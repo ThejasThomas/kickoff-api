@@ -1,0 +1,70 @@
+import jwt,{ JwtPayload, Secret } from "jsonwebtoken";
+import { injectable } from "tsyringe";
+import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
+import { config } from "../../shared/config";
+import ms from "ms";
+import { error } from "console";
+
+interface JWTPayloadData {
+     userId:string,
+     email:string,
+     role:string,
+}
+
+export interface ResetTokenPayload extends JwtPayload {
+
+}
+
+@injectable()
+export class JWTService implements ITokenService {
+        private _accessSecret:Secret;
+        private _accessExpiresIn:string;
+        private _refreshSecret:Secret;
+        private _refreshExpiresIn:string;
+
+        constructor(){
+            this._accessSecret=config.jwt.ACCESS_SECRET_KEY;
+            this._accessExpiresIn=config.jwt.ACCESS_EXPIRES_IN;
+            this._refreshSecret=config.jwt.REFRESH_SECRET_KEY;
+            this._refreshExpiresIn=config.jwt.REFRESH_EXPIRES_IN;
+        }
+
+        generateAccessToken(payload: { userId: string; email: string; role: string; }): string {
+            return jwt.sign(payload,this._accessSecret, {
+                expiresIn: this._accessExpiresIn as ms.StringValue,
+            })
+        }
+        generateRefreshToken(payload: { userId: string; email: string; role: string; }): string {
+            return jwt.sign(payload,this._refreshSecret,{
+                expiresIn:this._refreshExpiresIn as ms.StringValue,
+            })
+        }
+        verifyAccessToken(token: string): string | JwtPayload | null {
+            try{
+                return jwt.verify(token,this._accessSecret) as JwtPayload;
+            } catch{
+                console.error('Access token verification failed:',error);
+                return null;
+                
+            }
+        }
+        verifyRefreshToken(token: string): string | JwtPayload | null {
+            try{
+                return jwt.verify(token,this._refreshSecret) as JwtPayload;
+            } catch(error){
+                console.error('Refresh token verification failed:',error);
+                return null;
+                
+            }
+        }
+        decodeAccessToken(token: string): JwtPayload | null {
+            try{
+                return jwt.decode(token) as JwtPayload;
+            }catch(error){
+                console.error('Access token decoding failed',error);
+                return null;
+                
+            }
+        }
+
+}
