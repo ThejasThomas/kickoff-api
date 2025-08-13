@@ -10,6 +10,7 @@ import { config } from "../../shared/config";
 import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
 import { IRedisTokenRepository } from "../../entities/repositoryInterface/redis/redis_token_repository_interface";
 
+
 @injectable()
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
     constructor(
