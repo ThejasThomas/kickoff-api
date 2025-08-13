@@ -142,7 +142,6 @@ export class AuthController implements IAuthController {
 	// 🛠️ Send OTP Email
 	async sendOtpEmail(req: Request, res: Response): Promise<void> {
 		try {
-			// console.log('sendOtpuseCase',req)
 			const { email } = req.body;
 			await this._sendOtpEmailUseCase.execute(email);
 			res.status(HTTP_STATUS.OK).json({
@@ -229,7 +228,6 @@ async authenticateWithGoogle(req:Request,res:Response):Promise<void> {
 			user:user
 		})
 	} catch(error) {
-		console.log('broo itss error')
 			handleErrorResponse(req,res,error)
 	}
 }

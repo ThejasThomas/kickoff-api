@@ -6,7 +6,6 @@ import { IClientRepository } from "../../entities/repositoryInterface/users/clie
 import { ITurfOwnerRepository } from "../../entities/repositoryInterface/users/turf_owner-repository.interface";
 import { CustomError } from "../../entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
-import { email } from "zod";
 import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
 import { ResetTokenPayload } from "../../interfaceAdapters/services/jwt_service";
 import { IRedisTokenRepository } from "../../entities/repositoryInterface/redis/redis_token_repository_interface";
@@ -41,6 +40,7 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
                 HTTP_STATUS.BAD_REQUEST
             )
         }
+        const email = payload.email;
         let repository;
         if(role ==='client') {
             repository = this._clientRepository;

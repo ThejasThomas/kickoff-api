@@ -24,5 +24,4 @@ redisClient.on("error", (err) => console.log("Redis Client Error", err));
 				"            |"
 		)
 	);
-	//    console.log("Redis connected successfully!📦")
 })();
