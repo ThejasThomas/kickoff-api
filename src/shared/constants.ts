@@ -48,6 +48,9 @@ export const SUCCESS_MESSAGES = {
     LOGOUT_SUCCESS: "Logged out",
     VERIFICATION_SUCCESS: "Verification done",
     OPERATION_SUCCESS: "Action completed",
+    PASSWORD_RESET_SUCCESS: "Password reset",
+    EMAIL_SENT_SUCCESSFULLY: "Email sent",
+
 
 }
 
@@ -68,6 +71,7 @@ export const ERROR_MESSAGES ={
     INVALID_OTP: "Invalid or expired otp",
     USER_NOT_FOUND: "User not found",
     INVALID_TOKEN: "Invalid session please login again",
+    SAME_CURR_NEW_PASSWORD:"New password must be different from current password",
 
 
 

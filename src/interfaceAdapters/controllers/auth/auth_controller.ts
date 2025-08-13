@@ -27,6 +27,10 @@ import { CustomRequest } from "../../middlewares/auth_middleware";
 import { IRefreshTokenUseCase } from "../../../entities/useCaseInterfaces/auth/refresh_token_usecase_interface";
 import { IGoogleUseCase } from "../../../entities/useCaseInterfaces/auth/google_usecase";
 import { use } from "react";
+import { forgotPasswordValidationSchema } from "./validations/forgot_password_validation_schema";
+import { IForgotPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/forgot_password_usecase_interface";
+import { resetPasswordValidationSchema } from "./validations/reset_password_validation_schema";
+import { IResetPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/reset_password_usecase_interface";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -38,6 +42,8 @@ export class AuthController implements IAuthController {
 		@inject('IGenerateTokenUseCase') private _generateTokenUseCase:IGenerateTokenUseCase, 
 		@inject('IRefreshTokenUseCase') private _refreshTokenUseCase:IRefreshTokenUseCase,
 		@inject('IGoogleUseCase') private _googleUseCase:IGoogleUseCase,
+		@inject('IForgotPasswordUseCase') private _forgotPasswordUseCase:IForgotPasswordUseCase,
+		@inject('IResetPasswordUseCase') private _resetPasswordUseCase:IResetPasswordUseCase
 	) {}
 
 	// 🛠️ User Register
@@ -225,6 +231,48 @@ async authenticateWithGoogle(req:Request,res:Response):Promise<void> {
 	} catch(error) {
 		console.log('broo itss error')
 			handleErrorResponse(req,res,error)
+	}
+}
+async forgotPassword(req: Request, res: Response): Promise<void> {
+	try{
+		const validatedData = forgotPasswordValidationSchema.parse(
+			req.body
+		)
+		if(!validatedData){
+			res.status(HTTP_STATUS.BAD_REQUEST).json({
+				success:false,
+				message:ERROR_MESSAGES.VALIDATION_ERROR,
+			})
+			return;
+		}
+		await this._forgotPasswordUseCase.execute(validatedData);
+
+		res.status(HTTP_STATUS.OK).json({
+			success:true,
+			message:SUCCESS_MESSAGES.EMAIL_SENT_SUCCESSFULLY,
+		})
+	}catch(error){
+		handleErrorResponse(req,res,error)
+	}
+}
+
+async resetPassword(req: Request, res: Response): Promise<void> {
+	try{
+		const validatedData =resetPasswordValidationSchema.parse(req.body);
+		if(!validatedData) {
+			res.status(HTTP_STATUS.BAD_REQUEST).json({
+				success:false,
+				message:ERROR_MESSAGES.VALIDATION_ERROR,
+			})
+		}
+
+		await this._resetPasswordUseCase.execute(validatedData);
+		res.status(HTTP_STATUS.OK).json({
+			success:true,
+			message:SUCCESS_MESSAGES.PASSWORD_RESET_SUCCESS,
+		})
+	} catch(error) {
+		handleErrorResponse(req,res,error);
 	}
 }
 

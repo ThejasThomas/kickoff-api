@@ -26,8 +26,19 @@ export const config = {
         ACCESS_EXPIRES_IN:process.env.JWT_ACCESS_EXPIRES_IN || '15m',
         REFRESH_SECRET_KEY:process.env.JWT_REFRESH_KEY || 'refresh-secret-key',
         REFRESH_EXPIRES_IN:process.env.JWT_REFRESH_EXPIRES_IN || '14d',
+        RESET_SECRET_KEY:process.env.JWT_RESET_SECRET_KEY || 'reset-secret-key',
+        RESET_EXPIRES_IN:process.env.JWT_RESET_EXPIRES_IN || '5m'
         
     },
+
+    redis:{
+        REDIS_USERNAME:process.env.REDIS_USERNAME || "default",
+        REDIS_PASS:process.env.REDIS_PASS,
+        REDIS_HOST:process.env.REDIS_HOST,
+        REDIS_PORT:process.env.REDIS_PORT||"18498",
+    },
+
+
     OtpExpiry: process.env.OTP_EXPIRY_IN_MINUTES || "2",
 
     bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS || "10", 10),
