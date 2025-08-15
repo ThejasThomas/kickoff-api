@@ -33,6 +33,10 @@ import { IForgotPasswordUseCase } from "../../entities/useCaseInterfaces/auth/fo
 import { ForgotPasswordUseCase } from "../../useCases/auth/forgotPassword_usecase";
 import { IResetPasswordUseCase } from "../../entities/useCaseInterfaces/auth/reset_password_usecase_interface";
 import { ResetPasswordUseCase } from "../../useCases/auth/resetpassword_usecase";
+import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get_all_users_usecase_interface";
+import { GetAllUsersUseCase } from "../../useCases/users/get_all_users_usecase";
+import { IUpdateEntityStatusUseCase } from "../../entities/useCaseInterfaces/users/update_entity_status_usecase_interface";
+import { UpdateEntityStatusUseCase } from "../../useCases/users/update_entity_status_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -88,6 +92,12 @@ export class UseCaseRegistry {
         })
         container.register<IResetPasswordUseCase>('IResetPasswordUseCase',{
           useClass:ResetPasswordUseCase
+        })
+        container.register<IGetAllUsersUseCase>('IGetAllUsersUseCase',{
+          useClass:GetAllUsersUseCase
+        })
+        container.register<IUpdateEntityStatusUseCase>('IUpdateEntityStatusUseCase',{
+          useClass:UpdateEntityStatusUseCase
         })
   }
 }

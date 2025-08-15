@@ -1,18 +1,17 @@
 import { config } from "../shared/config";
 
-
-export const ROLES ={
-    ADMIN: 'admin',
-    CLIENT:'client',
-    TURF_OWNER:'turfOwner'
+export const ROLES = {
+  ADMIN: "admin",
+  CLIENT: "client",
+  TURF_OWNER: "turfOwner",
 } as const;
 
-export type statusTypes ='active' | 'pending' |'blocked';
+export type statusTypes = "active" | "pending" | "blocked";
 
-export type TRole ='client' |'admin' |'turfOwner'
+export type TRole = "client" | "admin" | "turfOwner";
 
-export const HTTP_STATUS ={
- // ✅ Success responses
+export const HTTP_STATUS = {
+  // ✅ Success responses
   OK: 200, // Request was successful (e.g., fetching data, updating without response body)
   CREATED: 201, // Resource successfully created (e.g., user registration, new booking)
   ACCEPTED: 202, // Request accepted for processing but not completed yet (e.g., background job)
@@ -37,46 +36,43 @@ export const HTTP_STATUS ={
   GATEWAY_TIMEOUT: 504, // Upstream server timed out (e.g., long API response time)
 } as const;
 
-
 export const SUCCESS_MESSAGES = {
-    LOGIN_SUCCESS: "Logged in",
-    REGISTRATION_SUCCESS: "Registration completed",
-    OTP_SEND_SUCCESS: "OTP sent",
-    OTP_VERIFIED: "OTP verified",
-    LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
-    COMPLETE_YOUR_PROFILE_TO_GET_APPROVED: "Complete your profile to get approved!",
-    LOGOUT_SUCCESS: "Logged out",
-    VERIFICATION_SUCCESS: "Verification done",
-    OPERATION_SUCCESS: "Action completed",
-    PASSWORD_RESET_SUCCESS: "Password reset",
-    EMAIL_SENT_SUCCESSFULLY: "Email sent",
+  LOGIN_SUCCESS: "Logged in",
+  REGISTRATION_SUCCESS: "Registration completed",
+  OTP_SEND_SUCCESS: "OTP sent",
+  OTP_VERIFIED: "OTP verified",
+  LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
+  LOGOUT_SUCCESS: "Logged out",
+  VERIFICATION_SUCCESS: "Verification done",
+  OPERATION_SUCCESS: "Action completed",
+  PASSWORD_RESET_SUCCESS: "Password reset",
+  EMAIL_SENT_SUCCESSFULLY: "Email sent",
+  UPDATED: "Successfully Updated.",
+};
 
-
-}
-
-export const ERROR_MESSAGES ={
-    TOKEN_EXPIRED: "Session expired login again",
-    TOKEN_BLACKLISTED: "Session is no longer valid" ,
-    EMAIL_NOT_FOUND: "Email not found",
-    EMAIL_EXISTS: "Email already registered",
-    USERNAME_EXISTS: "Username already taken",
-    INVALID_ROLE: "Access denied",
-    NOT_ALLOWED: "You can’t do this action",
-    ACCOUNT_UNDER_VERIFICATION: "Your account is under verification. Please wait for admin approval.",
-    SERVER_ERROR: "Something went wrong try again later",
-    VALIDATION_ERROR: "Check your inputs and try again",
-    UNAUTHORIZED_ACCESS: "Not authorized",
-    BLOCKED: "Your account is blocked",
-    INVALID_CREDENTIALS: "Wrong email or password",
-    INVALID_OTP: "Invalid or expired otp",
-    USER_NOT_FOUND: "User not found",
-    INVALID_TOKEN: "Invalid session please login again",
-    SAME_CURR_NEW_PASSWORD:"New password must be different from current password",
-
-
-
-
-}
+export const ERROR_MESSAGES = {
+  TOKEN_EXPIRED: "Session expired login again",
+  TOKEN_BLACKLISTED: "Session is no longer valid",
+  EMAIL_NOT_FOUND: "Email not found",
+  EMAIL_EXISTS: "Email already registered",
+  USERNAME_EXISTS: "Username already taken",
+  INVALID_ROLE: "Access denied",
+  NOT_ALLOWED: "You can’t do this action",
+  ACCOUNT_UNDER_VERIFICATION:
+    "Your account is under verification. Please wait for admin approval.",
+  PENDING_ADMIN_APPROVAL:
+    "Your account is pending admin approval. You can log in once approved.",
+  SERVER_ERROR: "Something went wrong try again later",
+  VALIDATION_ERROR: "Check your inputs and try again",
+  UNAUTHORIZED_ACCESS: "Not authorized",
+  BLOCKED: "Your account is blocked",
+  INVALID_CREDENTIALS: "Wrong email or password",
+  INVALID_OTP: "Invalid or expired otp",
+  USER_NOT_FOUND: "User not found",
+  INVALID_TOKEN: "Invalid session please login again",
+  SAME_CURR_NEW_PASSWORD:
+    "New password must be different from current password",
+};
 export const VERIFICATION_MAIL_CONTENT = (
   otp: string
 ) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">

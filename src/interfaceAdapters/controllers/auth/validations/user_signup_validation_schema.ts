@@ -18,26 +18,26 @@ const clientSchema=z.object({
 })
 
 const turfOwnerSchema=z.object({
-    turfName:nameSchema,
+    ownerName:nameSchema,
     email:strongEmailRegex,
     phoneNumber:phoneNumberSchema,
     password:passwordSchema,
-    location:z.object({
-        name:z.string(),
-        displayName:z.string(),
-        zipCode:z.string(),
-    }),
-    geoLocation:z.object({
-        type:z.string(),
-        coordinates:z.tuple([
-            z.number().min(-180).max(180),//longitude
-            z.number().min(-90).max(90),//latitude
-        ])
-   .refine(
-        (coords) => coords.length === 2,
-        "Coordinates must be [longitude, latitude]"
-      ),
-  }),
+    // location:z.object({
+    //     name:z.string(),
+    //     displayName:z.string(),
+    //     zipCode:z.string(),
+    // }),
+//     geoLocation:z.object({
+//         type:z.string(),
+//         coordinates:z.tuple([
+//             z.number().min(-180).max(180),//longitude
+//             z.number().min(-90).max(90),//latitude
+//         ])
+//    .refine(
+//         (coords) => coords.length === 2,
+//         "Coordinates must be [longitude, latitude]"
+//       ),
+//   }),
   status: z.enum(["pending", "active", "blocked"]),
   role: z.literal("turfOwner"),
 });
