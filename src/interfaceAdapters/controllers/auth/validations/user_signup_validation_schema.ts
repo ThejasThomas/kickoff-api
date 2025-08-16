@@ -38,7 +38,7 @@ const turfOwnerSchema=z.object({
 //         "Coordinates must be [longitude, latitude]"
 //       ),
 //   }),
-  status: z.enum(["pending", "active", "blocked"]),
+  status: z.enum(["pending", "active", "blocked","rejected"]),
   role: z.literal("turfOwner"),
 });
 

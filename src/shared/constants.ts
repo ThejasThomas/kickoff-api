@@ -57,11 +57,11 @@ export const ERROR_MESSAGES = {
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
   INVALID_ROLE: "Access denied",
-  NOT_ALLOWED: "You can’t do this action",
+  NOT_ALLOWED: "You can't do this action",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
   PENDING_ADMIN_APPROVAL:
-    "Your account is pending admin approval. You can log in once approved.",
+    "Your request is not approved by admin",
   SERVER_ERROR: "Something went wrong try again later",
   VALIDATION_ERROR: "Check your inputs and try again",
   UNAUTHORIZED_ACCESS: "Not authorized",
