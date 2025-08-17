@@ -13,7 +13,6 @@ export class AuthRoutes extends BaseRoute{
             authController.sendOtpEmail(req,res)
         })
         this.router.post('/verify-otp',(req:Request,res:Response) =>{
-            console.log('helooo its verify')
             authController.verifyOtp(req,res)
         })
         this.router.post('/signup',(req:Request,res:Response)=>{
@@ -24,6 +23,12 @@ export class AuthRoutes extends BaseRoute{
         })
         this.router.post('/google-auth',(req:Request,res:Response)=>{
             authController.authenticateWithGoogle(req,res)
+        })
+        this.router.post('/forgot-password',(req:Request,res:Response)=>{
+            authController.forgotPassword(req,res)
+        })
+        this.router.post('/reset-password',(req:Request,res:Response)=>{
+            authController.resetPassword(req,res)
         })
     }
 }

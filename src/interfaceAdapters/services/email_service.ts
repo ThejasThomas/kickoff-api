@@ -3,7 +3,7 @@ import { IEmailService } from "../../entities/serviceInterfaces/email_service_in
 import { config } from "../../shared/config";
 import nodemailer from 'nodemailer'
 import chalk from "chalk";
-import { PASSWORD_RESET_MAIL_CONTENT, VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
+import { PASSWORD_RESET_MAIL_CONTENT, SENT_REJECTION_EMAIL, VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
 
 
 @injectable()
@@ -73,5 +73,26 @@ export class EmailService implements IEmailService {
 		};
 		await this._sendMail(mailOptions);
 	}
+
+	async sendRejectionEmail(to: string,reason: string,retryUrl: string , entityLabel: string): Promise<void> {
+		const subject = `${entityLabel} Application Rejected - KickOff`
+		const mailOptions ={
+			from:`"KickOff" <${config.nodemailer.EMAIL_USER}>`,
+			to,
+			subject,
+			html:SENT_REJECTION_EMAIL(entityLabel, reason,retryUrl)
+			
+		}
+		await this._sendMail(mailOptions)
+
+		 console.log(
+      chalk.bgRedBright.bold(`❌ Rejection Email Sent:`),
+      chalk.yellowBright(`${entityLabel} - ${to}`)
+    );
+		
+
+	}
+
+
     
 }

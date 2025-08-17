@@ -18,7 +18,6 @@ async function startApp() {
 
     httpServer.listen(config.server.PORT, () => {
       console.log(chalk.cyanBright.bold('\n Server Status'));
-      // console.log(chalk.greenBright('---------------'));
       console.log(
         chalk.yellowBright.bold(
           `Server running at ${chalk.blueBright(`http://localhost:${config.server.PORT}`)}`

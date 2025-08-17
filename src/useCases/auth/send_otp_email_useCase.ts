@@ -19,7 +19,6 @@ export class sendOtpEmailUseCase implements ISendOtpEmailUseCase{
     ){}
 
 async execute(email:string):Promise<void> {
-    console.log('email here',email)
     const emailExists =await this._userExistenceService.emailExists(email);
     if(emailExists) {
         throw new CustomError(
@@ -39,6 +38,5 @@ async execute(email:string):Promise<void> {
             'KickOff - verify your Email',
             otp
         )
-        
 }
 }

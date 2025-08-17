@@ -1,18 +1,17 @@
 import { config } from "../shared/config";
 
-
-export const ROLES ={
-    ADMIN: 'admin',
-    CLIENT:'client',
-    TURF_OWNER:'turfOwner'
+export const ROLES = {
+  ADMIN: "admin",
+  CLIENT: "client",
+  TURF_OWNER: "turfOwner",
 } as const;
 
-export type statusTypes ='active' | 'pending' |'blocked';
+export type statusTypes = "active" | "pending" | "blocked";
 
-export type TRole ='client' |'admin' |'turfOwner'
+export type TRole = "client" | "admin" | "turfOwner";
 
-export const HTTP_STATUS ={
- // ✅ Success responses
+export const HTTP_STATUS = {
+  // ✅ Success responses
   OK: 200, // Request was successful (e.g., fetching data, updating without response body)
   CREATED: 201, // Resource successfully created (e.g., user registration, new booking)
   ACCEPTED: 202, // Request accepted for processing but not completed yet (e.g., background job)
@@ -37,42 +36,44 @@ export const HTTP_STATUS ={
   GATEWAY_TIMEOUT: 504, // Upstream server timed out (e.g., long API response time)
 } as const;
 
-
 export const SUCCESS_MESSAGES = {
-    LOGIN_SUCCESS: "Logged in",
-    REGISTRATION_SUCCESS: "Registration completed",
-    OTP_SEND_SUCCESS: "OTP sent",
-    OTP_VERIFIED: "OTP verified",
-    LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
-    COMPLETE_YOUR_PROFILE_TO_GET_APPROVED: "Complete your profile to get approved!",
-    LOGOUT_SUCCESS: "Logged out",
-    VERIFICATION_SUCCESS: "Verification done",
-    OPERATION_SUCCESS: "Action completed",
+  LOGIN_SUCCESS: "Logged in",
+  REGISTRATION_SUCCESS: "Registration completed",
+  OTP_SEND_SUCCESS: "OTP sent",
+  OTP_VERIFIED: "OTP verified",
+  LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
+  LOGOUT_SUCCESS: "Logged out",
+  VERIFICATION_SUCCESS: "Verification done",
+  OPERATION_SUCCESS: "Action completed",
+  PASSWORD_RESET_SUCCESS: "Password reset",
+  EMAIL_SENT_SUCCESSFULLY: "Email sent",
+  UPDATED: "Successfully Updated.",
+};
 
-}
+export const ERROR_MESSAGES = {
+  TOKEN_EXPIRED: "Session expired login again",
+  TOKEN_BLACKLISTED: "Session is no longer valid",
+  EMAIL_NOT_FOUND: "Email not found",
+  EMAIL_EXISTS: "Email already registered",
+  USERNAME_EXISTS: "Username already taken",
+  INVALID_ROLE: "Access denied",
+  NOT_ALLOWED: "You can't do this action",
+  ACCOUNT_UNDER_VERIFICATION:
+    "Your account is under verification. Please wait for admin approval.",
+  LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
 
-export const ERROR_MESSAGES ={
-    TOKEN_EXPIRED: "Session expired login again",
-    TOKEN_BLACKLISTED: "Session is no longer valid" ,
-    EMAIL_NOT_FOUND: "Email not found",
-    EMAIL_EXISTS: "Email already registered",
-    USERNAME_EXISTS: "Username already taken",
-    INVALID_ROLE: "Access denied",
-    NOT_ALLOWED: "You can’t do this action",
-    ACCOUNT_UNDER_VERIFICATION: "Your account is under verification. Please wait for admin approval.",
-    SERVER_ERROR: "Something went wrong try again later",
-    VALIDATION_ERROR: "Check your inputs and try again",
-    UNAUTHORIZED_ACCESS: "Not authorized",
-    BLOCKED: "Your account is blocked",
-    INVALID_CREDENTIALS: "Wrong email or password",
-    INVALID_OTP: "Invalid or expired otp",
-    USER_NOT_FOUND: "User not found",
-    INVALID_TOKEN: "Invalid session please login again",
-
-
-
-
-}
+  PENDING_ADMIN_APPROVAL: "Your request is not approved by admin",
+  SERVER_ERROR: "Something went wrong try again later",
+  VALIDATION_ERROR: "Check your inputs and try again",
+  UNAUTHORIZED_ACCESS: "Not authorized",
+  BLOCKED: "Your account is blocked",
+  INVALID_CREDENTIALS: "Wrong email or password",
+  INVALID_OTP: "Invalid or expired otp",
+  USER_NOT_FOUND: "User not found",
+  INVALID_TOKEN: "Invalid session please login again",
+  SAME_CURR_NEW_PASSWORD:
+    "New password must be different from current password",
+};
 export const VERIFICATION_MAIL_CONTENT = (
   otp: string
 ) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
@@ -199,6 +200,124 @@ export const PASSWORD_RESET_MAIL_CONTENT = (
    </div>
 </div>`;
 
+export const SENT_REJECTION_EMAIL = (
+  entityLabel: string,
+  reason: string,
+  retryUrl?: string
+) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; background: #fff;">
+   <!-- Logo Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
+         ⚽ <span style="color: #FEBA43;">KickOff</span>
+      </h1>
+   </div>
+
+   <!-- Header Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <div style="background-color: #dc3545; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+         <h2 style="color: white; margin: 0; font-size: 24px;">
+            ${entityLabel} Application Status 📋
+         </h2>
+      </div>
+      <p style="color: #666; font-size: 16px; margin: 10px 0;">
+         We've reviewed your application and have an update for you.
+      </p>
+   </div>
+
+   <!-- Main Content -->
+   <div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc); border: 1px solid #f0f0f0;">
+      <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+         We regret to inform you that your <strong>${entityLabel.toLowerCase()}</strong> application has been <span style="color: #dc3545; font-weight: bold;">rejected</span>.
+      </p>
+      
+      <!-- Rejection Reason -->
+      <div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; border-radius: 8px; margin: 25px 0;">
+         <h3 style="color: #721c24; margin: 0 0 10px 0; font-size: 18px; display: flex; align-items: center;">
+            <span style="margin-right: 10px;">⚠️</span> Reason for Rejection
+         </h3>
+         <p style="color: #721c24; font-size: 16px; margin: 0; line-height: 1.5;">
+            ${reason}
+         </p>
+      </div>
+      
+      ${
+        retryUrl
+          ? `
+      <!-- Retry Section -->
+      <div style="text-align: center; margin: 30px 0; padding: 25px; background-color: #e7f3ff; border-radius: 12px; border: 1px solid #bee5eb;">
+         <h3 style="color: #0c5460; margin: 0 0 15px 0; font-size: 18px;">
+            🔄 Don't Give Up!
+         </h3>
+         <p style="color: #0c5460; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+            You can address the issues mentioned above and reapply. We're here to help you succeed!
+         </p>
+         
+         <a href="${retryUrl}" 
+            style="background-color: #007bff; color: white; padding: 16px 32px; 
+                   text-decoration: none; border-radius: 8px; font-weight: 500; 
+                   display: inline-block; margin: 10px 0; font-size: 16px; 
+                   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); 
+                   transition: all 0.3s ease;"
+            onmouseover="this.style.backgroundColor='#0056b3'"
+            onmouseout="this.style.backgroundColor='#007bff'"
+            rel="noopener noreferrer"
+         >
+            🚀 Retry Application
+         </a>
+         
+         <p style="color: #6c757d; font-size: 12px; margin-top: 10px;">
+            This link will remain active for your convenience
+         </p>
+      </div>
+      `
+          : ""
+      }
+   </div>
+
+   <!-- Help Section -->
+   <div style="border-radius: 8px; padding: 20px; margin: 25px 0; background-color: #FFF8E1; border: 1px solid #FFE082;">
+      <div style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+         <span style="font-size: 24px; margin-right: 10px;">💡</span>
+         <h3 style="color: #B76E00; margin: 0; font-size: 18px;">Need Help?</h3>
+      </div>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Review our application guidelines carefully
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Ensure all required documents are complete and clear
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Contact our support team if you need clarification
+         </li>
+         ${
+           entityLabel === "Turf Owner"
+             ? `
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Ensure your turf facility meets our quality standards
+         </li>
+         `
+             : ""
+         }
+      </ul>
+   </div>
+
+   <!-- Contact Section -->
+   <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+      <p style="font-size: 14px; color: #888;">
+         Have questions about this decision? We're here to help! 💬<br>
+         Contact us at <a href="mailto:support@kickoff.in" style="color: #FEBA43; text-decoration: none;">support@kickoff.in</a>
+      </p>
+   </div>
+
+   <!-- Footer -->
+   <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
+      © ${new Date().getFullYear()} KickOff. All rights reserved.<br>
+      <span style="color: #FEBA43;">⚽</span> Building the Best Sports Experience <span style="color: #FEBA43;">⚽</span><br>
+      <em>This is an automated message. Please do not reply directly to this email.</em>
+   </div>
+</div>`;
+
 export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
   fullName: string,
   tempPassword: string
@@ -276,7 +395,7 @@ export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
       <p style="font-size: 14px; color: #888;">
          Need help? We're here for you! 💡<br>
-         Contact us at <a href="mailto:support@kickOff.in" style="color: #FEBA43; text-decoration: none;">support@kickOff.in</a>
+         Contact us at <a href="mailto:support@kickOfff@gmail.com" style="color: #FEBA43; text-decoration: none;">support@kickOff.in</a>
       </p>
    </div>
 

@@ -21,7 +21,7 @@ export interface ClientDTO {
 export interface TurfOwnerDTO {
     googleId?:string;
     userId?:string;
-    turfName:string;
+    ownerName:string;
     email:string;
     phoneNumber?:string;
     password?:string;
