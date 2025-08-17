@@ -264,6 +264,7 @@ export class AuthController implements IAuthController {
   async resetPassword(req: Request, res: Response): Promise<void> {
     try {
       const validatedData = resetPasswordValidationSchema.parse(req.body);
+      console.log('dataaaas',req.body)
       if (!validatedData) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
