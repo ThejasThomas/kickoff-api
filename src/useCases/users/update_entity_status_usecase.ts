@@ -6,6 +6,8 @@ import { CustomError } from "../../entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { hasEmail } from "../../shared/helper/hasEmail";
 import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
+import { IEmailService } from "../../entities/serviceInterfaces/email_service_interface";
+import { config } from '../../shared/config'
 
 @injectable()
 export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
@@ -13,10 +15,13 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
     @inject("IClientRepository")
     private _clientRepository: IClientRepository,
     @inject("ITurfOwnerRepository")
-    private _turfOwnerRepository: ITurfOwnerRepository
-  ) // @inject('ITokenService')
-  // private _tokenService:ITokenService
-  {}
+    private _turfOwnerRepository: ITurfOwnerRepository,
+    @inject('ITokenService')
+    private _tokenService:ITokenService,
+    @inject ('IEmailService')
+    private _emailService:IEmailService
+  )
+  {} 
   async execute(
     entityType: string,
     entityId: string,
@@ -31,13 +36,19 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
       );
     }
     let repo;
+    let entityLabel: string;
 
     switch (entityType) {
-      case "user":
+      case "client":
+        console.log('client',entityType)
+        console.log('Idddddd',entityId)
         repo = this._clientRepository;
+        entityLabel = "client";
         break;
       case "turfOwner":
         repo = this._turfOwnerRepository;
+        entityLabel = "Turf Owner";
+        console.log('ownerrrrrrrr',entityType)
         break;
       default:
         throw new CustomError(
@@ -45,9 +56,7 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
           HTTP_STATUS.BAD_REQUEST
         );
     }
-    try {
-      const entity = await repo.findOne({ userId: entityId });
-      console.log("Found entity:", entity);
+      const entity = await repo.findOne({ _id: entityId });
 
       if (!entity) {
         throw new CustomError(
@@ -56,19 +65,39 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
         );
       }
 
-      const result = await repo.update({ userId: entityId }, { status: status });
-      console.log("Update result:", result); 
-    } catch (dbError) {
-      console.error("Database error:", dbError);
-      throw dbError;
+      const previousStatus = entity.status;
+		await repo.update({ _id: entityId },{status})
+    
+    if(entityType==='turfOwner' && status ==='rejected' && reason && hasEmail(entity)) {
+        await this._handleRejection(entity.email,reason,entityType,entityLabel)
     }
-    // if(entityType==='turfOwner' && status ==='rejected' && reason && hasEmail(entity)) {
-    //     await this.
-    // }
   }
 
-  // private async _handleOwnerRejection(email:string,reason:string):Promise<void> {
-  //     const retryToken =this._tokenService.generateResetToken(email)
-  //     const retryUrl =new URL(`/`)
-  // }
+ private async _handleRejection(
+  email:string,
+  reason:string,
+  entityType:string,
+  entityLabel:string
+ ) :Promise<void> {
+  try{
+    let retryUrl:string |null=null
+    if (entityType === 'turfOwner') {
+    const retryToken = this._tokenService.generateResetToken(email)
+
+    retryUrl=`${config.cors.ALLOWED_ORIGIN}/turf-owner/register?retry_token=${retryToken}`;
+    }
+  
+
+  await this._emailService.sendRejectionEmail(
+    email,
+    reason,
+    retryUrl,
+    entityLabel
+  );
+   console.log(`✅ Rejection email sent to ${entityLabel}: ${email}`);
+ }
+ catch (error) {
+      console.error(`❌ Failed to send rejection email to ${email}:`, error);
+}
+ }
 }

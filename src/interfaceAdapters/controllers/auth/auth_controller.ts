@@ -132,14 +132,12 @@ export class AuthController implements IAuthController {
       const { password, ...userWithoutPassword } = user;
 
       if (
-        ["pending", "rejected"].includes(
-          userWithoutPassword.status as string
-        ) &&
-        userWithoutPassword.role === "turfOwner"
-      ) {
-        res.status(HTTP_STATUS.BAD_REQUEST).json({
-          success: false,
-          message: ERROR_MESSAGES.PENDING_ADMIN_APPROVAL,
+				userWithoutPassword.status === "pending" &&
+				userWithoutPassword.role === "turfOwner"
+			) {
+        res.status(HTTP_STATUS.OK).json({
+          success: true,
+          message: SUCCESS_MESSAGES.LOGIN_AND_COMPLETE_YOUR_PROFILE,
           user: userWithoutPassword,
         });
         return;

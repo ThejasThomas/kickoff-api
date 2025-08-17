@@ -41,8 +41,9 @@ export class UserController implements IUserController {
         search = "",
         role,
         status,
-        excludeStatus,
       } = req.query;
+              const excludeStatus = req.query['excludeStatus[]'] || req.query.excludeStatus;
+
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
       const searchTerm = typeof search === "string" ? search : "";
@@ -54,7 +55,7 @@ export class UserController implements IUserController {
         excludeStatusArr = excludeStatus.map(String);
       }
 
-      const roleStr = role === "owner" ? "owner" : "user";
+      const roleStr = role === "turfOwner" ? "turfOwner" : "client";
 
       const { users, totalPages } = await this._getAllUsersUseCase.execute(
         roleStr,
@@ -80,6 +81,7 @@ export class UserController implements IUserController {
    try{
      console.log("Controller received:", req.body);
     const {entityType,entityId,status,reason,email} =req.body;
+    console.log('entityIDdddddd',entityId)
       await this.__updateEntityStatusUseCase.execute(entityType,entityId,status,reason,email);
 
       res.status(HTTP_STATUS.OK).json({

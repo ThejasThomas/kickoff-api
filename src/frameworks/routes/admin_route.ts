@@ -13,6 +13,7 @@ export class AdminRoutes extends BaseRoute {
             })
             this.router.patch('/status',(req:Request,res:Response)=>{
                     userController.updateEntityStatus(req,res)
+                    console.log('',)
             })
             
         }

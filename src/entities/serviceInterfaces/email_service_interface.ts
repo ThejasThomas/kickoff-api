@@ -6,4 +6,5 @@ export interface IEmailService {
         resetLink:string
     ):Promise<void>;
     sendOtpEmail(to:string,subject:string,otp:string):Promise<void>;
+    sendRejectionEmail(to:string,subject:string,retryUrl:string|null,entityLabel:string):Promise<void>
 }
