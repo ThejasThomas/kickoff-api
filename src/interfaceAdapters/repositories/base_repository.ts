@@ -7,9 +7,9 @@ export class BaseRepository<T> implements IBaseRepository<T> {
   async find(filter: FilterQuery<T> = {}) {
     return this.model.find(filter);
   }
-  async findAll(filter: FilterQuery<T> = {}, skip = 0, limit = 10) {
+  async findAll(filter: FilterQuery<T> = {}, skip = 0, limit = 10, sort:any = {createdAt:-1}) {
     const [items, total] = await Promise.all([
-      this.model.find(filter).skip(skip).limit(limit).lean() as Promise<T[]>,
+      this.model.find(filter).sort(sort).skip(skip).limit(limit).lean() as Promise<T[]>,
       this.model.countDocuments(filter),
     ]);
     return { items, total };
