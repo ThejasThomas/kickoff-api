@@ -54,13 +54,11 @@ export interface CustomRequest extends Request {
         next();
     } catch(error:any){
         if(error.name==='TokenExpiredError') {
-            console.error(error.name);
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message:ERROR_MESSAGES.TOKEN_EXPIRED,
             })
             return;
         }
-        console.error('Invalid token response sent');
         res.status(HTTP_STATUS.UNAUTHORIZED).json({
             message:ERROR_MESSAGES.INVALID_TOKEN
         })

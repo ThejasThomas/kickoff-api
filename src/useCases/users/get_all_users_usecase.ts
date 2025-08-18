@@ -41,7 +41,6 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
     if (status && status !== "all") {
       filter.status = status;
     } else if (excludeStatus.length > 0) {
-      console.log('excludeSttaus',excludeStatus)
       filter.status = { $nin: excludeStatus };
     }
 
