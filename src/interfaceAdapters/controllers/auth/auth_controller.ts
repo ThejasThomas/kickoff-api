@@ -142,7 +142,6 @@ export class AuthController implements IAuthController {
         });
         return;
       }
-
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
