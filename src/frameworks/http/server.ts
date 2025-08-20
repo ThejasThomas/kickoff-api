@@ -33,7 +33,7 @@ export class ExpressServer {
     );
   this._app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: config.cors.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   })
