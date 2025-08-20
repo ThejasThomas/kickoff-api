@@ -30,7 +30,7 @@ export class JWTService implements ITokenService {
             this._refreshSecret=config.jwt.REFRESH_SECRET_KEY;
             this._refreshExpiresIn=config.jwt.REFRESH_EXPIRES_IN;
             this._resetSecret=config.jwt.RESET_SECRET_KEY;
-            this._resetExpiresIn=config.jwt.REFRESH_EXPIRES_IN;
+            this._resetExpiresIn=config.jwt.RESET_EXPIRES_IN;
 
         }
 
@@ -48,7 +48,6 @@ export class JWTService implements ITokenService {
             try{
                 return jwt.verify(token,this._accessSecret) as JwtPayload;
             } catch{
-                console.error('Access token verification failed:',error);
                 return null;
                 
             }
@@ -57,7 +56,6 @@ export class JWTService implements ITokenService {
             try{
                 return jwt.verify(token,this._refreshSecret) as JwtPayload;
             } catch(error){
-                console.error('Refresh token verification failed:',error);
                 return null;
                 
             }
@@ -66,7 +64,6 @@ export class JWTService implements ITokenService {
             try{
                 return jwt.decode(token) as JwtPayload;
             }catch(error){
-                console.error('Access token decoding failed',error);
                 return null;
                 
             }
@@ -80,7 +77,6 @@ export class JWTService implements ITokenService {
             try{
                 return jwt.verify(token,this._resetSecret) as ResetTokenPayload;
             } catch {
-                console.error("Reset token verification failed",error);
                 return null;
                 
             }
@@ -89,7 +85,6 @@ export class JWTService implements ITokenService {
 		try {
 			return jwt.decode(token) as ResetTokenPayload;
 		} catch (error) {
-			console.error("Reset token decoding failed", error);
 			return null;
 		}
 	}

@@ -19,9 +19,9 @@ redisClient.on("error", (err) => console.log("Redis Client Error", err));
 	await redisClient.connect();
 	console.log(
 		chalk.yellowBright.bold(
-			"\t|         " +
+			"\t         " +
 				chalk.blueBright.bold("📦 Redis connected successfully!") +
-				"            |"
+				"            "
 		)
 	);
 })();

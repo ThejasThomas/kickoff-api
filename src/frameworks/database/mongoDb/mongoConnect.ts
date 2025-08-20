@@ -12,7 +12,6 @@ export class MongoConnect {
         try {
             await mongoose.connect(this._dbUrl);
 
-            // console.log(chalk.yellowBright.bold('\t-------------'));
             console.log(
 				chalk.yellowBright.bold(
 					"\t|          " +

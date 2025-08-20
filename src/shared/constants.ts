@@ -80,7 +80,7 @@ export const VERIFICATION_MAIL_CONTENT = (
    <!-- Logo Text Section -->
    <div style="text-align: center; margin-bottom: 30px;">
       <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
-         ✂️ <span style="color: #FEBA43;">KickOff</span>
+         ⚽ <span style="color: #FEBA43;">KickOff</span>
       </h1>
    </div>
 
@@ -125,7 +125,7 @@ export const PASSWORD_RESET_MAIL_CONTENT = (
    <!-- Logo Text Section -->
    <div style="text-align: center; margin-bottom: 30px;">
       <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
-         ✂️ <span style="color: #FEBA43;">KickOff</span>
+         ⚽ <span style="color: #FEBA43;">KickOff</span>
       </h1>
    </div>
 
@@ -325,7 +325,7 @@ export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
    <!-- Logo Section -->
    <div style="text-align: center; margin-bottom: 30px;">
       <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
-         ✂️ <span style="color: #FEBA43;">kickOff</span>
+         ⚽ <span style="color: #FEBA43;">kickOff</span>
       </h1>
    </div>
 

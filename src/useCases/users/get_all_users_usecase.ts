@@ -41,16 +41,16 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
     if (status && status !== "all") {
       filter.status = status;
     } else if (excludeStatus.length > 0) {
-      console.log('excludeSttaus',excludeStatus)
       filter.status = { $nin: excludeStatus };
     }
+    const sortOptions={createdAt:-1}
 
     let repo =
       userType === "client"
         ? this._clientRepository
         : this._turfOwnerRepository;
 
-    const { items, total } = await repo.findAll(filter, skip, limit);
+    const { items, total } = await repo.findAll(filter, skip, limit,sortOptions);
     type SanitizedUser =
       | (Omit<IClientEntity, "password"> & { _id: string })
       | (Omit<ITurfOwnerEntity, "password"> & { _id: string });

@@ -48,6 +48,12 @@ export class LoginUserUseCase implements ILoginUserUseCase {
                 HTTP_STATUS.NOT_FOUND
             )
         }
+        if(userData.status==='blocked'){
+            throw new CustomError(
+                ERROR_MESSAGES.BLOCKED,
+                HTTP_STATUS.FORBIDDEN
+            )
+        }
 
         if (user.password) {
 			const isPasswordMatch = await this._passwordBcrypt.compare(

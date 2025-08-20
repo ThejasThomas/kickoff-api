@@ -18,7 +18,6 @@ export const handleErrorResponse = (
   });
 
   if (error instanceof ZodError) {
-  console.error(chalk.bgRedBright(error.name), ": ", error);
 
 //   const errors = (error as ZodError).errors.map((err) => ({
 //     message: err.message,
@@ -33,7 +32,6 @@ export const handleErrorResponse = (
 
 
   if (error instanceof CustomError) {
-    console.error(chalk.bgRedBright(error.name), ": ", error);
     return res.status(error.statusCode).json({
       success: false,
       message: error.message,
@@ -41,9 +39,7 @@ export const handleErrorResponse = (
   }
 
   if (error instanceof Error) {
-    console.error(chalk.bgRedBright(error.name), ": ", error);
   } else {
-    console.error(chalk.bgRedBright("Unknown Error: "), error);
   }
 
   return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({

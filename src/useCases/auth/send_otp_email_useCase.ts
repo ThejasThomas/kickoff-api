@@ -32,7 +32,6 @@ async execute(email:string):Promise<void> {
 
         const hashedOtp = await this._otpBcrypt.hash(otp);
         await this.__otpService.storeOtp(email,hashedOtp)
-        console.log('otp:',hashedOtp)
         await this._emailService.sendOtpEmail(
             email,
             'KickOff - verify your Email',

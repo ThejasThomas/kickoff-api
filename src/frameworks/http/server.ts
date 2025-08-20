@@ -47,7 +47,7 @@ export class ExpressServer {
 
  private configureRoutes(): void {
     this._app.use('/auth',new AuthRoutes().router)
-    this._app.use('/admin',new AdminRoutes().router)
+    this._app.use('/_ad',new AdminRoutes().router)
 
  }
 

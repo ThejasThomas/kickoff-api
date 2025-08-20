@@ -57,6 +57,7 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
                 user.userId ?? "",
                 resetToken
             )
+            // console.log('token stored in redis',resetToken)
         } catch (error){
             console.error('Failed to store reset token in Redis:',error);
             throw new CustomError(

@@ -40,15 +40,12 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
 
     switch (entityType) {
       case "client":
-        console.log('client',entityType)
-        console.log('Idddddd',entityId)
         repo = this._clientRepository;
         entityLabel = "client";
         break;
       case "turfOwner":
         repo = this._turfOwnerRepository;
         entityLabel = "Turf Owner";
-        console.log('ownerrrrrrrr',entityType)
         break;
       default:
         throw new CustomError(
