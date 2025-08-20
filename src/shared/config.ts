@@ -4,7 +4,7 @@ dotenv.config();
 export const config = {
     cors: {
         ALLOWED_ORIGIN:process.env.CORS_ALLOWED_ORIGIN || 'http://localhost:5173',
-
+        FRONTEND_URL:process.env.VITE_FRONTEND_URL || 'http://localhost:5173'
     },
 
 

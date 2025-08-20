@@ -57,7 +57,7 @@ export class JWTService implements ITokenService {
                 return jwt.verify(token,this._refreshSecret) as JwtPayload;
             } catch(error){
                 return null;
-                
+
             }
         }
         decodeAccessToken(token: string): JwtPayload | null {
