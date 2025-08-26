@@ -9,6 +9,8 @@ import { IRefreshTokenRepository } from "../../entities/repositoryInterface/auth
 import { RefreshTokenRepository } from "../../interfaceAdapters/repositories/auth/refresh_token_repositories";
 import { IRedisTokenRepository } from "../../entities/repositoryInterface/redis/redis_token_repository_interface";
 import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis_token_repository";
+import { ITurfRepository } from "../../entities/repositoryInterface/Turf/turf_repository_interface";
+import { TurfRepository } from "../../interfaceAdapters/repositories/turf/turf_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register('IOtpRepository', {
@@ -31,6 +33,10 @@ container.register<IRefreshTokenRepository>('IRefreshTokenRepository',{
 container.register<IRedisTokenRepository>('IRedisTokenRepository',{
   useClass:RedisTokenRepository
 })
+container.register<ITurfRepository>('ITurfRepository',{
+  useClass:TurfRepository
+})
+
 
   }
 }

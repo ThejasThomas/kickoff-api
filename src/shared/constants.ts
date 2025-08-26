@@ -6,7 +6,7 @@ export const ROLES = {
   TURF_OWNER: "turfOwner",
 } as const;
 
-export type statusTypes = "active" | "pending" | "blocked";
+export type statusTypes = "active" | "pending" | "blocked"|"approved"
 
 export type TRole = "client" | "admin" | "turfOwner";
 
@@ -48,6 +48,7 @@ export const SUCCESS_MESSAGES = {
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
   UPDATED: "Successfully Updated.",
+  TURF_ADDED_SUCCESSFULLY :"Turf added successfully"
 };
 
 export const ERROR_MESSAGES = {
@@ -61,7 +62,9 @@ export const ERROR_MESSAGES = {
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
-
+  OWNER_NOT_FOUND:"Owner not found",
+  TURF_CREATION_FAILED:'Failed to add turf. Please try again ',
+  OWNER_NOT_ACTIVE:"Owner is not active now please update your profile and try again",
   PENDING_ADMIN_APPROVAL: "Your request is not approved by admin",
   SERVER_ERROR: "Something went wrong try again later",
   VALIDATION_ERROR: "Check your inputs and try again",
@@ -226,9 +229,16 @@ export const SENT_REJECTION_EMAIL = (
 
    <!-- Main Content -->
    <div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc); border: 1px solid #f0f0f0;">
-      <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
-         We regret to inform you that your <strong>${entityLabel.toLowerCase()}</strong> application has been <span style="color: #dc3545; font-weight: bold;">rejected</span>.
-      </p>
+<div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc); border: 1px solid #f0f0f0;">
+  <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+    We regret to inform you that your <strong>${entityLabel.toLowerCase()}</strong> application has been 
+    <span style="color: #dc3545; font-weight: bold;">rejected</span>.
+  </p>
+  <p style="font-size: 15px; line-height: 1.6; text-align: center; color: #555;">
+    To get access to add <strong>turfs</strong> and <strong>services</strong>, please login and complete your profile.
+  </p>
+</div>
+
       
       <!-- Rejection Reason -->
       <div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; border-radius: 8px; margin: 25px 0;">

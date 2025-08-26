@@ -15,3 +15,4 @@ export const adminSchema = new Schema<IAdminModel>(
 		timestamps: true,
 	}
 );
+

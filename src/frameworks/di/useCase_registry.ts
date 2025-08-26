@@ -37,6 +37,10 @@ import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get_
 import { GetAllUsersUseCase } from "../../useCases/users/get_all_users_usecase";
 import { IUpdateEntityStatusUseCase } from "../../entities/useCaseInterfaces/users/update_entity_status_usecase_interface";
 import { UpdateEntityStatusUseCase } from "../../useCases/users/update_entity_status_usecase";
+import { IAddTurfUseCase } from "../../entities/useCaseInterfaces/turfOwner/add_turf_usecase_interface";
+import { AddTurfUseCase } from "../../useCases/turfOwner/add_turf_usecase";
+import { IValidateOwnerService } from "../../entities/serviceInterfaces/validate_owner_service_interface";
+import { ValidateOwnerService } from "../../interfaceAdapters/services/validate_owner_service";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -99,5 +103,11 @@ export class UseCaseRegistry {
         container.register<IUpdateEntityStatusUseCase>('IUpdateEntityStatusUseCase',{
           useClass:UpdateEntityStatusUseCase
         })
+        container.register<IAddTurfUseCase>('IAddTurfUseCase',{
+          useClass:AddTurfUseCase
+        })
+        container.register<IValidateOwnerService>('IValidateOwnerService',{
+          useClass:ValidateOwnerService
+      })
   }
 }

@@ -10,6 +10,7 @@ import morgan from 'morgan'
 import { MongoConnect } from "../database/mongoDb/mongoConnect";
 import { AuthRoutes } from "../routes/auth_route";
 import { AdminRoutes } from "../routes/admin_route";
+import { OwnerRoutes } from "../routes/turfOwner";
 // import { ExpressServer } from "../../app";
 
 export class ExpressServer {
@@ -48,6 +49,7 @@ export class ExpressServer {
  private configureRoutes(): void {
     this._app.use('/auth',new AuthRoutes().router)
     this._app.use('/_ad',new AdminRoutes().router)
+    this._app.use('/_ow',new OwnerRoutes().router)
 
  }
 
