@@ -9,4 +9,5 @@ export interface IAuthController {
   authenticateWithGoogle(req:Request,res:Response):void;
   forgotPassword(req:Request,res:Response):Promise<void>;
   resetPassword(req:Request,res:Response):Promise<void>;
+  getUploadSignature(req:Request,res:Response) :Promise<void>;
 }

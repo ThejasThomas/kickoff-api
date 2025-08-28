@@ -41,6 +41,8 @@ import { IAddTurfUseCase } from "../../entities/useCaseInterfaces/turfOwner/add_
 import { AddTurfUseCase } from "../../useCases/turfOwner/add_turf_usecase";
 import { IValidateOwnerService } from "../../entities/serviceInterfaces/validate_owner_service_interface";
 import { ValidateOwnerService } from "../../interfaceAdapters/services/validate_owner_service";
+import { ICloudinarySignatureService } from "../../entities/serviceInterfaces/cloudinary_service_interface";
+import { CloudinarySignatureService } from "../../interfaceAdapters/services/cloudinary_service";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -108,6 +110,9 @@ export class UseCaseRegistry {
         })
         container.register<IValidateOwnerService>('IValidateOwnerService',{
           useClass:ValidateOwnerService
+      })
+      container.register<ICloudinarySignatureService>('ICloudinarySignatureService',{
+        useClass:CloudinarySignatureService
       })
   }
 }

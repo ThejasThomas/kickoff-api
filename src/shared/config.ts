@@ -37,6 +37,11 @@ export const config = {
         REDIS_HOST:process.env.REDIS_HOST,
         REDIS_PORT:process.env.REDIS_PORT||"18498",
     },
+    cloudinary:{
+        CLOUDINARY_CLOUD_NAME:process.env.CLOUDINARY_CLOUD_NAME,
+        CLOUDINARY_API_KEY:process.env.CLOUDINARY_API_KEY,
+        CLOUDINARY_API_SECRET:process.env.CLOUDINARY_API_SECRET
+    },
 
 
     OtpExpiry: process.env.OTP_EXPIRY_IN_MINUTES || "2",

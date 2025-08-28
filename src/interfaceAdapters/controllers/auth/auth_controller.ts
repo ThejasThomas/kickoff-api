@@ -39,6 +39,7 @@ import { forgotPasswordValidationSchema } from "./validations/forgot_password_va
 import { IForgotPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/forgot_password_usecase_interface";
 import { resetPasswordValidationSchema } from "./validations/reset_password_validation_schema";
 import { IResetPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/reset_password_usecase_interface";
+import { ICloudinarySignatureService } from "../../../entities/serviceInterfaces/cloudinary_service_interface";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -57,7 +58,9 @@ export class AuthController implements IAuthController {
     @inject("IForgotPasswordUseCase")
     private _forgotPasswordUseCase: IForgotPasswordUseCase,
     @inject("IResetPasswordUseCase")
-    private _resetPasswordUseCase: IResetPasswordUseCase
+    private _resetPasswordUseCase: IResetPasswordUseCase,
+    @inject ("ICloudinarySignatureService")
+    private _cloudinaryService:ICloudinarySignatureService
   ) {}
 
   // 🛠️ User Register
@@ -258,6 +261,19 @@ export class AuthController implements IAuthController {
     } catch (error) {
       handleErrorResponse(req, res, error);
     }
+  }
+
+  async getUploadSignature(req: Request, res: Response): Promise<void> {
+    const folder=req.query.folder
+    console.log('hey brotherrrrrr.....')
+
+    if(!folder){
+      res.status(HTTP_STATUS.NOT_FOUND)
+      .json({success:false,message:ERROR_MESSAGES.FOLDER_NOT_FOUND})
+    }
+    const data=this._cloudinaryService.generateSignature(folder as string)
+
+    res.json(data)
   }
 
   async resetPassword(req: Request, res: Response): Promise<void> {

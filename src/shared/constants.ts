@@ -59,6 +59,7 @@ export const ERROR_MESSAGES = {
   USERNAME_EXISTS: "Username already taken",
   INVALID_ROLE: "Access denied",
   NOT_ALLOWED: "You can't do this action",
+FOLDER_NOT_FOUND:"Folder not Found",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",

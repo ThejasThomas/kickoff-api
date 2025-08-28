@@ -3,7 +3,7 @@ import { ITurf } from "../models/turf_model";
 import { trim } from "zod";
 import { model, Schema } from "mongoose";
 
-const TurfSchema =new Schema<ITurf>(
+export const TurfSchema =new Schema<ITurf>(
   {
     ownerId:{
       type:String,
@@ -82,4 +82,3 @@ const TurfSchema =new Schema<ITurf>(
 )
 TurfSchema.index({ "location.coordinates": "2dsphere" });
 
-export const TurfModel = model<ITurf>("Turf", TurfSchema);
