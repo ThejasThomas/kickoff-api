@@ -1,3 +1,4 @@
+import { verifyAuth } from "../../interfaceAdapters/middlewares/auth_middleware";
 import { authController } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 
@@ -6,7 +7,6 @@ export class CloudinaryRoutes extends BaseRoute {
         super()
     }
     protected initializeRoutes(): void {
-        console.log('heloo brotherrrrr')
-        this.router.get('/signature',authController.getUploadSignature.bind(authController))
+        this.router.get('/turfOwner/signature',authController.getUploadSignature.bind(authController))
     }
 }

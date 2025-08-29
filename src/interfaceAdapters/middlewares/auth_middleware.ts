@@ -30,6 +30,7 @@ export interface CustomRequest extends Request {
  )=>{
     try{
         const token =extractToken(req);
+        console.log('token',token)
         if(!token) {
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 success:false,
@@ -40,6 +41,7 @@ export interface CustomRequest extends Request {
         const user=tokenService.verifyAccessToken(
             token.access_token
         ) as CustomJwtPayload;
+        console.log('user',user.userId)
         if(!user || !user.userId){
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message:ERROR_MESSAGES.TOKEN_EXPIRED
@@ -74,6 +76,7 @@ export interface CustomRequest extends Request {
 
  ):{access_token: string; refresh_token:string} |null=>{
     const userType =req.path.split('/')[1]
+    console.log('userType',userType)
 
     if(!userType) return null;
 

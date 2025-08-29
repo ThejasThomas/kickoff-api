@@ -6,6 +6,8 @@ import { IUserController } from "../../entities/controllerInterfaces/users/user-
 import { UserController } from "../../interfaceAdapters/controllers/user_controller";
 import { ITurfOwnerController } from "../../entities/controllerInterfaces/owner/owner-contoller.interface";
 import { TurfOwnerController } from "../../interfaceAdapters/controllers/owner_controller";
+import { ITurfController } from "../../entities/controllerInterfaces/turf/turf_controller.interface";
+import { TurfController } from "../../interfaceAdapters/controllers/turf_controller";
 DependencyInjection.registerAll();
 
 export const authController =
@@ -16,4 +18,7 @@ export const userController =
 
   export const turfOwnerController = 
   container.resolve<ITurfOwnerController>(TurfOwnerController)
+
+  export const turfController =
+  container.resolve<ITurfController>(TurfController)
 

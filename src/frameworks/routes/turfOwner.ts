@@ -1,19 +1,31 @@
 import { Request, Response } from "express";
-import { turfOwnerController } from "../di/resolver";
+import { authController, turfOwnerController } from "../di/resolver";
 import { BaseRoute } from "./base_route";
-import { verifyAuth } from "../../interfaceAdapters/middlewares/auth_middleware";
+import {
+  decodeToken,
+  verifyAuth,
+} from "../../interfaceAdapters/middlewares/auth_middleware";
 
 export class OwnerRoutes extends BaseRoute {
-    constructor(){
-    super()
-    }
+  constructor() {
+    super();
+  }
 
-    protected initializeRoutes(): void {
-        this.router.post(
-            '/turfOwner/add-turf',verifyAuth,(req:Request,res:Response)=>{
-                console.log('helooooooooooooooo')
-                turfOwnerController.addTurf(req,res)
-            }
-        )
-    }
+  protected initializeRoutes(): void {
+    this.router.post(
+      "/turfOwner/add-turf",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        console.log("helooooooooooooooo");
+        turfOwnerController.addTurf(req, res);
+      }
+    );
+    this.router.post(
+      "/turfOwner/refersh-token",
+      decodeToken,
+      (req: Request, res: Response) => {
+        authController.handleTokenRefresh(req, res);
+      }
+    );
+  }
 }
