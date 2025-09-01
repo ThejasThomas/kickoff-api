@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BaseRoute } from "./base_route";
-import { authController, userController } from "../di/resolver";
+import { authController, turfController, userController } from "../di/resolver";
 import {
   authorizeRole,
   decodeToken,
@@ -31,7 +31,7 @@ export class AdminRoutes extends BaseRoute {
       "/admin/turfs",
       verifyAuth,
       (req:Request,res:Response) =>{
-        // userController.
+        turfController.getAllTurfs(req,res)
       }
     )
     this.router.post(

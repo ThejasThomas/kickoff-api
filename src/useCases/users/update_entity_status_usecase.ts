@@ -7,7 +7,8 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { hasEmail } from "../../shared/helper/hasEmail";
 import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
 import { IEmailService } from "../../entities/serviceInterfaces/email_service_interface";
-import { config } from '../../shared/config'
+import { config } from "../../shared/config";
+import { ITurfRepository } from "../../entities/repositoryInterface/Turf/turf_repository_interface";
 
 @injectable()
 export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
@@ -16,12 +17,13 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
     private _clientRepository: IClientRepository,
     @inject("ITurfOwnerRepository")
     private _turfOwnerRepository: ITurfOwnerRepository,
-    @inject('ITokenService')
-    private _tokenService:ITokenService,
-    @inject ('IEmailService')
-    private _emailService:IEmailService
-  )
-  {} 
+    @inject("ITokenService")
+    private _tokenService: ITokenService,
+    @inject("ITurfRepository")
+    private __turfRepository: ITurfRepository,
+    @inject("IEmailService")
+    private _emailService: IEmailService
+  ) {}
   async execute(
     entityType: string,
     entityId: string,
@@ -47,54 +49,66 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
         repo = this._turfOwnerRepository;
         entityLabel = "Turf Owner";
         break;
+      case "turf":
+        repo = this.__turfRepository;
+        entityLabel = "turf";
+        break;
       default:
         throw new CustomError(
           ERROR_MESSAGES.INVALID_ROLE,
           HTTP_STATUS.BAD_REQUEST
         );
     }
-      const entity = await repo.findOne({ _id: entityId });
+    const entity = await repo.findOne({ _id: entityId });
 
-      if (!entity) {
-        throw new CustomError(
-          `${entityType} ${ERROR_MESSAGES.USER_NOT_FOUND}`,
-          HTTP_STATUS.NOT_FOUND
-        );
-      }
+    if (!entity) {
+      throw new CustomError(
+        `${entityType} ${ERROR_MESSAGES.USER_NOT_FOUND}`,
+        HTTP_STATUS.NOT_FOUND
+      );
+    }
 
-      const previousStatus = entity.status;
-		await repo.update({ _id: entityId },{status})
-    
-    if(entityType==='turfOwner' && status ==='rejected' && reason && hasEmail(entity)) {
-        await this._handleRejection(entity.email,reason,entityType,entityLabel)
+    const previousStatus = entity.status;
+    await repo.update({ _id: entityId }, { status });
+
+    if (
+      entityType === "turfOwner" &&
+      status === "rejected" &&
+      reason &&
+      hasEmail(entity)
+    ) {
+      await this._handleRejection(
+        entity.email,
+        reason,
+        entityType,
+        entityLabel
+      );
     }
   }
 
- private async _handleRejection(
-  email:string,
-  reason:string,
-  entityType:string,
-  entityLabel:string
- ) :Promise<void> {
-  try{
-    let retryUrl:string |null=null
-    if (entityType === 'turfOwner') {
-    const retryToken = this._tokenService.generateResetToken(email)
+  private async _handleRejection(
+    email: string,
+    reason: string,
+    entityType: string,
+    entityLabel: string
+  ): Promise<void> {
+    try {
+      let retryUrl: string | null = null;
+      if (entityType === "turfOwner") {
+        const retryToken = this._tokenService.generateResetToken(email);
 
-    retryUrl=`${config.cors.ALLOWED_ORIGIN}/turf-owner/register?retry_token=${retryToken}`;
-    }
-  
+        retryUrl = `${config.cors.ALLOWED_ORIGIN}/turf-owner/register?retry_token=${retryToken}`;
+      }
 
-  await this._emailService.sendRejectionEmail(
-    email,
-    reason,
-    retryUrl,
-    entityLabel
-  );
-   console.log(`✅ Rejection email sent to ${entityLabel}: ${email}`);
- }
- catch (error) {
+      await this._emailService.sendRejectionEmail(
+        email,
+        reason,
+        retryUrl,
+        entityLabel
+      );
+      console.log(`✅ Rejection email sent to ${entityLabel}: ${email}`);
+    } catch (error) {
       console.error(`❌ Failed to send rejection email to ${email}:`, error);
-}
- }
+    }
+  }
 }
