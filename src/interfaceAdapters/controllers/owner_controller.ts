@@ -6,12 +6,16 @@ import { Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
 import { success } from "zod";
 import { CustomError } from "../../entities/utils/custom.error";
+import { TurfOwnerDetailsUseCase } from "../../useCases/turfOwner/get_turf_owner_profile_usecase";
+import { handleErrorResponse } from "../../shared/utils/error_handler";
 
 @injectable()
 export class TurfOwnerController implements ITurfOwnerController {
   constructor(
     @inject("IAddTurfUseCase")
-    private _addTurfUSeCase: IAddTurfUseCase
+    private _addTurfUSeCase: IAddTurfUseCase,
+    @inject('ITurfOwnerDetailsUseCase')
+    private _ownerDetailsUseCase:TurfOwnerDetailsUseCase
   ) {}
 
   async addTurf(req: Request, res: Response): Promise<void> {
@@ -62,6 +66,24 @@ export class TurfOwnerController implements ITurfOwnerController {
         
     }
   }
+
+    async getOwnerDetails(req: Request, res: Response): Promise<void> {
+      try{
+        console.log('broooiiioioioioio')
+      const ownerId = (req as CustomRequest).user?.userId;
+          console.log('ownerId',ownerId)
+          if(!ownerId){
+             res.status(HTTP_STATUS.UNAUTHORIZED).json({
+              success:false,
+              message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS
+            })
+          }
+          const profile = await this._ownerDetailsUseCase.execute(ownerId)
+          res.status(HTTP_STATUS.OK).json(profile)
+      } catch(error){
+          handleErrorResponse(req,res,error)
+      }
+    }
 
 
 }

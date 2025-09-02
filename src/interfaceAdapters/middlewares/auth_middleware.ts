@@ -31,6 +31,7 @@ export interface CustomRequest extends Request {
     try{
         const token =extractToken(req);
         if(!token) {
+            console.log('not token')
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 success:false,
                 message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS

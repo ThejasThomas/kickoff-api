@@ -47,6 +47,7 @@ export class JWTService implements ITokenService {
         verifyAccessToken(token: string): string | JwtPayload | null {
             try{
                 return jwt.verify(token,this._accessSecret) as JwtPayload;
+                console.log('verified')
             } catch{
                 return null;
                 

@@ -20,6 +20,15 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.addTurf(req, res);
       }
     );
+
+    this.router.get(
+      '/turfOwner/profile',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfOwnerController.getOwnerDetails(req,res)
+      }
+    )
+    
     this.router.post(
       "/turfOwner/refersh-token",
       decodeToken,

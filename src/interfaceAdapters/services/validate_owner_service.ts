@@ -6,6 +6,7 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { ITurfEntity } from "../../entities/models/turf_entity";
 import { ITurfRepository } from "../../entities/repositoryInterface/Turf/turf_repository_interface";
 import { inject, injectable } from "tsyringe";
+import { ITurfOwnerEntity } from "../../entities/models/turfOwner_entity";
 
 @injectable()
 export class ValidateOwnerService implements IValidateOwnerService{
@@ -21,7 +22,7 @@ export class ValidateOwnerService implements IValidateOwnerService{
         const owner =await this._turfOwnerRepository.findOne({ownerId})
         return !!owner
     }
-    async findOwner(ownerId: string): Promise<void> {
+    async findOwner(ownerId: string): Promise<ITurfOwnerEntity> {
         const owner = await this._turfOwnerRepository.findOne({userId:ownerId})
 
         if(!owner) {
@@ -33,6 +34,7 @@ export class ValidateOwnerService implements IValidateOwnerService{
             throw new CustomError(ERROR_MESSAGES.OWNER_NOT_ACTIVE,HTTP_STATUS.FORBIDDEN)
         }
         console.log('owner validation passed:')
+        return owner;
 
     }
     // async validateTufData(turfData: ITurfEntity): Promise<void> {
