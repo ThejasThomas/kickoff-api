@@ -47,6 +47,8 @@ import { IGetAllTurfsUseCase } from "../../entities/useCaseInterfaces/turfs/get_
 import { GetAllTurfsUsecase } from "../../useCases/turfs/get_all_turf_usecase";
 import { TurfOwnerDetailsUseCase } from "../../useCases/turfOwner/get_turf_owner_profile_usecase";
 import { ITurfOwnerDetailsUseCase } from "../../entities/useCaseInterfaces/turfOwner/get_turf_owner_profile_usecase";
+import { IUpdateTurfOwnerProfileUseCase } from "../../entities/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
+import { UpdateTurfOwnerProfileUseCase } from "../../useCases/turfOwner/update_turf_owner_profile_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -123,6 +125,9 @@ export class UseCaseRegistry {
       })
       container.register<ITurfOwnerDetailsUseCase>('ITurfOwnerDetailsUseCase',{
         useClass:TurfOwnerDetailsUseCase
+      })
+      container.register<IUpdateTurfOwnerProfileUseCase>('IUpdateTurfOwnerProfileUseCase',{
+        useClass:UpdateTurfOwnerProfileUseCase
       })
   }
 }

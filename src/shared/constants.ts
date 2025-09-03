@@ -48,7 +48,8 @@ export const SUCCESS_MESSAGES = {
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
   UPDATED: "Successfully Updated.",
-  TURF_ADDED_SUCCESSFULLY :"Turf added successfully"
+  TURF_ADDED_SUCCESSFULLY :"Turf added successfully",
+  PROFILE_UPDATED_SUCCESSFULLY :"Profile updated successfully",
 };
 
 export const ERROR_MESSAGES = {
@@ -77,6 +78,7 @@ FOLDER_NOT_FOUND:"Folder not Found",
   INVALID_TOKEN: "Invalid session please login again",
   SAME_CURR_NEW_PASSWORD:
     "New password must be different from current password",
+    UPDATE_FAILED:"failed to update profile"
 };
 export const VERIFICATION_MAIL_CONTENT = (
   otp: string

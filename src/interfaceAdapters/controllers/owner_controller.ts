@@ -4,10 +4,12 @@ import { IAddTurfUseCase } from "../../entities/useCaseInterfaces/turfOwner/add_
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
-import { success } from "zod";
+import { date, success } from "zod";
 import { CustomError } from "../../entities/utils/custom.error";
 import { TurfOwnerDetailsUseCase } from "../../useCases/turfOwner/get_turf_owner_profile_usecase";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
+import { ITurfOwnerDetailsUseCase } from "../../entities/useCaseInterfaces/turfOwner/get_turf_owner_profile_usecase";
+import { IUpdateTurfOwnerProfileUseCase } from "../../entities/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
 
 @injectable()
 export class TurfOwnerController implements ITurfOwnerController {
@@ -15,7 +17,9 @@ export class TurfOwnerController implements ITurfOwnerController {
     @inject("IAddTurfUseCase")
     private _addTurfUSeCase: IAddTurfUseCase,
     @inject('ITurfOwnerDetailsUseCase')
-    private _ownerDetailsUseCase:TurfOwnerDetailsUseCase
+    private _ownerDetailsUseCase:ITurfOwnerDetailsUseCase,
+    @inject('IUpdateTurfOwnerProfileUseCase')
+    private _updateTurfOwnerProfileUseCase:IUpdateTurfOwnerProfileUseCase
   ) {}
 
   async addTurf(req: Request, res: Response): Promise<void> {
@@ -85,5 +89,41 @@ export class TurfOwnerController implements ITurfOwnerController {
       }
     }
 
+    async updateTurfOwnerProfile(req:Request,res:Response): Promise<void>{
+          try{
+            const ownerId = (req as CustomRequest).user?.userId;
+            console.log('ownerId',ownerId)
+            const profileData=req.body;
 
-}
+            if(!ownerId) {
+              res.status(HTTP_STATUS.UNAUTHORIZED).json({
+                success:false,
+                message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+              })
+              return;
+            }
+            
+            const updatedProfile = await this._updateTurfOwnerProfileUseCase.execute(ownerId,profileData)
+            console.log('broooiii')
+            res.status(HTTP_STATUS.OK).json({
+              success:true,
+              message:SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
+              data:updatedProfile,
+            })
+          }
+          catch(error){
+            console.error("Error in updatedTurfprofile contoller",error);
+            if(error instanceof CustomError) {
+              res.status(error.statusCode).json({
+                success:false,
+                message:error.message,
+              })
+            } else {
+              handleErrorResponse(req,res,error)
+              }
+            }
+            
+          }
+    }
+
+

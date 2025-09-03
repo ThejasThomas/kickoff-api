@@ -37,9 +37,29 @@ export class ValidateOwnerService implements IValidateOwnerService{
         return owner;
 
     }
-    // async validateTufData(turfData: ITurfEntity): Promise<void> {
-    //     await this.
-    // }
+    async updateOwner(ownerId: string, profileData: Partial<ITurfOwnerEntity>): Promise<ITurfOwnerEntity> {
+        const owner =await this._turfOwnerRepository.findOne({userId:ownerId});
+        console.log('ownerr detils',owner)
+        console.log('profile data',profileData)
+        console.log('ownerId',ownerId)
+        if(!owner) {
+            throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND,HTTP_STATUS.NOT_FOUND);
+        }
+        const updatedData ={
+            ...owner,
+            ...profileData,
+            updatedAt:new Date(),
+        }
+        console.log('updatedDataaas',updatedData)
+
+        const updatedOwner =await this._turfOwnerRepository.update({userId:ownerId},{...profileData, updatedAt: new Date()});
+        console.log('updatedDatas',updatedOwner)
+        if(!updatedOwner) {
+            throw new CustomError(ERROR_MESSAGES.UPDATE_FAILED,HTTP_STATUS.INTERNAL_SERVER_ERROR);
+        }
+
+        return updatedOwner;
+    }
 
     
 }

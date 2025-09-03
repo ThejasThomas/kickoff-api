@@ -36,5 +36,13 @@ export class OwnerRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res);
       }
     );
+
+    this.router.put(
+      '/turfOwner/update-profile',
+      verifyAuth,
+      (req:Request,res:Response) => {
+        turfOwnerController.updateTurfOwnerProfile(req,res)
+      }
+    )
   }
 }

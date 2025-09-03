@@ -28,6 +28,11 @@ export class BaseRepository<T> implements IBaseRepository<T> {
       .findOneAndUpdate(filter, updateData, { new: true })
       .lean() as Promise<T>;
   }
+  async updateOne(filter: FilterQuery<T>, updateData: Partial<T>) {
+  const result = await this.model.updateOne(filter, { $set: updateData });
+  return result;
+}
+
 
   async delete(filter: FilterQuery<T>) {
     return this.model.findOneAndDelete(filter).lean() as Promise<T>;
