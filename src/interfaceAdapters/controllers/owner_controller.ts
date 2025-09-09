@@ -94,6 +94,7 @@ export class TurfOwnerController implements ITurfOwnerController {
             const ownerId = (req as CustomRequest).user?.userId;
             console.log('ownerId',ownerId)
             const profileData=req.body;
+            console.log('itzzzprofiledataaaaaaa',profileData)
 
             if(!ownerId) {
               res.status(HTTP_STATUS.UNAUTHORIZED).json({

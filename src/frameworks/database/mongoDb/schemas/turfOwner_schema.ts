@@ -15,7 +15,7 @@ export const turfOwnerSchema = new Schema<ITurfOwnerModel>(
       default: "pending",
     },
     googleId: { type: String },
-    profilePicture: { type: String },
+    profileImage: { type: String },
     address: { type: String },
     city: { type: String },
     state: { type: String },

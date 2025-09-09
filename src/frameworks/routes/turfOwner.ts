@@ -44,5 +44,12 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.updateTurfOwnerProfile(req,res)
       }
     )
+    this.router.post(
+      '/turfOwner/logout',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        authController.logout(req,res)
+      }
+    )
   }
 }

@@ -12,6 +12,7 @@ import { AuthRoutes } from "../routes/auth_route";
 import { AdminRoutes } from "../routes/admin_route";
 import { OwnerRoutes } from "../routes/turfOwner";
 import { CloudinaryRoutes } from "../routes/cloudinary_route";
+import { ClientRoutes } from "../routes/client_route";
 // import { ExpressServer } from "../../app";
 
 export class ExpressServer {
@@ -51,8 +52,8 @@ export class ExpressServer {
     this._app.use('/auth',new AuthRoutes().router)
     this._app.use('/_ad',new AdminRoutes().router)
     this._app.use('/_ow',new OwnerRoutes().router)
+    this._app.use('/_cl',new ClientRoutes().router)
     this._app.use('/api/cloudinary',new CloudinaryRoutes().router)
-
  }
 
  public getApp():Application {

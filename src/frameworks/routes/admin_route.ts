@@ -27,6 +27,13 @@ export class AdminRoutes extends BaseRoute {
         userController.updateEntityStatus(req, res);
       }
     );
+    this.router.post(
+      '/admin/logout',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        authController.logout(req,res)
+      }
+    )
     this.router.get(
       "/admin/turfs",
       verifyAuth,

@@ -263,6 +263,8 @@ export class AuthController implements IAuthController {
     }
   }
 
+  
+
   async getUploadSignature(req: Request, res: Response): Promise<void> {
     const folder=req.query.folder
     console.log('hey brotherrrrrr.....')
@@ -295,4 +297,26 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error);
     }
   }
+
+
+  	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ User Logout
+	//* ─────────────────────────────────────────────────────────────
+
+  async logout(req:Request,res:Response):Promise<void> {
+    try{
+      const user =(req as CustomRequest).user;
+      const accessTokenName =`${user.role}_access_token`;
+      const refreshTokenName=`${user.role}_refresh_token`;
+      clearAuthCookies(res,accessTokenName,refreshTokenName);
+      res.status(HTTP_STATUS.OK).json({
+        success:true,
+        message:SUCCESS_MESSAGES.LOGOUT_SUCCESS
+      })
+    }catch(error){
+      handleErrorResponse(req,res,error)
+    }
+  }
+
+
 }

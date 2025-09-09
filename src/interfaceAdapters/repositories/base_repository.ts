@@ -25,7 +25,7 @@ export class BaseRepository<T> implements IBaseRepository<T> {
 
   async update(filter: FilterQuery<T>, updateData: Partial<T>) {
     return this.model
-      .findOneAndUpdate(filter, updateData, { new: true })
+      .findOneAndUpdate(filter,{ $set: updateData }, { new: true })
       .lean() as Promise<T>;
   }
   async updateOne(filter: FilterQuery<T>, updateData: Partial<T>) {
