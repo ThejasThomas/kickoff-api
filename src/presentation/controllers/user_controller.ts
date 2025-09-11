@@ -5,24 +5,13 @@
 import { inject, injectable } from "tsyringe";
 import { IUserController } from "../../domain/controllerInterfaces/users/user-controller.interface";
 import { IGetAllUsersUseCase } from "../../domain/useCaseInterfaces/users/get_all_users_usecase_interface";
-import { HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { Request, Response } from "express";
 import { IUpdateEntityStatusUseCase } from "../../domain/useCaseInterfaces/users/update_entity_status_usecase_interface";
-import { success } from "zod";
+import { CustomRequest } from "../middlewares/auth_middleware";
 
-// async refreshSession(req:Request,res:Response) : Promise<void> {
-//     try{
-//         const {userId,role} = (req as CustomRequest).user;
-//         if(!userId || !role) {
-//             res.status(HTTP_STATUS.UNAUTHORIZED).json({
-//                 success:false,
-//                 message:ERROR_MESSAGES.INVALID_TOKEN
-//             })
-//             return;
-//         }
-//     }
-// }
+
 
 @injectable()
 export class UserController implements IUserController {
@@ -31,7 +20,28 @@ export class UserController implements IUserController {
     private _getAllUsersUseCase: IGetAllUsersUseCase,
     @inject('IUpdateEntityStatusUseCase')
     private __updateEntityStatusUseCase:IUpdateEntityStatusUseCase
+    // @inject('IGetAllUsersUseCase')
+    // private _getUserDetailsUseCase:IGetAllUsersUseCase
   ) {}
+
+
+  async refreshSession(req:Request,res:Response) : Promise<void> {
+    try{
+        const {userId,role} = (req as CustomRequest).user;
+        if(!userId || !role) {
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({
+                success:false,
+                message:ERROR_MESSAGES.INVALID_TOKEN
+            })
+            return;
+        }
+       res.status(HTTP_STATUS.OK).json({
+				success: true
+			});
+    } catch(error){
+      handleErrorResponse(req,res,error)
+    }
+}
 
   async getAllUsers(req: Request, res: Response): Promise<void> {
     try {

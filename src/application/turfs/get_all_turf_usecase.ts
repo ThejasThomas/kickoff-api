@@ -17,7 +17,7 @@ export class GetAllTurfsUsecase implements IGetAllTurfsUseCase {
     // excludeStatus: string[]=[]
   ): Promise<{ turfs: Omit<ITurfEntity, "ownerId">[]; totalPages: number }> {
     const skip = (page - 1) * limit;
-    let filter: any = {};
+    const filter: any = {};
 
     if (search) {
       filter.$or = [
@@ -44,7 +44,7 @@ export class GetAllTurfsUsecase implements IGetAllTurfsUseCase {
     type SanitizedTurf = Omit<ITurfEntity, "ownerId"> & { _id: string };
 
     const sanitizedTurfs: SanitizedTurf[] = items.map((turf) => {
-      const { ownerId, id, ...rest } = turf;
+      const {  id, ...rest } = turf;
       return { _id: (id ?? "").toString(), ...rest } as SanitizedTurf;
     });
 

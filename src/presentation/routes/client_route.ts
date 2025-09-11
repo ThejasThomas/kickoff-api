@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { authController, turfController } from "../di/resolver";
+import { authController, turfController, userController } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
@@ -8,6 +8,14 @@ export class ClientRoutes extends BaseRoute {
         super();
     }
     protected initializeRoutes(): void {
+        this.router.post(
+            '/client/refresh-session',
+            verifyAuth,
+            (req:Request,res:Response)=>{
+                userController.refreshSession(req,res)
+            }
+
+        )
         this.router.post(
             '/client/refresh-token',
             decodeToken,

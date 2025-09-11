@@ -1,5 +1,4 @@
 import { container } from "tsyringe";
-import { IOtpRepository } from "../../domain/repositoryInterface/auth/otp-repository.interface";
 import { OtpRepository } from "../../interfaceAdapters/repositories/auth/otp_repository";
 import { ClientRepository } from "../../interfaceAdapters/repositories/users/client_repository";
 import { TurfOwnerRepository } from "../../interfaceAdapters/repositories/users/turfOwner_Repository";

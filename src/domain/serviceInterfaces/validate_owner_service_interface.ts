@@ -1,5 +1,3 @@
-import { promises } from "dns"
-import { ITurfEntity } from "../models/turf_entity"
 import { ITurfOwnerEntity } from "../models/turfOwner_entity"
 
 export interface IValidateOwnerService {

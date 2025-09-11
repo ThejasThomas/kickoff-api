@@ -18,7 +18,6 @@ export class RetryAdminApprovalUseCase implements IRetryAdminApprovalUseCase {
     async execute(userId: string): Promise<ITurfOwnerEntity> {
         try {
             const owner = await this._validateOwnerService.findOwner(userId)
-            console.log('owner',owner)
             if (!owner) {
                 throw new CustomError(
                     ERROR_MESSAGES.USER_NOT_FOUND,
@@ -27,10 +26,8 @@ export class RetryAdminApprovalUseCase implements IRetryAdminApprovalUseCase {
             }
 
 
-            console.log('HEY HELOOOOOO')
 
             const updatedOwner = await this._turfOwnerRepository.updateOwnerStatus(userId, "updated");
-                    console.log("updatedOwner ===>", updatedOwner);
 
 
 

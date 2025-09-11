@@ -3,7 +3,6 @@ import { ITurfController } from "../../domain/controllerInterfaces/turf/turf_con
 import { Request, Response } from "express";
 import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_all_turfs_usecase_interface";
 import { HTTP_STATUS } from "../../shared/constants";
-import { success } from "zod";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 
@@ -17,7 +16,6 @@ export class TurfController implements ITurfController {
   async getAllTurfs(req: Request, res: Response): Promise<void> {
     try {
 
-      console.log('hey bro its turf controller')
       const { page = 1, limit = 10, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);

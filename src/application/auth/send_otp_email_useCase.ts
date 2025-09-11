@@ -1,4 +1,3 @@
-import { email, string } from "zod";
 import { ISendOtpEmailUseCase } from "../../domain/useCaseInterfaces/auth/sent_otp_usecase_interface";
 import { IUserExistenceService } from "../../domain/serviceInterfaces/user_existence_service_interface";
 import { CustomError } from "../../domain/utils/custom.error";

@@ -1,0 +1,2 @@
+::1 - - [11/Sep/2025:06:52:10 +0000] "GET /_cl/client/refresh-session HTTP/1.1" 404 165 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+::1 - - [11/Sep/2025:06:52:17 +0000] "POST /_cl/client/logout HTTP/1.1" 200 39 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"

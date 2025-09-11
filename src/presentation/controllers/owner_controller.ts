@@ -4,9 +4,7 @@ import { IAddTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/add_tu
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
-import { date, success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
-import { TurfOwnerDetailsUseCase } from "../../application/turfOwner/get_turf_owner_profile_usecase";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { ITurfOwnerDetailsUseCase } from "../../domain/useCaseInterfaces/turfOwner/get_turf_owner_profile_usecase";
 import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
@@ -29,10 +27,8 @@ export class TurfOwnerController implements ITurfOwnerController {
   async addTurf(req: Request, res: Response): Promise<void> {
     try {
       const turfData = req.body;
-      // console.log("req.body", turfData);
       const ownerId = (req as CustomRequest).user?.userId;
-      // console.log("req.body---", req.body);
-      console.log('ownerrrrrr iddd',ownerId)
+   
 
       if (!ownerId) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({
@@ -77,9 +73,7 @@ export class TurfOwnerController implements ITurfOwnerController {
 
     async getOwnerDetails(req: Request, res: Response): Promise<void> {
       try{
-        console.log('broooiiioioioioio')
       const ownerId = (req as CustomRequest).user?.userId;
-          console.log('ownerId',ownerId)
           if(!ownerId){
              res.status(HTTP_STATUS.UNAUTHORIZED).json({
               success:false,
@@ -96,9 +90,7 @@ export class TurfOwnerController implements ITurfOwnerController {
     async updateTurfOwnerProfile(req:Request,res:Response): Promise<void>{
           try{
             const ownerId = (req as CustomRequest).user?.userId;
-            console.log('ownerId',ownerId)
             const profileData=req.body;
-            console.log('itzzzprofiledataaaaaaa',profileData)
 
             if(!ownerId) {
               res.status(HTTP_STATUS.UNAUTHORIZED).json({
@@ -109,7 +101,6 @@ export class TurfOwnerController implements ITurfOwnerController {
             }
             
             const updatedProfile = await this._updateTurfOwnerProfileUseCase.execute(ownerId,profileData)
-            console.log('broooiii')
             res.status(HTTP_STATUS.OK).json({
               success:true,
               message:SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
@@ -135,10 +126,8 @@ export class TurfOwnerController implements ITurfOwnerController {
             try{
               const ownerId=(req as CustomRequest).user?.userId;
               const profileData=req.body;
-              console.log('dataas',profileData)
 
 
-              console.log('ownerr bro id is', ownerId)
               if(!ownerId) {
                 res.status(HTTP_STATUS.UNAUTHORIZED).json({
                   success:false,
@@ -146,7 +135,6 @@ export class TurfOwnerController implements ITurfOwnerController {
                 })
                 return;
               }
-              console.log('heloo broi')
               const result= await this.__retryAdminApprovalUseCase.execute(ownerId);
               res.status(HTTP_STATUS.OK).json({
                 success:true,

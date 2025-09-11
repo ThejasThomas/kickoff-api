@@ -1,6 +1,5 @@
 import { config } from "dotenv"
 import { Response } from "express";
-import { access } from "fs";
 config()
 
 export const setAuthCookies = (

@@ -1,4 +1,4 @@
-import z, { email } from "zod";
+import z from "zod";
 import { strongEmailRegex } from "../../../../shared/validations/email_validation";
 import { passwordSchema } from "../../../../shared/validations/password_validation";
 

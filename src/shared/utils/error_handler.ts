@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import { ZodError } from "zod";
 import { Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../constants";
@@ -38,9 +37,9 @@ export const handleErrorResponse = (
     });
   }
 
-  if (error instanceof Error) {
-  } else {
-  }
+  // if (error instanceof Error) {
+  // } else {
+  // }
 
   return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
     success: false,

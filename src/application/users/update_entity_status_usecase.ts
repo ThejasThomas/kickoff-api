@@ -29,7 +29,6 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
     entityId: string,
     status: string,
     reason?: string,
-    email?: string
   ): Promise<void> {
     if (!entityType || !entityId || !status) {
       throw new CustomError(
@@ -68,7 +67,7 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
       );
     }
 
-    const previousStatus = entity.status;
+    // const previousStatus = entity.status;
     await repo.update({ _id: entityId }, { status });
 
     if (

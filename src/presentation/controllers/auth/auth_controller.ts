@@ -30,11 +30,9 @@ import {
 } from "../../../shared/utils/cookie_helper";
 import { IGenerateTokenUseCase } from "../../../domain/useCaseInterfaces/auth/generate_token_usecase_interface";
 import { otpMailValidationSchema } from "./validations/otp_mail_validation_schema";
-import { success } from "zod";
 import { CustomRequest } from "../../middlewares/auth_middleware";
 import { IRefreshTokenUseCase } from "../../../domain/useCaseInterfaces/auth/refresh_token_usecase_interface";
 import { IGoogleUseCase } from "../../../domain/useCaseInterfaces/auth/google_usecase";
-import { use } from "react";
 import { forgotPasswordValidationSchema } from "./validations/forgot_password_validation_schema";
 import { IForgotPasswordUseCase } from "../../../domain/useCaseInterfaces/auth/forgot_password_usecase_interface";
 import { resetPasswordValidationSchema } from "./validations/reset_password_validation_schema";
@@ -193,7 +191,7 @@ export class AuthController implements IAuthController {
         success: true,
         message: SUCCESS_MESSAGES.OPERATION_SUCCESS,
       });
-    } catch (error) {
+    } catch {
       clearAuthCookies(
         res,
         `${(req as CustomRequest).user.role}_access_token`,
@@ -267,7 +265,6 @@ export class AuthController implements IAuthController {
 
   async getUploadSignature(req: Request, res: Response): Promise<void> {
     const folder=req.query.folder
-    console.log('hey brotherrrrrr.....')
 
     if(!folder){
       res.status(HTTP_STATUS.NOT_FOUND)

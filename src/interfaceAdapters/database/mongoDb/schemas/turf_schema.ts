@@ -1,7 +1,5 @@
-import { required } from "zod/v4/core/util.cjs";
 import { ITurf } from "../models/turf_model";
-import { trim } from "zod";
-import { model, Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 export const TurfSchema =new Schema<ITurf>(
   {

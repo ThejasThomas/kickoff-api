@@ -3,7 +3,6 @@ import { IClientRepository } from "../../domain/repositoryInterface/users/client
 import { ITurfOwnerRepository } from "../../domain/repositoryInterface/users/turf_owner-repository.interface";
 import { IClientEntity } from "../../domain/models/client_entity";
 import { ITurfOwnerEntity } from "../../domain/models/turfOwner_entity";
-import { email } from "zod";
 import { IGetAllUsersUseCase } from "../../domain/useCaseInterfaces/users/get_all_users_usecase_interface";
 
 @injectable()
@@ -29,7 +28,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
     totalPages: number;
   }> {
     const skip = (page - 1) * limit;
-    let filter: any = {};
+    const filter: any = {};
 
     if (search) {
       filter.$or = [
@@ -45,7 +44,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
     }
     const sortOptions={createdAt:-1}
 
-    let repo =
+    const repo =
       userType === "client"
         ? this._clientRepository
         : this._turfOwnerRepository;

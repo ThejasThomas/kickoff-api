@@ -20,7 +20,7 @@ export class OtpService implements IOtpService {
         )
         await this._otpRepository.save({ email,otp,expiresAt})
     }
-    async verifyOtp(email: string, otp: string): Promise<Boolean> {
+    async verifyOtp(email: string, otp: string): Promise<boolean> {
 		const otpEntry = await this._otpRepository.findLatestOtp(email);
 		if (!otpEntry) return false;
 		if (

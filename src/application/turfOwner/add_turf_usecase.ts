@@ -16,11 +16,7 @@ export class AddTurfUseCase implements IAddTurfUseCase {
   ) {}
 
   async execute(turfData: ITurfEntity, ownerId: string): Promise<ITurfEntity> {
-    console.log("Received turf data", {
-      turfName: turfData.turfName,
-      location: turfData.location?.city,
-      images: turfData.images?.length,
-    });
+  
 
     try {
       await this._validateOwnerUsecase.ownerExists(ownerId);
@@ -42,12 +38,6 @@ export class AddTurfUseCase implements IAddTurfUseCase {
         },
       };
 
-      console.log(
-        "Coordinates final check:",
-        turfData.location.coordinates.coordinates,
-        typeof turfData.location.coordinates.coordinates[0],
-        typeof turfData.location.coordinates.coordinates[1]
-      );
 
       const savedTurf = await this._turfRepository.save(newTurf);
 

@@ -2,10 +2,7 @@
 
 import { NextFunction,Request,Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
-import { email, json, success } from "zod";
 import { JwtPayload } from "jsonwebtoken";
-import { userInfo } from "os";
-import { useRadioGroup } from "@mui/material";
 import { JWTService } from "../../interfaceAdapters/services/jwt_service";
 // import { RefreshTokenModel } from "../database/mongoDb/models/refresh_token_model"
 
@@ -30,9 +27,7 @@ export interface CustomRequest extends Request {
  )=>{
     try{
         const token =extractToken(req);
-        console.log('tokenssss',token)
         if(!token) {
-            console.log('not token')
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 success:false,
                 message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS
@@ -76,7 +71,6 @@ export interface CustomRequest extends Request {
 
  ):{access_token: string; refresh_token:string} |null=>{
     const userType =req.path.split('/')[1]
-    console.log('userType',userType)
 
     if(!userType) return null;
 
@@ -131,5 +125,7 @@ export interface CustomRequest extends Request {
             refresh_token:token.refresh_token,
         }
         next()
-    }catch(error){}
+    }catch{
+
+    }
  }

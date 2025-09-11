@@ -9,7 +9,6 @@ import { ITurfOwnerEntity } from "../../../domain/models/turfOwner_entity";
         super(TurfOwnerModel)
     }
    async updateOwnerStatus(userId: string, status: string): Promise<ITurfOwnerEntity> {
-    console.log("Updating owner with _id:", userId);
 
     const updatedOwner = await this.model.findOneAndUpdate(
         { userId: userId },   // use _id instead of userId
@@ -22,7 +21,6 @@ import { ITurfOwnerEntity } from "../../../domain/models/turfOwner_entity";
         throw new Error("Owner not found");
     }
 
-    console.log("Updated owner document:", updatedOwner);
     return updatedOwner as ITurfOwnerEntity;
 }
 }

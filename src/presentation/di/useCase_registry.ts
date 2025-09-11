@@ -22,7 +22,6 @@ import { IGenerateTokenUseCase } from "../../domain/useCaseInterfaces/auth/gener
 import { GenerateTokenUseCase } from "../../application/auth/generate_token_usecase";
 import { ITokenService } from "../../domain/serviceInterfaces/token_service_interface";
 import { JWTService } from "../../interfaceAdapters/services/jwt_service";
-import { IRefreshTokenRepository } from "../../domain/repositoryInterface/auth/refresh-token-repository.interface";
 import { IRefreshTokenUseCase } from "../../domain/useCaseInterfaces/auth/refresh_token_usecase_interface";
 import { RefreshTokenUseCase } from "../../application/auth/refresh_token_usecase";
 import { IGoogleUseCase } from "../../domain/useCaseInterfaces/auth/google_usecase";

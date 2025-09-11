@@ -15,7 +15,6 @@ export class UpdateTurfOwnerProfileUseCase implements IUpdateTurfOwnerProfileUse
 
     async execute(ownerId: string, profileData: Partial<ITurfOwnerEntity>): Promise<ITurfOwnerEntity> {
         const existingOwner = await this._validateOwnerService.findOwner(ownerId);
-        console.log('idddds',)
         if(!existingOwner){
             throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND,HTTP_STATUS.NOT_FOUND);
 

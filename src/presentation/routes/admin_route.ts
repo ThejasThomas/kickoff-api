@@ -3,7 +3,6 @@ import { BaseRoute } from "./base_route";
 import { authController, turfController, userController } from "../di/resolver";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
-
 export class AdminRoutes extends BaseRoute {
   constructor() {
     super();
@@ -25,24 +24,31 @@ export class AdminRoutes extends BaseRoute {
       }
     );
     this.router.post(
-      '/admin/logout',
+      "/admin/logout",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        authController.logout(req,res)
+      (req: Request, res: Response) => {
+        authController.logout(req, res);
       }
-    )
+    );
     this.router.get(
       "/admin/turfs",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        turfController.getAllTurfs(req,res)
+      (req: Request, res: Response) => {
+        turfController.getAllTurfs(req, res);
       }
-    )
+    );
     this.router.post(
       "/admin/refresh-token",
       decodeToken,
       (req: Request, res: Response) => {
         authController.handleTokenRefresh(req, res);
+      }
+    );
+    this.router.post(
+      "/admin/refresh-session",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        userController.refreshSession(req, res);
       }
     );
   }
