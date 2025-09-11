@@ -1,8 +1,8 @@
 import { config } from "../../shared/config";
 import { inject, injectable } from "tsyringe";
-import { IOtpRepository } from "../../entities/repositoryInterface/auth/otp-repository.interface";
-import { IBcrypt } from "../../frameworks/security/bcrypt_interface";
-import { IOtpService } from "../../entities/serviceInterfaces/otp-service_interface";
+import { IOtpRepository } from "../../domain/repositoryInterface/auth/otp-repository.interface";
+import { IBcrypt } from "../../presentation/security/bcrypt_interface";
+import { IOtpService } from "../../domain/serviceInterfaces/otp-service_interface";
 
 @injectable()
 export class OtpService implements IOtpService {

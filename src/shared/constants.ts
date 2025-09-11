@@ -6,7 +6,7 @@ export const ROLES = {
   TURF_OWNER: "turfOwner",
 } as const;
 
-export type statusTypes = "active" | "pending" | "blocked"|"approved"
+export type statusTypes = "active" | "pending" | "blocked"|"approved"|"updated"
 
 export type TRole = "client" | "admin" | "turfOwner";
 
@@ -47,6 +47,8 @@ export const SUCCESS_MESSAGES = {
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
+    APPROVAL_REQUEST_SENT:"Approval request send to the admin",
+
   UPDATED: "Successfully Updated.",
   TURF_ADDED_SUCCESSFULLY :"Turf added successfully",
   PROFILE_UPDATED_SUCCESSFULLY :"Profile updated successfully",

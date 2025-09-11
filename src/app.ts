@@ -1,10 +1,10 @@
 import 'reflect-metadata'
-import "./frameworks/di/resolver"
-import { ExpressServer } from "./frameworks/http/server";
+import "./presentation/di/resolver"
+import { ExpressServer } from "./presentation/http/server";
 import { createServer } from "http";
 import { config } from './shared/config';
 import chalk from "chalk";
-import { MongoConnect } from "./frameworks/database/mongoDb/mongoConnect";
+import { MongoConnect } from "./interfaceAdapters/database/mongoDb/mongoConnect";
 
 async function startApp() {
   const expressServer = new ExpressServer();

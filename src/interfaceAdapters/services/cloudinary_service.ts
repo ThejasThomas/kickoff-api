@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { injectable } from "tsyringe";
-import { ICloudinarySignatureService } from "../../entities/serviceInterfaces/cloudinary_service_interface";
+import { ICloudinarySignatureService } from "../../domain/serviceInterfaces/cloudinary_service_interface";
 import { config } from "../../shared/config";
 
 @injectable()

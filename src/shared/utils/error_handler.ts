@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { ZodError } from "zod";
 import { Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../constants";
-import { CustomError } from "../../entities/utils/custom.error";
+import { CustomError } from "../../domain/utils/custom.error";
 import logger from "./error.logger";
 
 

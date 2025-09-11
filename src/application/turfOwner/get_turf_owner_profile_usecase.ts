@@ -1,0 +1,16 @@
+import { inject, injectable } from "tsyringe";
+import { ITurfOwnerDetailsUseCase } from "../../domain/useCaseInterfaces/turfOwner/get_turf_owner_profile_usecase";
+import { IValidateOwnerService } from "../../domain/serviceInterfaces/validate_owner_service_interface";
+import { ITurfOwnerEntity } from "../../domain/models/turfOwner_entity";
+
+@injectable()
+export class TurfOwnerDetailsUseCase implements ITurfOwnerDetailsUseCase{
+    constructor(
+        @inject('IValidateOwnerService')
+        private _validateOwnerService:IValidateOwnerService
+    ) {}
+
+    async execute(ownerId: string): Promise<ITurfOwnerEntity> {
+        return await this._validateOwnerService.findOwner(ownerId)
+    }
+}

@@ -1,6 +1,6 @@
 import jwt,{ JwtPayload, Secret } from "jsonwebtoken";
 import { injectable } from "tsyringe";
-import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
+import { ITokenService } from "../../domain/serviceInterfaces/token_service_interface";
 import { config } from "../../shared/config";
 import ms from "ms";
 import { error } from "console";

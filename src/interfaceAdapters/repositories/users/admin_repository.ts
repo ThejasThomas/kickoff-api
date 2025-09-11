@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
 // import { constructor } from "chalk";
-import { AdminModel, IAdminModel } from "../../../frameworks/database/mongoDb/models/admin_model";
+import { AdminModel, IAdminModel } from "../../database/mongoDb/models/admin_model";
 import { BaseRepository } from "../../../interfaceAdapters/repositories/base_repository";
 
 @injectable()

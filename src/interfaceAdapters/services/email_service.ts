@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IEmailService } from "../../entities/serviceInterfaces/email_service_interface";
+import { IEmailService } from "../../domain/serviceInterfaces/email_service_interface";
 import { config } from "../../shared/config";
 import nodemailer from 'nodemailer'
 import chalk from "chalk";

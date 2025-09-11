@@ -1,7 +1,0 @@
-import { Request, Response } from "express";
-
-export interface ITurfOwnerController {
-    addTurf(req:Request,res:Response):Promise<void>
-    getOwnerDetails(req:Request,res:Response) :Promise<void>
-    updateTurfOwnerProfile(req:Request,res:Response):Promise<void>
-}
