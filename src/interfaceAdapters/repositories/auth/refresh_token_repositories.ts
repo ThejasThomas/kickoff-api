@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IRefreshTokenModel, RefreshTokenModel } from "../../../frameworks/database/mongoDb/models/refresh_token_model";
+import { IRefreshTokenModel, RefreshTokenModel } from "../../database/mongoDb/models/refresh_token_model";
 import { BaseRepository } from "../base_repository";
 
 @injectable()

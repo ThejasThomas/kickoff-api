@@ -1,5 +1,5 @@
 import { Model, FilterQuery } from "mongoose";
-import { IBaseRepository } from "../../entities/repositoryInterface/base-repository.interface";
+import { IBaseRepository } from "../../domain/repositoryInterface/base-repository.interface";
 
 export class BaseRepository<T> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
@@ -25,9 +25,14 @@ export class BaseRepository<T> implements IBaseRepository<T> {
 
   async update(filter: FilterQuery<T>, updateData: Partial<T>) {
     return this.model
-      .findOneAndUpdate(filter, updateData, { new: true })
+      .findOneAndUpdate(filter,{ $set: updateData }, { new: true })
       .lean() as Promise<T>;
   }
+  async updateOne(filter: FilterQuery<T>, updateData: Partial<T>) {
+  const result = await this.model.updateOne(filter, { $set: updateData });
+  return result;
+}
+
 
   async delete(filter: FilterQuery<T>) {
     return this.model.findOneAndDelete(filter).lean() as Promise<T>;
@@ -37,6 +42,9 @@ export class BaseRepository<T> implements IBaseRepository<T> {
     await this.model.deleteMany(filter);
   }
 
+  async findById(id: string) {
+    return this.model.findById(id).lean() as Promise<T>;  // 👈 Added
+  }
   async countDocuments(filter: FilterQuery<T>) {
     return this.model.countDocuments(filter);
   }
