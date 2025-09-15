@@ -314,6 +314,7 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req,res,error)
     }
   }
+  
 
 
 }

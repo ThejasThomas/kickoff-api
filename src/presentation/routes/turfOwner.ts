@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   authController,
+  turfController,
   turfOwnerController,
   userController,
 } from "../di/resolver";
@@ -35,6 +36,13 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.getOwnerDetails(req, res);
       }
     );
+    this.router.put(
+      '/turfOwner/request-update-profile',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfOwnerController.requestUpdateProfile(req,res);
+      }
+    )
 
     this.router.post(
       "/turfOwner/refresh-token",
@@ -51,6 +59,26 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.updateTurfOwnerProfile(req, res);
       }
     );
+    this.router.get(
+      "/turfOwner/get-my-turf",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfController.getMyTurf(req,res)
+      }
+    )
+
+    this.router.get('/turfOwner/get-turfdetails/:id',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfController.getTurfById(req,res)
+      }
+    )
+    this.router.put('/turfOwner/update-turf/:id',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.updateTurf(req,res)
+      }
+    )
 
     this.router.post(
       "/turfOwner/retry-approval",

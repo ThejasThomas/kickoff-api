@@ -9,6 +9,7 @@ import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { ITurfOwnerDetailsUseCase } from "../../domain/useCaseInterfaces/turfOwner/get_turf_owner_profile_usecase";
 import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
 import { IRetryAdminApprovalUseCase } from "../../domain/useCaseInterfaces/turfOwner/retry_admin_approval_usecase_interface";
+import { IRequestUpdateProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/request_profile_update_usecase";
 
 @injectable()
 export class TurfOwnerController implements ITurfOwnerController {
@@ -20,7 +21,9 @@ export class TurfOwnerController implements ITurfOwnerController {
     @inject('IUpdateTurfOwnerProfileUseCase')
     private _updateTurfOwnerProfileUseCase:IUpdateTurfOwnerProfileUseCase,
     @inject('IRetryAdminApprovalUseCase')
-    private __retryAdminApprovalUseCase:IRetryAdminApprovalUseCase
+    private __retryAdminApprovalUseCase:IRetryAdminApprovalUseCase,
+    @inject('IRequestUpdateProfileUseCase')
+    private _requestupdateprofile:IRequestUpdateProfileUseCase
 
   ) {}
 
@@ -119,6 +122,40 @@ export class TurfOwnerController implements ITurfOwnerController {
               }
             }
             
+          }
+
+         async requestUpdateProfile(req: Request, res: Response): Promise<void> {
+            try{
+            const ownerId = (req as CustomRequest).user?.userId;
+            const profileData=req.body;
+            console.log('ownerrrId',ownerId,'Profiledaataa',profileData)
+
+            if(!ownerId) {
+              res.status(HTTP_STATUS.UNAUTHORIZED).json({
+                success:false,
+                message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+              })
+              return;
+            }
+            
+            const updatedProfile = await this._requestupdateprofile.execute(ownerId,profileData)
+            res.status(HTTP_STATUS.OK).json({
+              success:true,
+              message:SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
+              data:updatedProfile,
+            })
+          }
+          catch(error){
+            console.error("Error in updatedTurfprofile contoller",error);
+            if(error instanceof CustomError) {
+              res.status(error.statusCode).json({
+                success:false,
+                message:error.message,
+              })
+            } else {
+              handleErrorResponse(req,res,error)
+              }
+            }
           }
 
           async retryAdminApproval(req:Request,res:Response):

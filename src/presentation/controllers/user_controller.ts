@@ -89,8 +89,11 @@ export class UserController implements IUserController {
 
   async updateEntityStatus(req: Request, res: Response): Promise<void> {
    try{
+    
     const {entityType,entityId,status,reason,email} =req.body;
-      await this.__updateEntityStatusUseCase.execute(entityType,entityId,status,reason,email);
+    const ownerId = req.body.ownerId
+    console.log('iddddddddddddOwwwnerrr',ownerId)
+      await this.__updateEntityStatusUseCase.execute(entityType,entityId,status,reason,email,ownerId);
 
       res.status(HTTP_STATUS.OK).json({
         success:true,

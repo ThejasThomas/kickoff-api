@@ -2,15 +2,27 @@ import { inject, injectable } from "tsyringe";
 import { ITurfController } from "../../domain/controllerInterfaces/turf/turf_controller.interface";
 import { Request, Response } from "express";
 import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_all_turfs_usecase_interface";
-import { HTTP_STATUS } from "../../shared/constants";
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
+import { CustomRequest } from "../middlewares/auth_middleware";
+import { success } from "zod";
+import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_my_turf_usecase_interface";
+import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfs/get_turf_by_id_usecase_interface";
+import tr from "zod/v4/locales/tr.cjs";
+import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
 
 @injectable()
 export class TurfController implements ITurfController {
   constructor(
     @inject("IGetAllTurfsUseCase")
-    private _getAllTurfUseCase: IGetAllTurfsUseCase
+    private _getAllTurfUseCase: IGetAllTurfsUseCase,
+    @inject("IGetMyTurfsUseCase")
+    private _getMyTurfUseCase:IGetMyTurfsUseCase,
+    @inject('IGetTurfByIdUseCase')
+    private _getTurfByIdUseCase:IGetTurfByIdUseCase,
+    @inject('IUpdateTurfUseCase')
+    private _updateTurfUseCase:IUpdateTurfUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -44,4 +56,97 @@ export class TurfController implements ITurfController {
       handleErrorResponse(req, res, error);
     }
   }
+ async getMyTurf(req: Request, res: Response): Promise<void> {
+   try{
+    const ownerId = (req as CustomRequest).user?.userId;
+
+    if(!ownerId) {
+     res.status(HTTP_STATUS.UNAUTHORIZED).json({
+      success:false,
+      message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS
+     })
+     return;
+    }
+
+
+    const { page = 1, limit = 8, search = "", status } = req.query;
+
+      const pageNumber = Math.max(Number(page), 1);
+      const pageSize = Math.max(Number(limit), 1);
+      const searchTerm = typeof search === "string" ? search : "";
+      const statusFilter = typeof status === "string" ? status : undefined;
+
+    const { turfs, totalPages } = await this._getMyTurfUseCase.execute(
+        ownerId,
+        pageNumber,
+        pageSize,
+        searchTerm,
+        statusFilter
+      );
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        turfs,
+        totalPages,
+        currentPage: pageNumber,
+      });
+   } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+ }
+
+ async getTurfById(req: Request, res: Response): Promise<void> {
+   try{
+    const turfId =req.params.id;
+    const ownerId =(req as CustomRequest).user?.userId
+    // console.log('ownerrrrIIddd',ownerId,'turfIdddddd',turfId)
+    console.log('turffffIDDDDDD',turfId)
+    if(!turfId || !ownerId) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({
+        success:false,
+        message:ERROR_MESSAGES.INVALID_CREDENTIALS
+
+      })
+      return;
+    }
+    const turf =await this._getTurfByIdUseCase.execute(turfId,ownerId)
+    res.status(HTTP_STATUS.OK).json({
+      success:true,
+      turf
+    })
+   }catch(error){
+    handleErrorResponse(req,res,error)
+   }
+ }
+ async updateTurf(req: Request, res: Response): Promise<void> {
+   try{
+    const turfId=req.params.id;
+    const turfData=req.body;
+
+    if(!turfId){
+      res.status(HTTP_STATUS.BAD_REQUEST).json({
+        success:false,
+        message:ERROR_MESSAGES.INVALID_CREDENTIALS
+      })
+      return;
+    }
+
+    const isRetryUpdate = turfData.isRetryUpdate || false;
+    const retryToken = turfData.retryToken || null;
+
+    delete turfData.isRetryUpdate;
+    delete turfData.retryToken;
+    
+    const updatedTurf =await this._updateTurfUseCase.execute(turfId,turfData,isRetryUpdate,retryToken)
+    res.status(HTTP_STATUS.OK).json({
+      success:true,
+      message:isRetryUpdate ?
+      SUCCESS_MESSAGES.TURF_UPDATED_SUCCESSFULLY:SUCCESS_MESSAGES.TURF_RETRY_UPDATED_SUCCESSFULLY,
+      data:updatedTurf,
+    })
+   } catch(error){
+      handleErrorResponse(req,res,error)
+   }
+ }
+
 }

@@ -50,6 +50,16 @@ import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/t
 import { UpdateTurfOwnerProfileUseCase } from "../../application/turfOwner/update_turf_owner_profile_usecase";
 import { IRetryAdminApprovalUseCase } from "../../domain/useCaseInterfaces/turfOwner/retry_admin_approval_usecase_interface";
 import { RetryAdminApprovalUseCase } from "../../application/turfOwner/retry_admin_approval_usecase";
+import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_my_turf_usecase_interface";
+import { GetMyTurfsUseCase } from "../../application/turfs/get_my_turf_usecase";
+import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfs/get_turf_by_id_usecase_interface";
+import { GetTurfByIdUseCase } from "../../application/turfs/get_turf_by_id_usecase";
+import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
+import { UpdateTurfUseCase } from "../../application/turfs/update_turf_by_id_usecase";
+import { ITurfService } from "../../domain/serviceInterfaces/turfService_interface";
+import { TurfService } from "../../interfaceAdapters/services/turf_service";
+import { IRequestUpdateProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/request_profile_update_usecase";
+import { RequestUpdateProfileUseCase } from "../../application/turfOwner/request_profile_update_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -132,6 +142,24 @@ export class UseCaseRegistry {
       })
       container.register<IRetryAdminApprovalUseCase>('IRetryAdminApprovalUseCase',{
         useClass:RetryAdminApprovalUseCase
+      })
+      container.register<IGetMyTurfsUseCase>('IGetMyTurfsUseCase',{
+        useClass:GetMyTurfsUseCase
+      })
+      container.register<IGetTurfByIdUseCase>('IGetTurfByIdUseCase',{
+        useClass:GetTurfByIdUseCase
+      })
+      container.register<IUpdateTurfUseCase>('IUpdateTurfUseCase',{
+        useClass:UpdateTurfUseCase
+      })
+      container.register<IUpdateTurfUseCase>('UpdateTurfUseCase',{
+        useClass:UpdateTurfUseCase
+      })
+      container.register<ITurfService>('ITurfService',{
+        useClass:TurfService
+      })
+      container.register<IRequestUpdateProfileUseCase>('IRequestUpdateProfileUseCase',{
+        useClass:RequestUpdateProfileUseCase
       })
   }
 }
