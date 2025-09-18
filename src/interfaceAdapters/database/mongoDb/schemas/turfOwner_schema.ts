@@ -11,7 +11,7 @@ export const turfOwnerSchema = new Schema<ITurfOwnerModel>(
     role: { type: String, default: "turfOwner" },
     status: {
       type: String,
-      enum: ["active", "blocked", "pending","updated"],
+      enum: ["active", "blocked", "pending"],
       default: "pending",
     },
     googleId: { type: String },

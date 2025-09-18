@@ -10,6 +10,8 @@ import { IRedisTokenRepository } from "../../domain/repositoryInterface/redis/re
 import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis_token_repository";
 import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { TurfRepository } from "../../interfaceAdapters/repositories/turf/turf_repository";
+import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repository_interface";
+import { SlotRepository } from "../../interfaceAdapters/repositories/turf/slot_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register('IOtpRepository', {
@@ -35,7 +37,9 @@ container.register<IRedisTokenRepository>('IRedisTokenRepository',{
 container.register<ITurfRepository>('ITurfRepository',{
   useClass:TurfRepository
 })
-
+container.register<ISlotRepository>('ISlotRepository',{
+  useClass:SlotRepository
+})
 
   }
 }

@@ -20,5 +20,9 @@ export interface ITurfEntity {
     status:"active" | "inactive" | "pending" | "rejected";
     createdAt?:Date;
     updatedAt?:Date;
+    openingTime?:string;
+    closingTime?:string;
+    slotDuration?:number;
 }
+
 

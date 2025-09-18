@@ -2,7 +2,11 @@ import { inject, injectable } from "tsyringe";
 import { ITurfController } from "../../domain/controllerInterfaces/turf/turf_controller.interface";
 import { Request, Response } from "express";
 import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_all_turfs_usecase_interface";
-import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
+import {
+  ERROR_MESSAGES,
+  HTTP_STATUS,
+  SUCCESS_MESSAGES,
+} from "../../shared/constants";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 import { CustomRequest } from "../middlewares/auth_middleware";
@@ -11,6 +15,7 @@ import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_my_
 import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfs/get_turf_by_id_usecase_interface";
 import tr from "zod/v4/locales/tr.cjs";
 import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
+import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -18,16 +23,17 @@ export class TurfController implements ITurfController {
     @inject("IGetAllTurfsUseCase")
     private _getAllTurfUseCase: IGetAllTurfsUseCase,
     @inject("IGetMyTurfsUseCase")
-    private _getMyTurfUseCase:IGetMyTurfsUseCase,
-    @inject('IGetTurfByIdUseCase')
-    private _getTurfByIdUseCase:IGetTurfByIdUseCase,
-    @inject('IUpdateTurfUseCase')
-    private _updateTurfUseCase:IUpdateTurfUseCase
+    private _getMyTurfUseCase: IGetMyTurfsUseCase,
+    @inject("IGetTurfByIdUseCase")
+    private _getTurfByIdUseCase: IGetTurfByIdUseCase,
+    @inject("IUpdateTurfUseCase")
+    private _updateTurfUseCase: IUpdateTurfUseCase,
+    @inject("IGenerateSlotUseCase")
+    private _generateSlotsUseCase: IGenerateSlotUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
     try {
-
       const { page = 1, limit = 10, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);
@@ -42,7 +48,7 @@ export class TurfController implements ITurfController {
         pageNumber,
         pageSize,
         searchTerm,
-        status as string,
+        status as string
         // excludeArray
       );
 
@@ -56,27 +62,26 @@ export class TurfController implements ITurfController {
       handleErrorResponse(req, res, error);
     }
   }
- async getMyTurf(req: Request, res: Response): Promise<void> {
-   try{
-    const ownerId = (req as CustomRequest).user?.userId;
+  async getMyTurf(req: Request, res: Response): Promise<void> {
+    try {
+      const ownerId = (req as CustomRequest).user?.userId;
 
-    if(!ownerId) {
-     res.status(HTTP_STATUS.UNAUTHORIZED).json({
-      success:false,
-      message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS
-     })
-     return;
-    }
+      if (!ownerId) {
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success: false,
+          message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+        });
+        return;
+      }
 
-
-    const { page = 1, limit = 8, search = "", status } = req.query;
+      const { page = 1, limit = 8, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
       const searchTerm = typeof search === "string" ? search : "";
       const statusFilter = typeof status === "string" ? status : undefined;
 
-    const { turfs, totalPages } = await this._getMyTurfUseCase.execute(
+      const { turfs, totalPages } = await this._getMyTurfUseCase.execute(
         ownerId,
         pageNumber,
         pageSize,
@@ -90,63 +95,101 @@ export class TurfController implements ITurfController {
         totalPages,
         currentPage: pageNumber,
       });
-   } catch (error) {
+    } catch (error) {
       handleErrorResponse(req, res, error);
     }
- }
+  }
 
- async getTurfById(req: Request, res: Response): Promise<void> {
-   try{
-    const turfId =req.params.id;
-    const ownerId =(req as CustomRequest).user?.userId
-    // console.log('ownerrrrIIddd',ownerId,'turfIdddddd',turfId)
-    console.log('turffffIDDDDDD',turfId)
-    if(!turfId || !ownerId) {
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success:false,
-        message:ERROR_MESSAGES.INVALID_CREDENTIALS
-
-      })
-      return;
+  async getTurfById(req: Request, res: Response): Promise<void> {
+    try {
+      const turfId = req.params.id;
+      const ownerId = (req as CustomRequest).user?.userId;
+      // console.log('ownerrrrIIddd',ownerId,'turfIdddddd',turfId)
+      console.log("turffffIDDDDDD", turfId);
+      if (!turfId || !ownerId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.INVALID_CREDENTIALS,
+        });
+        return;
+      }
+      const turf = await this._getTurfByIdUseCase.execute(turfId, ownerId);
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        turf,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
     }
-    const turf =await this._getTurfByIdUseCase.execute(turfId,ownerId)
-    res.status(HTTP_STATUS.OK).json({
-      success:true,
-      turf
-    })
-   }catch(error){
-    handleErrorResponse(req,res,error)
-   }
- }
- async updateTurf(req: Request, res: Response): Promise<void> {
-   try{
-    const turfId=req.params.id;
-    const turfData=req.body;
+  }
+  async updateTurf(req: Request, res: Response): Promise<void> {
+    try {
+      const turfId = req.params.id;
+      const turfData = req.body;
 
-    if(!turfId){
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success:false,
-        message:ERROR_MESSAGES.INVALID_CREDENTIALS
-      })
-      return;
+      if (!turfId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.INVALID_CREDENTIALS,
+        });
+        return;
+      }
+
+      const isRetryUpdate = turfData.isRetryUpdate || false;
+      const retryToken = turfData.retryToken || null;
+
+      delete turfData.isRetryUpdate;
+      delete turfData.retryToken;
+
+      const updatedTurf = await this._updateTurfUseCase.execute(
+        turfId,
+        turfData,
+        isRetryUpdate,
+        retryToken
+      );
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: isRetryUpdate
+          ? SUCCESS_MESSAGES.TURF_UPDATED_SUCCESSFULLY
+          : SUCCESS_MESSAGES.TURF_RETRY_UPDATED_SUCCESSFULLY,
+        data: updatedTurf,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
     }
-
-    const isRetryUpdate = turfData.isRetryUpdate || false;
-    const retryToken = turfData.retryToken || null;
-
-    delete turfData.isRetryUpdate;
-    delete turfData.retryToken;
-    
-    const updatedTurf =await this._updateTurfUseCase.execute(turfId,turfData,isRetryUpdate,retryToken)
-    res.status(HTTP_STATUS.OK).json({
-      success:true,
-      message:isRetryUpdate ?
-      SUCCESS_MESSAGES.TURF_UPDATED_SUCCESSFULLY:SUCCESS_MESSAGES.TURF_RETRY_UPDATED_SUCCESSFULLY,
-      data:updatedTurf,
-    })
-   } catch(error){
-      handleErrorResponse(req,res,error)
-   }
- }
-
+  }
+  async generateSlots(req: Request, res: Response): Promise<void> {
+    try {
+      const {
+        turfId,
+        date,
+        startTime,
+        endTime,
+        slotDuration,
+        price,
+        selectedDate,
+        endDate,
+      } = req.body;
+      console.log("daaaataassssssss", req.body);
+      const ownerId = (req as CustomRequest).user?.userId;
+      console.log("ownerrrIDDDD", ownerId, "turfIDDDDD", turfId);
+      const slots = await this._generateSlotsUseCase.execute(
+        turfId,
+        ownerId,
+        date,
+        selectedDate,
+        endDate,
+        startTime,
+        endTime,
+        slotDuration,
+        price
+      );
+      res.status(HTTP_STATUS.CREATED).json({ success:true,
+         message: "Slots generated successfully",
+         slots });
+    } catch (error) {
+      console.log(error);
+      handleErrorResponse(req, res, error);
+    }
+  }
 }

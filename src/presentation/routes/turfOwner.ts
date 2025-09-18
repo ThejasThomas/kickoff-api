@@ -80,6 +80,13 @@ export class OwnerRoutes extends BaseRoute {
       }
     )
 
+    this.router.post('/turfOwner/generateSlots',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.generateSlots(req,res)
+      }
+    )
+
     this.router.post(
       "/turfOwner/retry-approval",
       verifyAuth,

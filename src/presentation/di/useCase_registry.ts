@@ -60,6 +60,10 @@ import { ITurfService } from "../../domain/serviceInterfaces/turfService_interfa
 import { TurfService } from "../../interfaceAdapters/services/turf_service";
 import { IRequestUpdateProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/request_profile_update_usecase";
 import { RequestUpdateProfileUseCase } from "../../application/turfOwner/request_profile_update_usecase";
+import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
+import { GenerateSlotUseCase } from "../../application/turfs/generate_slots_usecase";
+import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";
+import { SlotService } from "../../interfaceAdapters/services/slot_service";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -160,6 +164,12 @@ export class UseCaseRegistry {
       })
       container.register<IRequestUpdateProfileUseCase>('IRequestUpdateProfileUseCase',{
         useClass:RequestUpdateProfileUseCase
+      })
+      container.register<IGenerateSlotUseCase>("IGenerateSlotUseCase",{
+        useClass:GenerateSlotUseCase
+      })
+      container.register<ISlotService>("ISlotService",{
+        useClass:SlotService
       })
   }
 }
