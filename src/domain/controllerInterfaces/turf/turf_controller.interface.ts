@@ -6,4 +6,5 @@ export interface ITurfController{
     getTurfById(req:Request,res:Response):Promise<void>
     updateTurf(req:Request,res:Response):Promise<void>
     generateSlots(req:Request,res:Response):Promise<void>
+    getSlots(req:Request,res:Response):Promise<void>
 }

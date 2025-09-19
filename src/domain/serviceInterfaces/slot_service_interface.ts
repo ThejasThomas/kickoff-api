@@ -4,4 +4,6 @@ import { IBaseRepository } from "../repositoryInterface/base-repository.interfac
 
 export interface ISlotService {
     createSlots(slots:ISlot[]):Promise<ISlotEntity[]>
+      findByTurfIdAndDate(turfId: string, date: string): Promise<ISlotEntity[]>
+
 }

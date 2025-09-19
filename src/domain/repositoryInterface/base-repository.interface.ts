@@ -9,7 +9,7 @@ export interface IBaseRepository<T> {
     sort?: any
   ): Promise<{ items: T[]; total: number }>;
   findOne(filter: any): Promise<T | null>;
-    findById(id: string): Promise<T | null>;
+  findById(id: string): Promise<T | null>;
 
   save(data: Partial<T>): Promise<T>;
   update(filter: any, updateData: Partial<T> | any): Promise<T | null>;

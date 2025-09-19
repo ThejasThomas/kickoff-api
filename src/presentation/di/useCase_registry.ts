@@ -64,6 +64,8 @@ import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/gener
 import { GenerateSlotUseCase } from "../../application/turfs/generate_slots_usecase";
 import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";
 import { SlotService } from "../../interfaceAdapters/services/slot_service";
+import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
+import { GetSlotsUseCase } from "../../application/turfs/get_slot_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -170,6 +172,9 @@ export class UseCaseRegistry {
       })
       container.register<ISlotService>("ISlotService",{
         useClass:SlotService
+      })
+      container.register<IGetSlotsUseCase>("IGetSlotsUseCase",{
+        useClass:GetSlotsUseCase
       })
   }
 }

@@ -10,14 +10,17 @@ export class GetTurfByIdUseCase implements IGetTurfByIdUseCase {
         private _turfRepository:ITurfRepository
     ){}
 
-    async execute(turfId: string, ownerId: string): Promise<ITurfEntity> {
-        const filter = {_id:turfId,ownerId};
-        console.log('turfffffIddddd',turfId)
+    async execute(turfId: string): Promise<ITurfEntity> {
+        const filter = {_id:turfId};
+
+
 
         const turf =await this._turfRepository.findOne(filter);
+        console.log('Tuuurfffff',turf)
         if(!turf) {
             throw new Error("Turf not found or you do not have permission to access it")
         }
+
 
         const {id,...rest} =turf;
         const sanitizedTurf:ITurfEntity ={

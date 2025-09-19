@@ -1,5 +1,5 @@
 export interface ISlotEntity{
-    id:string,
+    id?:string,
     turfId:string,
     ownerId:string,
     date:string,

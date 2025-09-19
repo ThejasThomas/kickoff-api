@@ -16,6 +16,7 @@ import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfs/get_tu
 import tr from "zod/v4/locales/tr.cjs";
 import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
 import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
+import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -29,7 +30,9 @@ export class TurfController implements ITurfController {
     @inject("IUpdateTurfUseCase")
     private _updateTurfUseCase: IUpdateTurfUseCase,
     @inject("IGenerateSlotUseCase")
-    private _generateSlotsUseCase: IGenerateSlotUseCase
+    private _generateSlotsUseCase: IGenerateSlotUseCase,
+    @inject("IGetSlotsUseCase")
+    private _getSlotsUseCase: IGetSlotsUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -104,7 +107,7 @@ export class TurfController implements ITurfController {
     try {
       const turfId = req.params.id;
       const ownerId = (req as CustomRequest).user?.userId;
-      // console.log('ownerrrrIIddd',ownerId,'turfIdddddd',turfId)
+      console.log("ownerrrrIIddd", ownerId, "turfIdddddd", turfId);
       console.log("turffffIDDDDDD", turfId);
       if (!turfId || !ownerId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -113,7 +116,7 @@ export class TurfController implements ITurfController {
         });
         return;
       }
-      const turf = await this._getTurfByIdUseCase.execute(turfId, ownerId);
+      const turf = await this._getTurfByIdUseCase.execute(turfId);
       res.status(HTTP_STATUS.OK).json({
         success: true,
         turf,
@@ -184,12 +187,39 @@ export class TurfController implements ITurfController {
         slotDuration,
         price
       );
-      res.status(HTTP_STATUS.CREATED).json({ success:true,
-         message: "Slots generated successfully",
-         slots });
+      res
+        .status(HTTP_STATUS.CREATED)
+        .json({
+          success: true,
+          message: "Slots generated successfully",
+          slots,
+        });
     } catch (error) {
       console.log(error);
       handleErrorResponse(req, res, error);
+    }
+  }
+
+  async getSlots(req: Request, res: Response): Promise<void> {
+    try {
+      const turfId = req.params.id;
+      const { date } = req.query;
+
+      if (!turfId || !date) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.INVALID_CREDENTIALS,
+        });
+        return;
+      }
+
+      const slots = await this._getSlotsUseCase.execute(turfId, date as string);
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        slots,
+      });
+    } catch(error){
+      handleErrorResponse(req,res,error)
     }
   }
 }

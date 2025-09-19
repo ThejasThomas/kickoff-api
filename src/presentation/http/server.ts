@@ -62,8 +62,6 @@ export class ExpressServer {
   this._app.use(morgan("combined", { stream: logStream }));
   }
 
-  
-
   private configureRoutes(): void {
     this._app.use("/auth", new AuthRoutes().router);
     this._app.use("/_ad", new AdminRoutes().router);
@@ -75,4 +73,5 @@ export class ExpressServer {
   public getApp(): Application {
     return this._app;
   }
+  
 }

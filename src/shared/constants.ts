@@ -65,6 +65,7 @@ export const ERROR_MESSAGES = {
   SLOT_ALREADY_EXISTS:"Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR:"Database Error",
+  SLOT_NOT_DOUND:"Slot not found",
   NOT_ALLOWED: "You can't do this action",
   TURF_NOT_FOUND:"Turf not found",
 FOLDER_NOT_FOUND:"Folder not Found",

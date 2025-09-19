@@ -6,6 +6,7 @@ import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interf
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { CustomError } from "../../domain/utils/custom.error";
 export interface ISlot{
+    id?:string
     turfId:string,
     ownerId:string,
     date:string,
@@ -59,6 +60,7 @@ console.log("typeof endTime:", typeof endTime, "value:", endTime);
 
 
                 generatedSlots.push({
+                    
                     turfId,
                     ownerId,
                     date:targetDate,
