@@ -29,9 +29,11 @@ export const SlotSchema= new Schema<ISlotModel>({
     },
     duration:{
         type:Number,
+        required:true
     },
     price:{
         type:Number,
+        required:true
     }
 })
 

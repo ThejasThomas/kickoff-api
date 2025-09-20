@@ -14,7 +14,7 @@ export class OwnerRoutes extends BaseRoute {
   }
 
   protected initializeRoutes(): void {
-    this.router.post(
+    this.router.get(
       "/turfOwner/refresh-session",
       verifyAuth,
       (req: Request, res: Response) => {

@@ -17,6 +17,8 @@ import tr from "zod/v4/locales/tr.cjs";
 import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
 import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
 import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
+import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
+import { CustomError } from "../../domain/utils/custom.error";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -32,7 +34,9 @@ export class TurfController implements ITurfController {
     @inject("IGenerateSlotUseCase")
     private _generateSlotsUseCase: IGenerateSlotUseCase,
     @inject("IGetSlotsUseCase")
-    private _getSlotsUseCase: IGetSlotsUseCase
+    private _getSlotsUseCase: IGetSlotsUseCase,
+    @inject("IBookSlotUseCase")
+    private _bookSlotUseCase: IBookSlotUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -187,13 +191,11 @@ export class TurfController implements ITurfController {
         slotDuration,
         price
       );
-      res
-        .status(HTTP_STATUS.CREATED)
-        .json({
-          success: true,
-          message: "Slots generated successfully",
-          slots,
-        });
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        message: "Slots generated successfully",
+        slots,
+      });
     } catch (error) {
       console.log(error);
       handleErrorResponse(req, res, error);
@@ -218,8 +220,45 @@ export class TurfController implements ITurfController {
         success: true,
         slots,
       });
-    } catch(error){
-      handleErrorResponse(req,res,error)
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+  async bookslots(req: Request, res: Response): Promise<void> {
+    try {
+      const bookData = req.body;
+      const userId = (req as CustomRequest).user?.userId;
+      console.log("userrrrrrID", userId);
+
+      if (!userId) {
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success: false,
+          message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+        });
+        return;
+      }
+      console.log("bookdataaaaas", bookData);
+      const bookslot = await this._bookSlotUseCase.execute(bookData, userId);
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        message: SUCCESS_MESSAGES.TURF_BOOKED_SUCCESSFULLY,
+        data: bookslot,
+      });
+    } catch (error) {
+      console.error("Error in addTurf controller", error);
+
+      if (error instanceof CustomError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+          success:false,
+          message:ERROR_MESSAGES.SERVER_ERROR,
+        })
+      }
     }
   }
 }

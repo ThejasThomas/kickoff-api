@@ -8,7 +8,7 @@ export class ClientRoutes extends BaseRoute {
     super();
   }
   protected initializeRoutes(): void {
-    this.router.post(
+    this.router.get(
       "/client/refresh-session",
       verifyAuth,
       (req: Request, res: Response) => {
@@ -39,6 +39,13 @@ export class ClientRoutes extends BaseRoute {
     this.router.get("/client/getturfs", (req: Request, res: Response) => {
       turfController.getAllTurfs(req, res);
     });
+    this.router.post(
+      "/client/bookslots",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        turfController.bookslots(req, res);
+      }
+    );
     this.router.post(
       "/client/logout",
       verifyAuth,

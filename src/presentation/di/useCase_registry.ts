@@ -66,6 +66,8 @@ import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interf
 import { SlotService } from "../../interfaceAdapters/services/slot_service";
 import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
 import { GetSlotsUseCase } from "../../application/turfs/get_slot_usecase";
+import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
+import { BookSlotUseCase } from "../../application/Bookings/book_slot_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -175,6 +177,9 @@ export class UseCaseRegistry {
       })
       container.register<IGetSlotsUseCase>("IGetSlotsUseCase",{
         useClass:GetSlotsUseCase
+      })
+      container.register<IBookSlotUseCase>("IBookSlotUseCase",{
+        useClass:BookSlotUseCase
       })
   }
 }

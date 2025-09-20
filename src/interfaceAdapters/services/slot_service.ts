@@ -37,7 +37,7 @@ export class SlotService implements ISlotService{
                 turfId,
                  date,
             })
-            console.log('slotssssss',slots)
+            // console.log('slotssssss',slots)
             return slots.map((slot)=>({
                 
                 turfId:slot.turfId,
@@ -53,4 +53,6 @@ export class SlotService implements ISlotService{
             throw new Error(`Failed to fetch slots from database:${error}`)
         }
     }
+
+    
 }

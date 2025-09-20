@@ -48,6 +48,7 @@ export const SUCCESS_MESSAGES = {
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
     APPROVAL_REQUEST_SENT:"Approval request send to the admin",
+    TURF_BOOKED_SUCCESSFULLY:"Your turf slot  Booked successfully",
 
   UPDATED: "Successfully Updated.",
   TURF_ADDED_SUCCESSFULLY :"Turf added successfully",
@@ -65,10 +66,13 @@ export const ERROR_MESSAGES = {
   SLOT_ALREADY_EXISTS:"Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR:"Database Error",
+  BOOKING_FAILED:"Slot booking failed",
   SLOT_NOT_DOUND:"Slot not found",
   NOT_ALLOWED: "You can't do this action",
   TURF_NOT_FOUND:"Turf not found",
 FOLDER_NOT_FOUND:"Folder not Found",
+SLOT_UPDATE_FAILED:"Slot updated failed",
+SLOT_NOT_FOUND_OR_ALREADY_BOOKED:"Slot not found or it already booked",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",

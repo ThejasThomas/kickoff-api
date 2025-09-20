@@ -19,7 +19,7 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
     async execute(turfId: string, date: string): Promise<ISlotEntity[]> {
         try{
             const slots =await this._slotService.findByTurfIdAndDate(turfId,date)
-            console.log('slotssss',slots)
+            // console.log('slotssss',slots)
             return slots;
         }catch(error){
             throw new CustomError(ERROR_MESSAGES.SLOT_NOT_DOUND,HTTP_STATUS.NOT_FOUND)
