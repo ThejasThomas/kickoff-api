@@ -82,7 +82,7 @@ export const TurfSchema =new Schema<ITurf>(
     },
     slotDuration:{
       type:String,
-      required:true
+      required:false
     }
     
   },

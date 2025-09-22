@@ -5,10 +5,11 @@ import { ISlotModel, SlotModel } from "../../database/mongoDb/models/slot_model"
 import { ISlot } from "../../../application/turfs/generate_slots_usecase";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { ISlotRepository } from "../../../domain/repositoryInterface/Turf/slot_repository_interface";
 
 @injectable()
 
-export class SlotRepository extends BaseRepository<ISlotModel>{
+export class SlotRepository extends BaseRepository<ISlotModel> implements ISlotRepository{
     constructor(){
         super(SlotModel)
     }

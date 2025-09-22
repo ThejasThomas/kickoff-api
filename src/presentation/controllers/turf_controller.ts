@@ -19,6 +19,7 @@ import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/gener
 import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
 import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { CustomError } from "../../domain/utils/custom.error";
+import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfs/get_nearby_turf_usecase_interface";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -36,7 +37,9 @@ export class TurfController implements ITurfController {
     @inject("IGetSlotsUseCase")
     private _getSlotsUseCase: IGetSlotsUseCase,
     @inject("IBookSlotUseCase")
-    private _bookSlotUseCase: IBookSlotUseCase
+    private _bookSlotUseCase: IBookSlotUseCase,
+    @inject("IGetNearByTurfUseCase")
+    private _getNearbyTurfsUseCase:IGetNearByTurfUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -224,6 +227,42 @@ export class TurfController implements ITurfController {
       handleErrorResponse(req, res, error);
     }
   }
+
+  async getnearbyturfs(req: Request, res: Response): Promise<void> {
+    try{
+        const {latitude,longitude,page=1,limit=10,search=""}=req.query;
+
+        if(!latitude || !longitude){
+          res.status(HTTP_STATUS.BAD_REQUEST).json({
+            success:false,
+            message:ERROR_MESSAGES.LATITUDE_LONGITUDE_REQUIRED
+          })
+          return;
+        }
+
+        const result =await this._getNearbyTurfsUseCase.execute(
+          parseFloat(latitude as string),
+          parseFloat(longitude as string),
+          parseInt(page as string,10),
+          parseInt(limit as string ,10),
+          search as string,
+        )
+
+        res.status(HTTP_STATUS.OK).json({
+          success:true,
+          turfs:result.turfs,
+          totalPages:result.totalPages,
+        })
+
+    }catch(error){
+      console.error("Error fetching nearby turfs:", error);
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success:false,
+        message:ERROR_MESSAGES.SERVER_ERROR
+      })
+    }
+  }
+
   async bookslots(req: Request, res: Response): Promise<void> {
     try {
       const bookData = req.body;

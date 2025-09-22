@@ -37,9 +37,11 @@ export class AddTurfUseCase implements IAddTurfUseCase {
           },
         },
       };
+      console.log('newwwTurfff',newTurf)
 
 
       const savedTurf = await this._turfRepository.save(newTurf);
+      console.log('SavvedddTurfffs',savedTurf)
 
       return savedTurf;
     } catch (error) {

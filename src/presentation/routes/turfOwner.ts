@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import {
   authController,
+  bookingsController,
   turfController,
   turfOwnerController,
   userController,
 } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
+import { BookingsController } from "../controllers/bookings_controller";
 
 export class OwnerRoutes extends BaseRoute {
   constructor() {
@@ -84,6 +86,12 @@ export class OwnerRoutes extends BaseRoute {
       verifyAuth,
       (req:Request,res:Response)=>{
         turfController.generateSlots(req,res)
+      }
+    )
+    this.router.get('/turfOwner/get-all-bookings',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        bookingsController.getAllbookings(req,res)
       }
     )
 

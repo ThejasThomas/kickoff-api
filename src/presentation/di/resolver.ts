@@ -8,6 +8,8 @@ import { TurfController } from "../controllers/turf_controller";
 import { TurfOwnerController } from "../controllers/owner_controller";
 import { UserController } from "../controllers/user_controller";
 import { AuthController } from "../controllers/auth/auth_controller";
+import { IBookingsController } from "../../domain/controllerInterfaces/bookings/bookings_controller_interface";
+import { BookingsController } from "../controllers/bookings_controller";
 DependencyInjection.registerAll();
 
 export const authController =
@@ -21,4 +23,7 @@ export const userController =
 
   export const turfController =
   container.resolve<ITurfController>(TurfController)
+
+  export const bookingsController =
+  container.resolve<IBookingsController>(BookingsController)
 

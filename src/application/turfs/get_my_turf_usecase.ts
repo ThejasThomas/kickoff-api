@@ -32,12 +32,14 @@ export class GetMyTurfsUseCase implements IGetMyTurfsUseCase {
     }
 
     const sortOptions = { createdAt: -1 };
+    console.log('daaataas',filter,skip,limit,sortOptions)
     const { items, total } = await this._turfRepository.findAll(
       filter,
       skip,
       limit,
       sortOptions,
     );
+    console.log("items",items,'total',total)
 
     type SanitizedTurf = Omit<ITurfEntity, never>;
     const sanitizedTurfs: SanitizedTurf[] = items.map((turf) => {

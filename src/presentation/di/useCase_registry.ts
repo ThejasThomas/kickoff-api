@@ -68,6 +68,10 @@ import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots
 import { GetSlotsUseCase } from "../../application/turfs/get_slot_usecase";
 import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { BookSlotUseCase } from "../../application/Bookings/book_slot_usecase";
+import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfs/get_nearby_turf_usecase_interface";
+import { GetNearbyTurfsUseCase } from "../../application/turfs/get_nearby_turf_usecase";
+import { IGetBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_bookings_useCase_interface";
+import { GetBookingsUseCase } from "../../application/Bookings/get_bookings_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -180,6 +184,12 @@ export class UseCaseRegistry {
       })
       container.register<IBookSlotUseCase>("IBookSlotUseCase",{
         useClass:BookSlotUseCase
+      })
+      container.register<IGetNearByTurfUseCase>("IGetNearByTurfUseCase",{
+        useClass:GetNearbyTurfsUseCase
+      })
+      container.register<IGetBookingsUseCase>("IGetBookingsUseCase",{
+        useClass:GetBookingsUseCase
       })
   }
 }

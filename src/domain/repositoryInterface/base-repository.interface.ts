@@ -6,7 +6,7 @@ export interface IBaseRepository<T> {
     filter: any,
     skip: number,
     limit: number,
-    sort?: any
+    sort: any
   ): Promise<{ items: T[]; total: number }>;
   findOne(filter: any): Promise<T | null>;
   findById(id: string): Promise<T | null>;
