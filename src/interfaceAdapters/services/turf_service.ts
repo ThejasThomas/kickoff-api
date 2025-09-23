@@ -39,7 +39,6 @@ export class TurfService implements ITurfService {
         updatedAt: new Date(),
       };
             const updatedTurf=await this._turfRepository.update({ _id: turfId },{...updateData,updatedAt:new Date()})
-            console.log('updatedTurfff',updatedTurf)
             if(!updatedTurf) {
                 throw new CustomError(ERROR_MESSAGES.TURF_NOT_FOUND,HTTP_STATUS.NOT_FOUND);
             }

@@ -6,7 +6,7 @@ export const ROLES = {
   TURF_OWNER: "turfOwner",
 } as const;
 
-export type statusTypes = "active" | "pending" | "blocked"|"approved"
+export type statusTypes = "active" | "pending" | "blocked" | "approved";
 
 export type TRole = "client" | "admin" | "turfOwner";
 
@@ -41,21 +41,22 @@ export const SUCCESS_MESSAGES = {
   REGISTRATION_SUCCESS: "Registration completed",
   OTP_SEND_SUCCESS: "OTP sent",
   OTP_VERIFIED: "OTP verified",
-  BOOKINGS_FETCHED_SUCCESSFULLY:"Bookings fetched successfully",
+  BOOKINGS_FETCHED_SUCCESSFULLY: "Bookings fetched successfully",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
   LOGOUT_SUCCESS: "Logged out",
   VERIFICATION_SUCCESS: "Verification done",
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
-    APPROVAL_REQUEST_SENT:"Approval request send to the admin",
-    TURF_BOOKED_SUCCESSFULLY:"Your turf slot  Booked successfully",
+  APPROVAL_REQUEST_SENT: "Approval request send to the admin",
+  TURF_BOOKED_SUCCESSFULLY: "Your turf slot  Booked successfully",
 
   UPDATED: "Successfully Updated.",
-  TURF_ADDED_SUCCESSFULLY :"Turf added successfully",
-  TURF_UPDATED_SUCCESSFULLY:"Turf updated successfully",
-  TURF_RETRY_UPDATED_SUCCESSFULLY:"Turf updated successfully and wait for admin approval",
-  PROFILE_UPDATED_SUCCESSFULLY :"Profile updated successfully",
+  TURF_ADDED_SUCCESSFULLY: "Turf added successfully",
+  TURF_UPDATED_SUCCESSFULLY: "Turf updated successfully",
+  TURF_RETRY_UPDATED_SUCCESSFULLY:
+    "Turf updated successfully and wait for admin approval",
+  PROFILE_UPDATED_SUCCESSFULLY: "Profile updated successfully",
 };
 
 export const ERROR_MESSAGES = {
@@ -64,26 +65,29 @@ export const ERROR_MESSAGES = {
   EMAIL_NOT_FOUND: "Email not found",
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
-  SLOT_ALREADY_EXISTS:"Slots all ready exists please check",
+  SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
-  DATABASE_ERROR:"Database Error",
-  BOOKING_FAILED:"Slot booking failed",
-  SLOT_NOT_DOUND:"Slot not found",
-  MISSING_REQUIRED_FIELDS:"Missing required field",
-  FAILED_TO_FETCH_BOOKINGS:"Failed to bookings",
+  DATABASE_ERROR: "Database Error",
+  OWNER_PERMISSION_DENIED:
+    "Access denied. Your account is not approved to add services.",
+  BOOKING_FAILED: "Slot booking failed",
+  SLOT_NOT_DOUND: "Slot not found",
+  MISSING_REQUIRED_FIELDS: "Missing required field",
+  FAILED_TO_FETCH_BOOKINGS: "Failed to bookings",
   NOT_ALLOWED: "You can't do this action",
-  TURF_NOT_FOUND:"Turf not found",
-  INVALID_TURFID_OR_DATE:"Invalid turfId or date",
-  LATITUDE_LONGITUDE_REQUIRED:"Latitude and longitude are required",
-FOLDER_NOT_FOUND:"Folder not Found",
-SLOT_UPDATE_FAILED:"Slot updated failed",
-SLOT_NOT_FOUND_OR_ALREADY_BOOKED:"Slot not found or it already booked",
+  TURF_NOT_FOUND: "Turf not found",
+  INVALID_TURFID_OR_DATE: "Invalid turfId or date",
+  LATITUDE_LONGITUDE_REQUIRED: "Latitude and longitude are required",
+  FOLDER_NOT_FOUND: "Folder not Found",
+  SLOT_UPDATE_FAILED: "Slot updated failed",
+  SLOT_NOT_FOUND_OR_ALREADY_BOOKED: "Slot not found or it already booked",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
-  OWNER_NOT_FOUND:"Owner not found",
-  TURF_CREATION_FAILED:'Failed to add turf. Please try again ',
-  OWNER_NOT_ACTIVE:"Owner is not active now please update your profile and try again",
+  OWNER_NOT_FOUND: "Owner not found",
+  TURF_CREATION_FAILED: "Failed to add turf. Please try again ",
+  OWNER_NOT_ACTIVE:
+    "Owner is not active now please update your profile and try again",
   PENDING_ADMIN_APPROVAL: "Your request is not approved by admin",
   SERVER_ERROR: "Something went wrong try again later",
   VALIDATION_ERROR: "Check your inputs and try again",
@@ -95,7 +99,7 @@ SLOT_NOT_FOUND_OR_ALREADY_BOOKED:"Slot not found or it already booked",
   INVALID_TOKEN: "Invalid session please login again",
   SAME_CURR_NEW_PASSWORD:
     "New password must be different from current password",
-    UPDATE_FAILED:"failed to update profile"
+  UPDATE_FAILED: "failed to update profile",
 };
 export const VERIFICATION_MAIL_CONTENT = (
   otp: string
@@ -389,7 +393,7 @@ export const SENT_TURF_APPROVAL_EMAIL = (turfName: string) => `
 `;
 
 export const SENT_APPROVE_EMAIL = (
-  entityLabel: string,
+  entityLabel: string
 ) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; background: #fff;">
    <!-- Logo Section -->
    <div style="text-align: center; margin-bottom: 30px;">
@@ -464,8 +468,11 @@ export const SENT_APPROVE_EMAIL = (
    </div>
 </div>`;
 
-
-export const SENT_TURF_REJECTION_EMAIL = (turfName: string, reason: string, retryUrl: string) => `
+export const SENT_TURF_REJECTION_EMAIL = (
+  turfName: string,
+  reason: string,
+  retryUrl: string
+) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px;">
     <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
       <div style="text-align: center; margin-bottom: 30px;">
@@ -506,7 +513,6 @@ export const SENT_TURF_REJECTION_EMAIL = (turfName: string, reason: string, retr
     </div>
   </div>
 `;
-
 
 export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
   fullName: string,

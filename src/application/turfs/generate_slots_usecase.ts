@@ -1,7 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
 import { format,addDays } from "date-fns";
-import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repository_interface";
 import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { CustomError } from "../../domain/utils/custom.error";
@@ -42,8 +41,6 @@ export class GenerateSlotUseCase implements IGenerateSlotUseCase {
       throw new Error("Date or date range is required.");
       
     }
-    console.log("typeof startTime:", typeof startTime, "value:", startTime);
-console.log("typeof endTime:", typeof endTime, "value:", endTime);
 
 
         const startHour=parseInt(String(startTime.split(":")[0]));

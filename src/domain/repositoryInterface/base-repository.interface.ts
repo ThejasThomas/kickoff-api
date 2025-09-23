@@ -13,7 +13,7 @@ export interface IBaseRepository<T> {
 
   save(data: Partial<T>): Promise<T>;
   update(filter: any, updateData: Partial<T> | any): Promise<T | null>;
-  updateOne(filter: any, updateData: Partial<T> | any): Promise<UpdateResult>; // 👈 added
+  updateOne(filter: any, updateData: Partial<T> | any): Promise<UpdateResult>;
 
   delete(filter: any): Promise<T | null>;
   deleteAll(filter: any): Promise<void>;

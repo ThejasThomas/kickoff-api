@@ -22,7 +22,6 @@ export class BookSlotUseCase implements IBookSlotUseCase{
             ...bookData,
             userId
         }
-        console.log('hey mahn this are the datas',bookData.date   ,bookData.startTime,   bookData.turfId)
 
         const bookSlot=await this._bookingRepository.save(newBooking)
 

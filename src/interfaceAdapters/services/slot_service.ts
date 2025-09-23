@@ -37,7 +37,6 @@ export class SlotService implements ISlotService{
                 turfId,
                  date,
             })
-            // console.log('slotssssss',slots)
             return slots.map((slot)=>({
                 
                 turfId:slot.turfId,

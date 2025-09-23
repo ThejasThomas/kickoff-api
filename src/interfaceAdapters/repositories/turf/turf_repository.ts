@@ -10,7 +10,6 @@ export class TurfRepository extends BaseRepository<ITurf>implements ITurfReposit
         super(TurfModel)
     }
     async findNearbyTurfs(latitude: number, longitude: number, maxDistance: number =1000, filter: FilterQuery<[ITurf]>, skip: number=0, limit: number=10, sortOptions: any={createdAt:-1}): Promise<{ items: ITurf[]; total: number; }> {
-        console.log('bosss i am repo turff',latitude,longitude,maxDistance,filter,skip,limit,sortOptions)
         const pipeline: any[] = [
       {
         $geoNear: {

@@ -114,8 +114,6 @@ export class TurfController implements ITurfController {
     try {
       const turfId = req.params.id;
       const ownerId = (req as CustomRequest).user?.userId;
-      console.log("ownerrrrIIddd", ownerId, "turfIdddddd", turfId);
-      console.log("turffffIDDDDDD", turfId);
       if (!turfId || !ownerId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,

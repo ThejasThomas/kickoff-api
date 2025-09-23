@@ -33,14 +33,12 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
     email?: string,
     ownerId?:string
   ): Promise<void> {
-    console.log('entityyyyyTypeeee',entityType)
     if (!entityType || !entityId || !status) {
       throw new CustomError(
         ERROR_MESSAGES.VALIDATION_ERROR,
         HTTP_STATUS.BAD_REQUEST
       );
     }
-    console.log('statuusssss',status)
     let repo;
     let entityLabel: string;
 
@@ -123,14 +121,11 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
       turfId:string
     ):Promise<void> {
       try{
-        console.log('heloo brotherrr')
         const owner =await this._turfOwnerRepository.findOne({userId:ownerId})
-        console.log('ownereerererere',owner)
         if(!owner || !hasEmail(owner)) {
           console.log(`owner not found or has no email for ID:${ownerId}`);
           return;
         }
-        console.log('ownerrrrrr',owner)
 
         if(status==='rejected' && reason) {
           await this._handleTurfRejection(
@@ -155,7 +150,6 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
     ):Promise<void> {
       try{
         const retryToken = this._tokenService.generateResetToken(email);
-        console.log('retrrrryytToken',retryToken)
         const retryUrl = `${config.cors.ALLOWED_ORIGIN}/turfOwner/retryedit-turf/${turfId}?retry_token=${retryToken}`;
         await this._emailService.sendTurfRejectionEmail(email,reason,turfName,retryUrl)
               console.log(`✅ Turf rejection email sent to: ${email} for turf: ${turfName}`);

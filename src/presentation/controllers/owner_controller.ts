@@ -31,7 +31,6 @@ export class TurfOwnerController implements ITurfOwnerController {
     try {
       const turfData = req.body;
       const ownerId = (req as CustomRequest).user?.userId;
-   
 
       if (!ownerId) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({

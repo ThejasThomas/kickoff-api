@@ -87,7 +87,8 @@ export class EmailService implements IEmailService {
 
 		 console.log(
       chalk.bgRedBright.bold(`❌ Rejection Email Sent:`),
-      chalk.yellowBright(`${entityLabel} - ${to}`)
+      chalk.yellowBright(`${entityLabel} - ${to}`),
+	  chalk.yellowBright('url',`${retryUrl}`)
     );
 		
 
@@ -121,7 +122,8 @@ export class EmailService implements IEmailService {
 		await this._sendMail(mailOptions)
 		console.log(
       chalk.bgGreenBright.bold(`✅ Turf Rejection Email Sent:`),
-      chalk.yellowBright(`${turfName} - ${to}`)
+      chalk.yellowBright(`${turfName} - ${to}`),
+	  chalk.yellowBright('url',`${retryUrl}`)
     );
 
 	}

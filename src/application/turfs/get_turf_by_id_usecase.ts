@@ -16,7 +16,6 @@ export class GetTurfByIdUseCase implements IGetTurfByIdUseCase {
 
 
         const turf =await this._turfRepository.findOne(filter);
-        console.log('Tuuurfffff',turf)
         if(!turf) {
             throw new Error("Turf not found or you do not have permission to access it")
         }

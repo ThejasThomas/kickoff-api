@@ -1,5 +1,4 @@
 import { inject, injectable } from "tsyringe";
-import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
 import { IValidateOwnerService } from "../../domain/serviceInterfaces/validate_owner_service_interface";
 import { ITurfOwnerEntity } from "../../domain/models/turfOwner_entity";
 import { CustomError } from "../../domain/utils/custom.error";
@@ -25,7 +24,6 @@ export class RequestUpdateProfileUseCase implements IRequestUpdateProfileUseCase
             ...profileData,
             status: "pending" as const,
         };
-        console.log('updatedProfiledata',updatedProfileData)
         const updatedOwner = await this._validateOwnerService.updateOwner(ownerId,updatedProfileData);
 
         return updatedOwner;

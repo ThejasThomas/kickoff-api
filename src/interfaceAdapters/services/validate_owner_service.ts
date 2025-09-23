@@ -20,6 +20,19 @@ export class ValidateOwnerService implements IValidateOwnerService{
         const owner =await this._turfOwnerRepository.findOne({ownerId})
         return !!owner
     }
+    async ownerActive(ownerId: string): Promise<boolean> {
+        const owner =await this._turfOwnerRepository.findOne({
+            userId:ownerId,
+            status:"approved",
+        })
+        if(!owner) {
+            throw new CustomError(
+                ERROR_MESSAGES.OWNER_PERMISSION_DENIED,
+                HTTP_STATUS.BAD_REQUEST
+            )
+        }
+        return true;
+    }
     async findOwner(ownerId: string): Promise<ITurfOwnerEntity> {
         const owner = await this._turfOwnerRepository.findOne({userId:ownerId})
 

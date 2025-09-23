@@ -23,6 +23,7 @@ export class GetAllTurfsUsecase implements IGetAllTurfsUseCase {
       filter.$or = [
         { turfName: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
+        {"location.city":{$regex:search,$options:"i"}}
       ];
     }
 

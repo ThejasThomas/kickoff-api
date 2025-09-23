@@ -11,7 +11,6 @@ export class GetNearbyTurfsUseCase implements IGetNearByTurfUseCase {
     ) {}
 
     async execute(latitude: number, longitude: number, page: number, limit: number, search: string): Promise<{ turfs: Omit<ITurfEntity, "ownerId">[]; totalPages: number; }> {
-        console.log('heyloooo brotherr',latitude,longitude,page,limit,search)
         const skip =(page-1) * limit;
         const filter:any ={};
 

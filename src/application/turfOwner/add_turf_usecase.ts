@@ -20,6 +20,7 @@ export class AddTurfUseCase implements IAddTurfUseCase {
 
     try {
       await this._validateOwnerUsecase.ownerExists(ownerId);
+      await this._validateOwnerUsecase.ownerActive(ownerId)
       await this._validateOwnerUsecase.findOwner(ownerId);
 
       const newTurf: ITurfEntity = {
@@ -37,12 +38,10 @@ export class AddTurfUseCase implements IAddTurfUseCase {
           },
         },
       };
-      console.log('newwwTurfff',newTurf)
 
 
       const savedTurf = await this._turfRepository.save(newTurf);
-      console.log('SavvedddTurfffs',savedTurf)
-
+ 
       return savedTurf;
     } catch (error) {
       console.error("Error in addturf usecase");
