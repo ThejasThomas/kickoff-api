@@ -87,6 +87,11 @@ export class UserController implements IUserController {
     }
   }
 
+  async getUserDetails(req: Request, res: Response): Promise<void> {
+    
+  }
+
+
   async updateEntityStatus(req: Request, res: Response): Promise<void> {
    try{
     

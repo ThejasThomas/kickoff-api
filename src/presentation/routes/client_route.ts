@@ -46,6 +46,13 @@ export class ClientRoutes extends BaseRoute {
         turfController.bookslots(req, res);
       }
     );
+    this.router.get(
+      "/client/get-user-profile",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        userController.getUserDetails(req,res)
+      }
+    )
 
     this.router.get(
       "/client/getnearbyturf",

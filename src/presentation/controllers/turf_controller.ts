@@ -230,6 +230,8 @@ export class TurfController implements ITurfController {
     try{
         const {latitude,longitude,page=1,limit=10,search=""}=req.query;
 
+        console.log('latitude','longitude',latitude,longitude)
+
         if(!latitude || !longitude){
           res.status(HTTP_STATUS.BAD_REQUEST).json({
             success:false,

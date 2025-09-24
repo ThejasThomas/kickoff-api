@@ -61,6 +61,7 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
           HTTP_STATUS.BAD_REQUEST
         );
     }
+    
     const entity = await repo.findOne({ _id: entityId });
 
     if (!entity) {
