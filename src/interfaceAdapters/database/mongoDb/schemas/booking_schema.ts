@@ -1,6 +1,5 @@
 import { Schema } from "mongoose";
 import { IBookingModel } from "../models/booking_model";
-import { number } from "zod";
 
 export const BookingSchema =new Schema<IBookingModel>({
     userId:{

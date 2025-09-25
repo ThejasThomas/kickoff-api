@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
+import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/update_turf_by_id_usecase_interface";
 import { ITurfEntity } from "../../domain/models/turf_entity";
 import { ITurfService } from "../../domain/serviceInterfaces/turfService_interface";
 import { CustomError } from "../../domain/utils/custom.error";
@@ -27,6 +27,7 @@ export class UpdateTurfUseCase implements IUpdateTurfUseCase {
       //   //   throw new CustomError(ERROR_MESSAGES.INVALID_TOKEN, HTTP_STATUS.UNAUTHORIZED);
       //   // }
       // }
+      console.log('satus',turfId)
 
       TurfData.status='pending';
       

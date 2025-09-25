@@ -1,4 +1,4 @@
-import { ITurfEntity } from "../../models/turf_entity";
+import { ITurfEntity } from "../../../models/turf_entity";
 
 export interface IGetMyTurfsUseCase {
   execute(

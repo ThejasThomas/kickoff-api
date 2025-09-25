@@ -11,3 +11,4 @@ export interface IUserController{
     refreshSession(req:Request,res:Response):Promise<void>
     getUserDetails(req:Request,res:Response):Promise<void>
 }
+

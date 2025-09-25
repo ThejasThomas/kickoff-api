@@ -44,6 +44,7 @@ export const SUCCESS_MESSAGES = {
   BOOKINGS_FETCHED_SUCCESSFULLY: "Bookings fetched successfully",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
   LOGOUT_SUCCESS: "Logged out",
+  TURF_DETAILS_FETCHED_SUCCESSFULLY:"Turf details fetched successfully",
   VERIFICATION_SUCCESS: "Verification done",
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
@@ -85,6 +86,7 @@ export const ERROR_MESSAGES = {
     "Your account is under verification. Please wait for admin approval.",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
   OWNER_NOT_FOUND: "Owner not found",
+  FAILED_TO_FETCH_TURF_DETAILS:"Failed to fetch turf details",
   TURF_CREATION_FAILED: "Failed to add turf. Please try again ",
   OWNER_NOT_ACTIVE:
     "Owner is not active now please update your profile and try again",

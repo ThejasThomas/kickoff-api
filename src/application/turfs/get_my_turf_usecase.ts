@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ITurfEntity } from "../../domain/models/turf_entity";
-import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_my_turf_usecase_interface";
+import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_my_turf_usecase_interface";
 
 @injectable()
 export class GetMyTurfsUseCase implements IGetMyTurfsUseCase {

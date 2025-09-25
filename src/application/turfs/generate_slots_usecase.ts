@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
+import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/generateSlotsUseCase";
 import { format,addDays } from "date-fns";
 import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";

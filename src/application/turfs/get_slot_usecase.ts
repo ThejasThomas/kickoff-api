@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
+import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_slots_usecase";
 import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repository_interface";
 import { ISlotEntity } from "../../domain/models/slot_entity";
 import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";

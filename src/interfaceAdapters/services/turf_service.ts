@@ -1,7 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { ITurfService } from "../../domain/serviceInterfaces/turfService_interface";
 import { ITurfEntity } from "../../domain/models/turf_entity";
-import { TurfModel } from "../database/mongoDb/models/turf_model";
 import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { CustomError } from "../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";

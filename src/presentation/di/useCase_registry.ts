@@ -42,7 +42,7 @@ import { IValidateOwnerService } from "../../domain/serviceInterfaces/validate_o
 import { ValidateOwnerService } from "../../interfaceAdapters/services/validate_owner_service";
 import { ICloudinarySignatureService } from "../../domain/serviceInterfaces/cloudinary_service_interface";
 import { CloudinarySignatureService } from "../../interfaceAdapters/services/cloudinary_service";
-import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_all_turfs_usecase_interface";
+import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_all_turfs_usecase_interface";
 import { GetAllTurfsUsecase } from "../../application/turfs/get_all_turf_usecase";
 import { TurfOwnerDetailsUseCase } from "../../application/turfOwner/get_turf_owner_profile_usecase";
 import { ITurfOwnerDetailsUseCase } from "../../domain/useCaseInterfaces/turfOwner/get_turf_owner_profile_usecase";
@@ -50,28 +50,34 @@ import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/t
 import { UpdateTurfOwnerProfileUseCase } from "../../application/turfOwner/update_turf_owner_profile_usecase";
 import { IRetryAdminApprovalUseCase } from "../../domain/useCaseInterfaces/turfOwner/retry_admin_approval_usecase_interface";
 import { RetryAdminApprovalUseCase } from "../../application/turfOwner/retry_admin_approval_usecase";
-import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_my_turf_usecase_interface";
+import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_my_turf_usecase_interface";
 import { GetMyTurfsUseCase } from "../../application/turfs/get_my_turf_usecase";
-import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfs/get_turf_by_id_usecase_interface";
+import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_turf_by_id_usecase_interface";
 import { GetTurfByIdUseCase } from "../../application/turfs/get_turf_by_id_usecase";
-import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
+import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/update_turf_by_id_usecase_interface";
 import { UpdateTurfUseCase } from "../../application/turfs/update_turf_by_id_usecase";
 import { ITurfService } from "../../domain/serviceInterfaces/turfService_interface";
 import { TurfService } from "../../interfaceAdapters/services/turf_service";
 import { IRequestUpdateProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/request_profile_update_usecase";
 import { RequestUpdateProfileUseCase } from "../../application/turfOwner/request_profile_update_usecase";
-import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
+import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/generateSlotsUseCase";
 import { GenerateSlotUseCase } from "../../application/turfs/generate_slots_usecase";
 import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";
 import { SlotService } from "../../interfaceAdapters/services/slot_service";
-import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
+import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_slots_usecase";
 import { GetSlotsUseCase } from "../../application/turfs/get_slot_usecase";
 import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { BookSlotUseCase } from "../../application/Bookings/book_slot_usecase";
-import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfs/get_nearby_turf_usecase_interface";
+import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_nearby_turf_usecase_interface";
 import { GetNearbyTurfsUseCase } from "../../application/turfs/get_nearby_turf_usecase";
 import { IGetBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_bookings_useCase_interface";
 import { GetBookingsUseCase } from "../../application/Bookings/get_bookings_usecase";
+import { IGetUpcomingBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_bookings_usecase_interface";
+import { GetUpcomingBookingsUseCase } from "../../application/Bookings/get_upcoming_bookings_usecase.";
+import { IGetBookedTurfUseCase } from "../../domain/useCaseInterfaces/Bookings/get_booked_useCase_interface";
+import { GetBookedTurfDetails } from "../../application/Bookings/get_turf_details";
+import { IGetPastBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_pastbookings_usecase_interface";
+import { GetPastBookingsUseCase } from "../../application/Bookings/get_past_bookings_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -190,6 +196,15 @@ export class UseCaseRegistry {
       })
       container.register<IGetBookingsUseCase>("IGetBookingsUseCase",{
         useClass:GetBookingsUseCase
+      })
+      container.register<IGetUpcomingBookingUseCase>('IGetUpcomingBookingUseCase',{
+        useClass:GetUpcomingBookingsUseCase
+      })
+      container.register<IGetBookedTurfUseCase>('IGetBookedTurfUseCase',{
+        useClass:GetBookedTurfDetails
+      })
+      container.register<IGetPastBookingsUseCase>('IGetPastBookingsUseCase',{
+        useClass:GetPastBookingsUseCase
       })
   }
 }

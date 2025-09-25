@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { ITurfController } from "../../domain/controllerInterfaces/turf/turf_controller.interface";
 import { Request, Response } from "express";
-import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_all_turfs_usecase_interface";
+import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_all_turfs_usecase_interface";
 import {
   ERROR_MESSAGES,
   HTTP_STATUS,
@@ -11,15 +11,15 @@ import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { success } from "zod";
-import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_my_turf_usecase_interface";
-import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfs/get_turf_by_id_usecase_interface";
+import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_my_turf_usecase_interface";
+import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_turf_by_id_usecase_interface";
 import tr from "zod/v4/locales/tr.cjs";
-import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfs/update_turf_by_id_usecase_interface";
-import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfs/generateSlotsUseCase";
-import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfs/get_slots_usecase";
+import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/update_turf_by_id_usecase_interface";
+import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/generateSlotsUseCase";
+import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_slots_usecase";
 import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { CustomError } from "../../domain/utils/custom.error";
-import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfs/get_nearby_turf_usecase_interface";
+import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_nearby_turf_usecase_interface";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -148,7 +148,7 @@ export class TurfController implements ITurfController {
 
       delete turfData.isRetryUpdate;
       delete turfData.retryToken;
-
+      delete turfData.status;
       const updatedTurf = await this._updateTurfUseCase.execute(
         turfId,
         turfData,

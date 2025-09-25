@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfs/get_all_turfs_usecase_interface";
+import { IGetAllTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_all_turfs_usecase_interface";
 import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ITurfEntity } from "../../domain/models/turf_entity";
 @injectable()

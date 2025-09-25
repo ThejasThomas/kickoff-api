@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { authController, turfController, userController } from "../di/resolver";
+import { authController, bookingsController, turfController, userController } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
@@ -46,6 +46,7 @@ export class ClientRoutes extends BaseRoute {
         turfController.bookslots(req, res);
       }
     );
+
     this.router.get(
       "/client/get-user-profile",
       verifyAuth,
@@ -59,6 +60,27 @@ export class ClientRoutes extends BaseRoute {
       verifyAuth,
       (req:Request,res:Response) =>{
         turfController.getnearbyturfs(req,res)
+      }
+    )
+    this.router.get(
+      "/client/get-upcoming-bookings",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        bookingsController.getUpcomingbookings(req,res)
+      }
+    )
+    this.router.get(
+      "/client/getbookingturf",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        bookingsController.getTurfdetails(req,res)
+      }
+    )
+    this.router.get(
+      "/client/get-past-bookings",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        bookingsController.getPastbookings(req,res)
       }
     )
     this.router.post(

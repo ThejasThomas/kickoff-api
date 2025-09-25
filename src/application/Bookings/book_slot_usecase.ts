@@ -12,6 +12,8 @@ export class BookSlotUseCase implements IBookSlotUseCase{
     constructor(
         @inject('IBookingRepository')
         private _bookingRepository:IBookingRepository,
+
+        
         @inject('ISlotRepository')
         private _slotRepository:ISlotRepository
     ){}
@@ -22,6 +24,7 @@ export class BookSlotUseCase implements IBookSlotUseCase{
             ...bookData,
             userId
         }
+        
 
         const bookSlot=await this._bookingRepository.save(newBooking)
 
