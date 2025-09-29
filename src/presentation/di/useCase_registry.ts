@@ -78,6 +78,12 @@ import { IGetBookedTurfUseCase } from "../../domain/useCaseInterfaces/Bookings/g
 import { GetBookedTurfDetails } from "../../application/Bookings/get_turf_details";
 import { IGetPastBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_pastbookings_usecase_interface";
 import { GetPastBookingsUseCase } from "../../application/Bookings/get_past_bookings_usecase";
+import { IAddRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/add_rules_useCase_interface";
+import { AddRulesUseCase } from "../../application/turfs/addRules_usecase";
+import { IRuleService } from "../../domain/serviceInterfaces/rules_service_interface";
+import { RulesService } from "../../interfaceAdapters/services/rules_service";
+import { IGetRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_rules_useCase_interface";
+import { GetRulesUseCase } from "../../application/turfs/getRules_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -89,122 +95,149 @@ export class UseCaseRegistry {
       useClass: sendOtpEmailUseCase,
     });
 
-        container.register<IBcrypt>('IPasswordBcrypt',{
-            useClass:PasswordBcrypt
-        })
+    container.register<IBcrypt>("IPasswordBcrypt", {
+      useClass: PasswordBcrypt,
+    });
 
-        container.register<IBcrypt>('IOtpBcrypt',{
-            useClass:OtpBcrypt
-        })
+    container.register<IBcrypt>("IOtpBcrypt", {
+      useClass: OtpBcrypt,
+    });
 
-         container.register<IUserExistenceService>('IUserExistenceService',{
-            useClass:UserExistenceService
-        })
-        container.register<IEmailService>('IEmailService', {
-          useClass:EmailService
-        })
-        container.register<IVerifyOtpUseCase>('IVerifyOtpUseCase', {
-          useClass:VerifyOtpUseCase
-        })
+    container.register<IUserExistenceService>("IUserExistenceService", {
+      useClass: UserExistenceService,
+    });
+    container.register<IEmailService>("IEmailService", {
+      useClass: EmailService,
+    });
+    container.register<IVerifyOtpUseCase>("IVerifyOtpUseCase", {
+      useClass: VerifyOtpUseCase,
+    });
 
-        container.register<IRegisterUserUseCase>('IRegisterUserUseCase', {
-          useClass:RegisterUserUseCase
-        })
-        container.register<ILoginUserUseCase>('ILoginUserUseCase',{
-          useClass:LoginUserUseCase
-        })
-        container.register<IGenerateTokenUseCase>('IGenerateTokenUseCase',{
-          useClass:GenerateTokenUseCase
-        })
-        container.register<ITokenService>('ITokenService',{
-          useClass:JWTService
-        })
-        container.register<IRefreshTokenUseCase>('IRefreshTokenUseCase',{
-          useClass:RefreshTokenUseCase
-        })
-        container.register<IGoogleUseCase>('IGoogleUseCase',{
-          useClass:GoogleUseCase
-        })
-        container.register<ISendEmailUseCase>('ISendEmailUseCase',{
-          useClass:SendEmailUseCase
-        })
-        container.register<IForgotPasswordUseCase>('IForgotPasswordUseCase',{
-          useClass:ForgotPasswordUseCase
-        })
-        container.register<IResetPasswordUseCase>('IResetPasswordUseCase',{
-          useClass:ResetPasswordUseCase
-        })
-        container.register<IGetAllUsersUseCase>('IGetAllUsersUseCase',{
-          useClass:GetAllUsersUseCase
-        })
-        container.register<IUpdateEntityStatusUseCase>('IUpdateEntityStatusUseCase',{
-          useClass:UpdateEntityStatusUseCase
-        })
-        container.register<IAddTurfUseCase>('IAddTurfUseCase',{
-          useClass:AddTurfUseCase
-        })
-        container.register<IValidateOwnerService>('IValidateOwnerService',{
-          useClass:ValidateOwnerService
-      })
-      container.register<ICloudinarySignatureService>('ICloudinarySignatureService',{
-        useClass:CloudinarySignatureService
-      })
-      container.register<IGetAllTurfsUseCase>('IGetAllTurfsUseCase',{
-        useClass:GetAllTurfsUsecase
-      })
-      container.register<ITurfOwnerDetailsUseCase>('ITurfOwnerDetailsUseCase',{
-        useClass:TurfOwnerDetailsUseCase
-      })
-      container.register<IUpdateTurfOwnerProfileUseCase>('IUpdateTurfOwnerProfileUseCase',{
-        useClass:UpdateTurfOwnerProfileUseCase
-      })
-      container.register<IRetryAdminApprovalUseCase>('IRetryAdminApprovalUseCase',{
-        useClass:RetryAdminApprovalUseCase
-      })
-      container.register<IGetMyTurfsUseCase>('IGetMyTurfsUseCase',{
-        useClass:GetMyTurfsUseCase
-      })
-      container.register<IGetTurfByIdUseCase>('IGetTurfByIdUseCase',{
-        useClass:GetTurfByIdUseCase
-      })
-      container.register<IUpdateTurfUseCase>('IUpdateTurfUseCase',{
-        useClass:UpdateTurfUseCase
-      })
-      container.register<IUpdateTurfUseCase>('UpdateTurfUseCase',{
-        useClass:UpdateTurfUseCase
-      })
-      container.register<ITurfService>('ITurfService',{
-        useClass:TurfService
-      })
-      container.register<IRequestUpdateProfileUseCase>('IRequestUpdateProfileUseCase',{
-        useClass:RequestUpdateProfileUseCase
-      })
-      container.register<IGenerateSlotUseCase>("IGenerateSlotUseCase",{
-        useClass:GenerateSlotUseCase
-      })
-      container.register<ISlotService>("ISlotService",{
-        useClass:SlotService
-      })
-      container.register<IGetSlotsUseCase>("IGetSlotsUseCase",{
-        useClass:GetSlotsUseCase
-      })
-      container.register<IBookSlotUseCase>("IBookSlotUseCase",{
-        useClass:BookSlotUseCase
-      })
-      container.register<IGetNearByTurfUseCase>("IGetNearByTurfUseCase",{
-        useClass:GetNearbyTurfsUseCase
-      })
-      container.register<IGetBookingsUseCase>("IGetBookingsUseCase",{
-        useClass:GetBookingsUseCase
-      })
-      container.register<IGetUpcomingBookingUseCase>('IGetUpcomingBookingUseCase',{
-        useClass:GetUpcomingBookingsUseCase
-      })
-      container.register<IGetBookedTurfUseCase>('IGetBookedTurfUseCase',{
-        useClass:GetBookedTurfDetails
-      })
-      container.register<IGetPastBookingsUseCase>('IGetPastBookingsUseCase',{
-        useClass:GetPastBookingsUseCase
-      })
+    container.register<IRegisterUserUseCase>("IRegisterUserUseCase", {
+      useClass: RegisterUserUseCase,
+    });
+    container.register<ILoginUserUseCase>("ILoginUserUseCase", {
+      useClass: LoginUserUseCase,
+    });
+    container.register<IGenerateTokenUseCase>("IGenerateTokenUseCase", {
+      useClass: GenerateTokenUseCase,
+    });
+    container.register<ITokenService>("ITokenService", {
+      useClass: JWTService,
+    });
+    container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
+      useClass: RefreshTokenUseCase,
+    });
+    container.register<IGoogleUseCase>("IGoogleUseCase", {
+      useClass: GoogleUseCase,
+    });
+    container.register<ISendEmailUseCase>("ISendEmailUseCase", {
+      useClass: SendEmailUseCase,
+    });
+    container.register<IForgotPasswordUseCase>("IForgotPasswordUseCase", {
+      useClass: ForgotPasswordUseCase,
+    });
+    container.register<IResetPasswordUseCase>("IResetPasswordUseCase", {
+      useClass: ResetPasswordUseCase,
+    });
+    container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase", {
+      useClass: GetAllUsersUseCase,
+    });
+    container.register<IUpdateEntityStatusUseCase>(
+      "IUpdateEntityStatusUseCase",
+      {
+        useClass: UpdateEntityStatusUseCase,
+      }
+    );
+    container.register<IAddTurfUseCase>("IAddTurfUseCase", {
+      useClass: AddTurfUseCase,
+    });
+    container.register<IValidateOwnerService>("IValidateOwnerService", {
+      useClass: ValidateOwnerService,
+    });
+    container.register<ICloudinarySignatureService>(
+      "ICloudinarySignatureService",
+      {
+        useClass: CloudinarySignatureService,
+      }
+    );
+    container.register<IGetAllTurfsUseCase>("IGetAllTurfsUseCase", {
+      useClass: GetAllTurfsUsecase,
+    });
+    container.register<ITurfOwnerDetailsUseCase>("ITurfOwnerDetailsUseCase", {
+      useClass: TurfOwnerDetailsUseCase,
+    });
+    container.register<IUpdateTurfOwnerProfileUseCase>(
+      "IUpdateTurfOwnerProfileUseCase",
+      {
+        useClass: UpdateTurfOwnerProfileUseCase,
+      }
+    );
+    container.register<IRetryAdminApprovalUseCase>(
+      "IRetryAdminApprovalUseCase",
+      {
+        useClass: RetryAdminApprovalUseCase,
+      }
+    );
+    container.register<IGetMyTurfsUseCase>("IGetMyTurfsUseCase", {
+      useClass: GetMyTurfsUseCase,
+    });
+    container.register<IGetTurfByIdUseCase>("IGetTurfByIdUseCase", {
+      useClass: GetTurfByIdUseCase,
+    });
+    container.register<IUpdateTurfUseCase>("IUpdateTurfUseCase", {
+      useClass: UpdateTurfUseCase,
+    });
+    container.register<IUpdateTurfUseCase>("UpdateTurfUseCase", {
+      useClass: UpdateTurfUseCase,
+    });
+    container.register<ITurfService>("ITurfService", {
+      useClass: TurfService,
+    });
+    container.register<IRequestUpdateProfileUseCase>(
+      "IRequestUpdateProfileUseCase",
+      {
+        useClass: RequestUpdateProfileUseCase,
+      }
+    );
+    container.register<IGenerateSlotUseCase>("IGenerateSlotUseCase", {
+      useClass: GenerateSlotUseCase,
+    });
+    container.register<ISlotService>("ISlotService", {
+      useClass: SlotService,
+    });
+    container.register<IGetSlotsUseCase>("IGetSlotsUseCase", {
+      useClass: GetSlotsUseCase,
+    });
+    container.register<IBookSlotUseCase>("IBookSlotUseCase", {
+      useClass: BookSlotUseCase,
+    });
+    container.register<IGetNearByTurfUseCase>("IGetNearByTurfUseCase", {
+      useClass: GetNearbyTurfsUseCase,
+    });
+    container.register<IGetBookingsUseCase>("IGetBookingsUseCase", {
+      useClass: GetBookingsUseCase,
+    });
+    container.register<IGetUpcomingBookingUseCase>(
+      "IGetUpcomingBookingUseCase",
+      {
+        useClass: GetUpcomingBookingsUseCase,
+      }
+    );
+    container.register<IGetBookedTurfUseCase>("IGetBookedTurfUseCase", {
+      useClass: GetBookedTurfDetails,
+    });
+    container.register<IGetPastBookingsUseCase>("IGetPastBookingsUseCase", {
+      useClass: GetPastBookingsUseCase,
+    });
+    container.register<IAddRulesUseCase>("IAddRulesUseCase", {
+      useClass: AddRulesUseCase,
+    });
+    container.register<IRuleService>("IRuleService",{
+      useClass:RulesService
+    })
+    container.register<IGetRulesUseCase>("IGetRulesUseCase",{
+      useClass:GetRulesUseCase
+    })
   }
 }

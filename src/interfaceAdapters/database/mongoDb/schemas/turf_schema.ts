@@ -87,7 +87,7 @@ export const TurfSchema =new Schema<ITurf>(
     
   },
   {
-    timestamps: true, // adds createdAt & updatedAt automatically
+    timestamps: true, 
   }
 )
 TurfSchema.index({ "location.coordinates": "2dsphere" });

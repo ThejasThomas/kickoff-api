@@ -81,11 +81,25 @@ export class OwnerRoutes extends BaseRoute {
         turfController.updateTurf(req,res)
       }
     )
+    this.router.get('/turfOwner/get-rules/:id',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.getrules(req,res)
+      }
+    )
 
     this.router.post('/turfOwner/generateSlots',
       verifyAuth,
       (req:Request,res:Response)=>{
         turfController.generateSlots(req,res)
+      }
+    )
+    
+    this.router.post(
+      "/turfOwner/add-rules",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.addrules(req,res)
       }
     )
     this.router.get('/turfOwner/get-all-bookings',

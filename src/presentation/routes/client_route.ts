@@ -76,6 +76,7 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.getTurfdetails(req,res)
       }
     )
+
     this.router.get(
       "/client/get-past-bookings",
       verifyAuth,

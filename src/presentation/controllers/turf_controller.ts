@@ -20,6 +20,8 @@ import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs
 import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { CustomError } from "../../domain/utils/custom.error";
 import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_nearby_turf_usecase_interface";
+import { IAddRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/add_rules_useCase_interface";
+import { IGetRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_rules_useCase_interface";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -39,7 +41,11 @@ export class TurfController implements ITurfController {
     @inject("IBookSlotUseCase")
     private _bookSlotUseCase: IBookSlotUseCase,
     @inject("IGetNearByTurfUseCase")
-    private _getNearbyTurfsUseCase:IGetNearByTurfUseCase
+    private _getNearbyTurfsUseCase: IGetNearByTurfUseCase,
+    @inject("IAddRulesUseCase")
+    private _addRulesUseCase: IAddRulesUseCase,
+    @inject("IGetRulesUseCase")
+    private _getRulesUseCase: IGetRulesUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -227,39 +233,44 @@ export class TurfController implements ITurfController {
   }
 
   async getnearbyturfs(req: Request, res: Response): Promise<void> {
-    try{
-        const {latitude,longitude,page=1,limit=10,search=""}=req.query;
+    try {
+      const {
+        latitude,
+        longitude,
+        page = 1,
+        limit = 10,
+        search = "",
+      } = req.query;
 
-        console.log('latitude','longitude',latitude,longitude)
+      console.log("latitude", "longitude", latitude, longitude);
 
-        if(!latitude || !longitude){
-          res.status(HTTP_STATUS.BAD_REQUEST).json({
-            success:false,
-            message:ERROR_MESSAGES.LATITUDE_LONGITUDE_REQUIRED
-          })
-          return;
-        }
+      if (!latitude || !longitude) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.LATITUDE_LONGITUDE_REQUIRED,
+        });
+        return;
+      }
 
-        const result =await this._getNearbyTurfsUseCase.execute(
-          parseFloat(latitude as string),
-          parseFloat(longitude as string),
-          parseInt(page as string,10),
-          parseInt(limit as string ,10),
-          search as string,
-        )
+      const result = await this._getNearbyTurfsUseCase.execute(
+        parseFloat(latitude as string),
+        parseFloat(longitude as string),
+        parseInt(page as string, 10),
+        parseInt(limit as string, 10),
+        search as string
+      );
 
-        res.status(HTTP_STATUS.OK).json({
-          success:true,
-          turfs:result.turfs,
-          totalPages:result.totalPages,
-        })
-
-    }catch(error){
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        turfs: result.turfs,
+        totalPages: result.totalPages,
+      });
+    } catch (error) {
       console.error("Error fetching nearby turfs:", error);
       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-        success:false,
-        message:ERROR_MESSAGES.SERVER_ERROR
-      })
+        success: false,
+        message: ERROR_MESSAGES.SERVER_ERROR,
+      });
     }
   }
 
@@ -294,10 +305,77 @@ export class TurfController implements ITurfController {
         });
       } else {
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-          success:false,
-          message:ERROR_MESSAGES.SERVER_ERROR,
-        })
+          success: false,
+          message: ERROR_MESSAGES.SERVER_ERROR,
+        });
       }
+    }
+  }
+
+  async addrules(req: Request, res: Response): Promise<void> {
+    try {
+      const rules = req.body;
+      console.log("this are the rules", rules);
+      const ownerId = (req as CustomRequest).user?.userId;
+
+      if (!ownerId) {
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success: false,
+          message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+        });
+        return;
+      }
+      rules.ownerId = ownerId;
+      console.log('rrrrruulless',rules.turfId,rules.slotDuration)
+      if (
+        !rules.turfId ||
+        !rules.slotDuration ||
+        !rules.price ||
+        !rules.weeklyRules
+      ) {
+        throw new CustomError(
+          ERROR_MESSAGES.VALIDATION_ERROR,
+          HTTP_STATUS.BAD_REQUEST
+        );
+      }
+      const addedRules = await this._addRulesUseCase.execute(rules);
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: "Rules added or updated successfullly",
+        data: addedRules,
+      });
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: ERROR_MESSAGES.SERVER_ERROR,
+        });
+      }
+    }
+  }
+  async getrules(req: Request, res: Response): Promise<void> {
+    try {
+      const turfId = req.params.id;
+
+      if (!turfId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.INVALID_CREDENTIALS,
+        });
+        return;
+      }
+      const rules = await this._getRulesUseCase.execute(turfId);
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        rules,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
     }
   }
 }

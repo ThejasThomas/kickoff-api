@@ -14,6 +14,8 @@ import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repo
 import { SlotRepository } from "../../interfaceAdapters/repositories/turf/slot_repository";
 import { IBookingRepository } from "../../domain/repositoryInterface/booking/booking_repository_interface";
 import { BookingRepository } from "../../interfaceAdapters/repositories/booking/booking_repository";
+import { IRuleRepository } from "../../domain/repositoryInterface/Turf/rule_repository_interface";
+import { RuleRepository } from "../../interfaceAdapters/repositories/turf/rule_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register('IOtpRepository', {
@@ -44,6 +46,9 @@ container.register<ISlotRepository>('ISlotRepository',{
 })
 container.register<IBookingRepository>('IBookingRepository',{
   useClass:BookingRepository
+})
+container.register<IRuleRepository>('IRuleRepository',{
+  useClass:RuleRepository
 })
 
   }
