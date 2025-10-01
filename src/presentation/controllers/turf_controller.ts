@@ -213,16 +213,19 @@ export class TurfController implements ITurfController {
     try {
       const turfId = req.params.id;
       const { date } = req.query;
+      console.log('turffIDDD',turfId)
 
-      if (!turfId || !date) {
+      if (!turfId || !date||typeof date !== "string") {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           message: ERROR_MESSAGES.INVALID_CREDENTIALS,
         });
         return;
       }
+       const dateObj=new Date(date)
+            const dayIndex =dateObj.getDay()
 
-      const slots = await this._getSlotsUseCase.execute(turfId, date as string);
+      const slots = await this._getSlotsUseCase.execute(turfId, date as string,dayIndex);
       res.status(HTTP_STATUS.OK).json({
         success: true,
         slots,
@@ -279,6 +282,7 @@ export class TurfController implements ITurfController {
       const bookData = req.body;
       const userId = (req as CustomRequest).user?.userId;
       console.log("userrrrrrID", userId);
+      console.log('bookDAAtaaa',bookData)
 
       if (!userId) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({

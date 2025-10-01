@@ -72,7 +72,8 @@ export const ERROR_MESSAGES = {
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
   BOOKING_FAILED: "Slot booking failed",
-  SLOT_NOT_DOUND: "Slot not found",
+  INVALID_DAY_INDEX:"Invalid day index",
+  SLOT_NOT_FOUND: "Slot not found",
   MISSING_REQUIRED_FIELDS: "Missing required field",
   FAILED_TO_FETCH_BOOKINGS: "Failed to bookings",
   NOT_ALLOWED: "You can't do this action",

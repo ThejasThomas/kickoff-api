@@ -15,7 +15,6 @@ export interface IRules {
     ownerId:string,
     slotDuration:number,
     price:number,
-    duration:string,
     weeklyRules:IWeekRules[]
     exceptions:IException[]
 }

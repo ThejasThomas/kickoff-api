@@ -12,8 +12,6 @@ export class BookSlotUseCase implements IBookSlotUseCase{
     constructor(
         @inject('IBookingRepository')
         private _bookingRepository:IBookingRepository,
-
-        
         @inject('ISlotRepository')
         private _slotRepository:ISlotRepository
     ){}
@@ -28,11 +26,11 @@ export class BookSlotUseCase implements IBookSlotUseCase{
 
         const bookSlot=await this._bookingRepository.save(newBooking)
 
-        await this._slotRepository.updateSlotBookedStatus(
-            bookData.turfId,
-            bookData.date,
-            bookData.startTime
-        )
+        // await this._slotRepository.updateSlotBookedStatus(
+        //     bookData.turfId,
+        //     bookData.date,
+        //     bookData.startTime
+        // )
         return bookSlot;
     } catch(error){
         console.error('Error in book slot use case ')
