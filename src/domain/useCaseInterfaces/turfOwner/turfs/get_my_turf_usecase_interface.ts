@@ -1,3 +1,4 @@
+import { GetTurfDTO } from "../../../../presentation/dtos/get_turf_dto";
 import { ITurfEntity } from "../../../models/turf_entity";
 
 export interface IGetMyTurfsUseCase {
@@ -7,5 +8,5 @@ export interface IGetMyTurfsUseCase {
     limit: number,
     search?: string,
     status?: string
-  ): Promise<{ turfs: ITurfEntity[]; totalPages: number }>;
+  ): Promise<{ turfs: GetTurfDTO[]; totalPages: number }>;
 }

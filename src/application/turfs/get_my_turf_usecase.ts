@@ -2,6 +2,8 @@ import { inject, injectable } from "tsyringe";
 import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ITurfEntity } from "../../domain/models/turf_entity";
 import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_my_turf_usecase_interface";
+import { mapGetTurfDTO } from "../../presentation/mappers/getTurfMappers";
+import { GetTurfDTO } from "../../presentation/dtos/get_turf_dto";
 
 @injectable()
 export class GetMyTurfsUseCase implements IGetMyTurfsUseCase {
@@ -10,13 +12,14 @@ export class GetMyTurfsUseCase implements IGetMyTurfsUseCase {
     private _turfRepository: ITurfRepository
   ) {}
 
+
   async execute(
     ownerId: string,
     page: number,
     limit: number,
     search: string = "",
     status?: string
-  ): Promise<{ turfs: ITurfEntity[]; totalPages: number }> {
+  ): Promise<{ turfs: GetTurfDTO[]; totalPages: number }> {
     const skip = (page - 1) * limit;
     const filter: any = { ownerId }; 
 
@@ -38,15 +41,12 @@ export class GetMyTurfsUseCase implements IGetMyTurfsUseCase {
       limit,
       sortOptions,
     );
+    console.log('itmes',items)
 
-    type SanitizedTurf = Omit<ITurfEntity, never>;
-    const sanitizedTurfs: SanitizedTurf[] = items.map((turf) => {
-      const { id, ...rest } = turf;
-      return { _id: (id ?? "").toString(), ...rest } as SanitizedTurf;
-    });
-
+    const myturfs = items.map(mapGetTurfDTO);
+    console.log('myTurfs',myturfs[0]._id)
     return {
-      turfs: sanitizedTurfs,
+      turfs: myturfs,
       totalPages: Math.ceil(total / limit),
     };
   }

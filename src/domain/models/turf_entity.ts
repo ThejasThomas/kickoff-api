@@ -1,5 +1,8 @@
+import { ObjectId } from "mongoose";
+
 export interface ITurfEntity {
     id?:string;
+    _id?: string | ObjectId;
     ownerId:string;
     turfName:string;
     description:string;

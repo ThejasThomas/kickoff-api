@@ -4,6 +4,7 @@ import { ITurfOwnerRepository } from "../../domain/repositoryInterface/users/tur
 import { IClientEntity } from "../../domain/models/client_entity";
 import { ITurfOwnerEntity } from "../../domain/models/turfOwner_entity";
 import { IGetAllUsersUseCase } from "../../domain/useCaseInterfaces/users/get_all_users_usecase_interface";
+import { mapUser } from "../../presentation/mappers/getUsersMappers";
 
 @injectable()
 export class GetAllUsersUseCase implements IGetAllUsersUseCase {
@@ -50,15 +51,8 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
         : this._turfOwnerRepository;
 
     const { items, total } = await repo.findAll(filter, skip, limit,sortOptions);
-    type SanitizedUser =
-      | (Omit<IClientEntity, "password"> & { _id: string })
-      | (Omit<ITurfOwnerEntity, "password"> & { _id: string });
-
-    const sanitizedUsers: SanitizedUser[] = items.map((user) => {
-      const { password, _id, ...rest } = user;
-      return { _id: (_id ?? "").toString(), ...rest } as SanitizedUser;
-    });
-
+    
+    const sanitizedUsers = items.map(mapUser);
     return {
       users: sanitizedUsers,
       totalPages: Math.ceil(total / limit),

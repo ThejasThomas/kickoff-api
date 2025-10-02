@@ -4,6 +4,7 @@ import { IBookingRepository } from "../../domain/repositoryInterface/booking/boo
 import { IBookingModel } from "../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { CustomError } from "../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
+import { mapBookingDTOList } from "../../presentation/mappers/getBookingapper";
 
 @injectable()
 export class GetBookingsUseCase implements IGetBookingsUseCase{
@@ -22,7 +23,7 @@ export class GetBookingsUseCase implements IGetBookingsUseCase{
             }
 
             const bookings = await this._bookingRepository.findByTurfIdAndDate(turfId,date);
-            return bookings;
+            return mapBookingDTOList(bookings);
         }catch(error){
             console.error("Error in GetBookingsUseCase:",error)
             if(error instanceof CustomError){

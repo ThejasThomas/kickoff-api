@@ -19,6 +19,7 @@ export class UpdateTurfOwnerProfileUseCase implements IUpdateTurfOwnerProfileUse
             throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND,HTTP_STATUS.NOT_FOUND);
 
         }
+        console.log('ownerrIDD',ownerId)
         
 
         const updatedOwner = await this._validateOwnerService.updateOwner(ownerId,profileData);

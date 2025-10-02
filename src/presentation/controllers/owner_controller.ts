@@ -93,6 +93,7 @@ export class TurfOwnerController implements ITurfOwnerController {
           try{
             const ownerId = (req as CustomRequest).user?.userId;
             const profileData=req.body;
+            console.log('profileDate',profileData)
 
             if(!ownerId) {
               res.status(HTTP_STATUS.UNAUTHORIZED).json({
@@ -103,6 +104,7 @@ export class TurfOwnerController implements ITurfOwnerController {
             }
             
             const updatedProfile = await this._updateTurfOwnerProfileUseCase.execute(ownerId,profileData)
+            console.log('updatedProfile',updatedProfile)
             res.status(HTTP_STATUS.OK).json({
               success:true,
               message:SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
