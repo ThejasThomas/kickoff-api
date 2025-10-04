@@ -1,4 +1,4 @@
-import { model, ObjectId } from "mongoose";
+import { model } from "mongoose";
 import { IBookingEntity } from "../../../../domain/models/booking_entity";
 import { BookingSchema } from "../schemas/booking_schema";
 

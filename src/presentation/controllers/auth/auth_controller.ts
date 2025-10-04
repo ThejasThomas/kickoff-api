@@ -21,7 +21,7 @@ import {
   HTTP_STATUS,
   SUCCESS_MESSAGES,
 } from "../../../shared/constants";
-import { LoginUserDTO } from "../../dtos/user_dto";
+import { LoginUserDTO } from "../../../application/dtos/user_dto";
 import { handleErrorResponse } from "../../../shared/utils/error_handler";
 import {
   clearAuthCookies,

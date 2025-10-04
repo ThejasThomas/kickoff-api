@@ -22,6 +22,7 @@ export class ClientRoutes extends BaseRoute {
         turfController.getTurfById(req, res);
       }
     );
+
     this.router.get(
       "/client/getslots/:id",
       verifyAuth,

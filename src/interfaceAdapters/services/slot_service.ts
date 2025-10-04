@@ -1,10 +1,8 @@
-import { duration } from "zod/v4/classic/iso.cjs";
 import { ISlotService } from "../../domain/serviceInterfaces/slot_service_interface";
-import { ISlot } from "../../application/turfs/generate_slots_usecase";
+import { ISlot } from "../../application/usecase/turfs/generate_slots_usecase";
 import { ISlotEntity } from "../../domain/models/slot_entity";
 import { SlotModel } from "../database/mongoDb/models/slot_model";
 import { inject, injectable } from "tsyringe";
-import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repository_interface";
 
 

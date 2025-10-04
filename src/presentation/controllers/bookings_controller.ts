@@ -8,8 +8,7 @@ import {
   SUCCESS_MESSAGES,
 } from "../../shared/constants";
 import { IGetBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_bookings_useCase_interface";
-import { success } from "zod";
-import { GetBookingDTO } from "../dtos/booking_dto";
+import { GetBookingDTO } from "../../application/dtos/booking_dto";
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { IGetUpcomingBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_bookings_usecase_interface";
 import { IGetBookedTurfUseCase } from "../../domain/useCaseInterfaces/Bookings/get_booked_useCase_interface";

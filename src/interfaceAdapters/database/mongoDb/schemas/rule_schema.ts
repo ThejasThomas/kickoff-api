@@ -1,6 +1,5 @@
-import { model, Schema } from "mongoose";
+import {  Schema } from "mongoose";
 import { IRules } from "../../../../domain/models/rule_entity";
-import { required } from "zod/v4/core/util.cjs";
 
 export const RulesSchema = new Schema<IRules>(
   {

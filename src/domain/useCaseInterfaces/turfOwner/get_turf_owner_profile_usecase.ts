@@ -1,5 +1,4 @@
-import { IOwnerDTO } from "../../../presentation/dtos/owner_dto";
-import { ITurfOwnerEntity } from "../../models/turfOwner_entity";
+import { IOwnerDTO } from "../../../application/dtos/owner_dto";
 
 export interface ITurfOwnerDetailsUseCase{
     execute(ownerId:string):Promise<IOwnerDTO>

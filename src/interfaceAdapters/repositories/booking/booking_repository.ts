@@ -48,7 +48,6 @@ export class BookingRepository extends BaseRepository<IBookingModel > implements
         try{
             const now =new Date();
             const currentDateStr = now.toISOString().split('T')[0];
-            const currentTimeStr =`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
 
             const bookings =await BookinModel.find({
                 userId,

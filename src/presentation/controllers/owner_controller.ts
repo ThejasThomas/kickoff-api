@@ -163,7 +163,6 @@ export class TurfOwnerController implements ITurfOwnerController {
           Promise<void> {
             try{
               const ownerId=(req as CustomRequest).user?.userId;
-              const profileData=req.body;
 
 
               if(!ownerId) {

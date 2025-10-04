@@ -8,7 +8,6 @@ import {
 } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
-import { BookingsController } from "../controllers/bookings_controller";
 
 export class OwnerRoutes extends BaseRoute {
   constructor() {
@@ -61,6 +60,13 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.updateTurfOwnerProfile(req, res);
       }
     );
+    this.router.get(
+      "/turfOwner/getbookedclient-details/:userId",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        userController.getBookedUserDetails(req,res)
+      }
+    )
     this.router.get(
       "/turfOwner/get-my-turf",
       verifyAuth,

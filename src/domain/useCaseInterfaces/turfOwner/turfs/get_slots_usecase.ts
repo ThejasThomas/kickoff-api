@@ -1,4 +1,3 @@
-import { IRules } from "../../../models/rule_entity";
 import { ISlotEntity } from "../../../models/slot_entity";
 
 export interface IGetSlotsUseCase {

@@ -1,4 +1,4 @@
-import { GetTurfDTO } from "../../../../presentation/dtos/get_turf_dto";
+import { GetTurfDTO } from "../../../../application/dtos/get_turf_dto";
 import { ITurfEntity } from "../../../models/turf_entity";
 
 export interface IGetMyTurfsUseCase {

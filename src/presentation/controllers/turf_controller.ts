@@ -10,10 +10,8 @@ import {
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 import { CustomRequest } from "../middlewares/auth_middleware";
-import { success } from "zod";
 import { IGetMyTurfsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_my_turf_usecase_interface";
 import { IGetTurfByIdUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_turf_by_id_usecase_interface";
-import tr from "zod/v4/locales/tr.cjs";
 import { IUpdateTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/update_turf_by_id_usecase_interface";
 import { IGenerateSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/generateSlotsUseCase";
 import { IGetSlotsUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_slots_usecase";
@@ -55,17 +53,12 @@ export class TurfController implements ITurfController {
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
       const searchTerm = typeof search === "string" ? search : "";
-      //  let excludeArray: string[] = [];
-      // if (typeof excludeStatus === "string") {
-      //   excludeArray = excludeStatus.split(",").map((s) => s.trim());
-      // }
 
       const { turfs, totalPages } = await this._getAllTurfUseCase.execute(
         pageNumber,
         pageSize,
         searchTerm,
         status as string
-        // excludeArray
       );
 
       res.status(HTTP_STATUS.OK).json({
