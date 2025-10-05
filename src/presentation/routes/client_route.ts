@@ -22,6 +22,13 @@ export class ClientRoutes extends BaseRoute {
         turfController.getTurfById(req, res);
       }
     );
+    this.router.get(
+      "/client/get-user-profile",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        userController.getUserDetails(req,res)
+      }
+    )
 
     this.router.get(
       "/client/getslots/:id",
@@ -53,6 +60,13 @@ export class ClientRoutes extends BaseRoute {
       verifyAuth,
       (req:Request,res:Response) =>{
         userController.getUserDetails(req,res)
+      }
+    )
+    this.router.post(
+      "/client/update-user-details",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        
       }
     )
 

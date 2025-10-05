@@ -86,6 +86,10 @@ import { TurfOwnerDetailsUseCase } from "../../application/usecase/turfOwner/get
 import { UpdateTurfOwnerProfileUseCase } from "../../application/usecase/turfOwner/update_turf_owner_profile_usecase";
 import { RetryAdminApprovalUseCase } from "../../application/usecase/turfOwner/retry_admin_approval_usecase";
 import { RequestUpdateProfileUseCase } from "../../application/usecase/turfOwner/request_profile_update_usecase";
+import { IGetUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/get_user_details_usecase_interface";
+import { GetUserDetailsUseCase } from "../../application/usecase/users/get_user_details_usecase";
+import { IUpdateUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/update_userdetails_usecase_interface";
+import { UpdateUserDetailsUseCase } from "../../application/usecase/users/update_user_details_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -244,5 +248,11 @@ export class UseCaseRegistry {
     container.register<IGetBookedUsersDetails>("IGetBookedUsersDetails", {
       useClass: GetBookedUsersDetails,
     });
+    container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase", {
+      useClass:GetUserDetailsUseCase
+    })
+    container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase",{
+      useClass:UpdateUserDetailsUseCase
+    })
   }
 }

@@ -11,6 +11,7 @@ import { Request, Response } from "express";
 import { IUpdateEntityStatusUseCase } from "../../domain/useCaseInterfaces/users/update_entity_status_usecase_interface";
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { IGetBookedUsersDetails } from "../../domain/useCaseInterfaces/users/get_bookedUsersDetails_interface";
+import { IGetUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/get_user_details_usecase_interface";
 
 @injectable()
 export class UserController implements IUserController {
@@ -19,10 +20,10 @@ export class UserController implements IUserController {
     private _getAllUsersUseCase: IGetAllUsersUseCase,
     @inject("IUpdateEntityStatusUseCase")
     private __updateEntityStatusUseCase: IUpdateEntityStatusUseCase,
-    // @inject('IGetAllUsersUseCase')
-    // private _getUserDetailsUseCase:IGetAllUsersUseCase
     @inject("IGetBookedUsersDetails")
-    private _getBookedUserDetailsUseCase: IGetBookedUsersDetails
+    private _getBookedUserDetailsUseCase: IGetBookedUsersDetails,
+    @inject("IGetUserDetailsUseCase")
+    private _getUserDetailsUseCase:IGetUserDetailsUseCase
   ) {}
 
   async refreshSession(req: Request, res: Response): Promise<void> {
@@ -82,7 +83,35 @@ export class UserController implements IUserController {
     }
   }
 
-  async getUserDetails(req: Request, res: Response): Promise<void> {}
+  async getUserDetails(req: Request, res: Response): Promise<void> {
+    try{
+      const userId=(req as CustomRequest).user?.userId
+      console.log('userId',userId)
+      const userDetails=await this._getUserDetailsUseCase.execute(userId)
+      res.status(HTTP_STATUS.OK).json(userDetails)
+    }catch(error){
+      handleErrorResponse(req,res,error)
+    }
+  }
+
+  async updateUserDetails(req: Request, res: Response): Promise<void> {
+    try{
+      const userId=(req as CustomRequest).user?.userId
+      const profileDate=req.body 
+      if(!userId){
+         res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success: false,
+          message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+        });
+        return;
+      }
+      const updatedProfile =await this
+      
+    }catch{
+
+    }
+  }
+
 
   async updateEntityStatus(req: Request, res: Response): Promise<void> {
     try {

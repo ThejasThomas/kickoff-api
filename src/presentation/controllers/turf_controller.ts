@@ -53,6 +53,7 @@ export class TurfController implements ITurfController {
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
       const searchTerm = typeof search === "string" ? search : "";
+      console.log('paageeee',pageNumber,   'sixeee',  pageSize,     )
 
       const { turfs, totalPages } = await this._getAllTurfUseCase.execute(
         pageNumber,
