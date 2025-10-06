@@ -13,13 +13,14 @@ export class UpdateUserDetailsUseCase implements IUpdateUserDetailsUseCase{
     ){}
 
     async execute(userId: string, profileData: GetUserDetailsDTO): Promise<void> {
-        const existingUser=await this._clientRepository.findOne({userId:userId})
+        const existingUser=await this._clientRepository.findOne({userId})
+        console.log('existingguser',existingUser)
         if(!existingUser){
             throw new CustomError(
                 ERROR_MESSAGES.USER_NOT_FOUND,HTTP_STATUS.NOT_FOUND
             )
         }
-        const updatedUserDetails=await this._clientRepository.updateOne(userId,profileData)
+        const updatedUserDetails=await this._clientRepository.updateOne({userId},profileData)
         console.log(updatedUserDetails)
 
     }

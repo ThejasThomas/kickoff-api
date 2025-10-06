@@ -12,6 +12,9 @@ import { IUpdateEntityStatusUseCase } from "../../domain/useCaseInterfaces/users
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { IGetBookedUsersDetails } from "../../domain/useCaseInterfaces/users/get_bookedUsersDetails_interface";
 import { IGetUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/get_user_details_usecase_interface";
+import { IUpdateUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/update_userdetails_usecase_interface";
+import { success } from "zod";
+import { CustomError } from "../../domain/utils/custom.error";
 
 @injectable()
 export class UserController implements IUserController {
@@ -23,7 +26,9 @@ export class UserController implements IUserController {
     @inject("IGetBookedUsersDetails")
     private _getBookedUserDetailsUseCase: IGetBookedUsersDetails,
     @inject("IGetUserDetailsUseCase")
-    private _getUserDetailsUseCase:IGetUserDetailsUseCase
+    private _getUserDetailsUseCase:IGetUserDetailsUseCase,
+    @inject("IUpdateUserDetailsUseCase")
+    private _updateUserDetailsUseCase:IUpdateUserDetailsUseCase,
   ) {}
 
   async refreshSession(req: Request, res: Response): Promise<void> {
@@ -98,6 +103,7 @@ export class UserController implements IUserController {
     try{
       const userId=(req as CustomRequest).user?.userId
       const profileDate=req.body 
+      console.log('profileDataa',profileDate)
       if(!userId){
          res.status(HTTP_STATUS.UNAUTHORIZED).json({
           success: false,
@@ -105,10 +111,22 @@ export class UserController implements IUserController {
         });
         return;
       }
-      const updatedProfile =await this
-      
-    }catch{
+      const updatedProfile =await this._updateUserDetailsUseCase.execute(userId,profileDate)
 
+      res.status(HTTP_STATUS.OK).json({
+        success:true,
+        message:SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
+        data:updatedProfile
+      })
+    }catch(error){
+      if (error instanceof CustomError) {
+              res.status(error.statusCode).json({
+                success: false,
+                message: error.message,
+              });
+            } else {
+              handleErrorResponse(req, res, error);
+            }
     }
   }
 

@@ -62,11 +62,11 @@ export class ClientRoutes extends BaseRoute {
         userController.getUserDetails(req,res)
       }
     )
-    this.router.post(
+    this.router.patch(
       "/client/update-user-details",
       verifyAuth,
       (req:Request,res:Response)=>{
-        
+        userController.updateUserDetails(req,res)
       }
     )
 
