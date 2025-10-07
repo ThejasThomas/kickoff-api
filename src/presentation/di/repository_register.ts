@@ -1,0 +1,55 @@
+import { container } from "tsyringe";
+import { OtpRepository } from "../../interfaceAdapters/repositories/auth/otp_repository";
+import { ClientRepository } from "../../interfaceAdapters/repositories/users/client_repository";
+import { TurfOwnerRepository } from "../../interfaceAdapters/repositories/users/turfOwner_Repository";
+import { IAdminRepository } from "../../domain/repositoryInterface/users/admin-repository.interface.interface";
+import { AdminRepository } from "../../interfaceAdapters/repositories/users/admin_repository";
+import { IRefreshTokenRepository } from "../../domain/repositoryInterface/auth/refresh-token-repository.interface";
+import { RefreshTokenRepository } from "../../interfaceAdapters/repositories/auth/refresh_token_repositories";
+import { IRedisTokenRepository } from "../../domain/repositoryInterface/redis/redis_token_repository_interface";
+import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis_token_repository";
+import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
+import { TurfRepository } from "../../interfaceAdapters/repositories/turf/turf_repository";
+import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repository_interface";
+import { SlotRepository } from "../../interfaceAdapters/repositories/turf/slot_repository";
+import { IBookingRepository } from "../../domain/repositoryInterface/booking/booking_repository_interface";
+import { BookingRepository } from "../../interfaceAdapters/repositories/booking/booking_repository";
+import { IRuleRepository } from "../../domain/repositoryInterface/Turf/rule_repository_interface";
+import { RuleRepository } from "../../interfaceAdapters/repositories/turf/rule_repository";
+export class RepositoryRegistry {
+  static registerRepositories(): void {
+    container.register('IOtpRepository', {
+  useClass: OtpRepository,
+});
+
+container.register("IClientRepository",{
+    useClass:ClientRepository
+})
+container.register('ITurfOwnerRepository',{
+    useClass:TurfOwnerRepository
+})
+
+container.register<IAdminRepository>('IAdminRepository', {
+  useClass:AdminRepository
+})
+container.register<IRefreshTokenRepository>('IRefreshTokenRepository',{
+  useClass:RefreshTokenRepository
+})
+container.register<IRedisTokenRepository>('IRedisTokenRepository',{
+  useClass:RedisTokenRepository
+})
+container.register<ITurfRepository>('ITurfRepository',{
+  useClass:TurfRepository
+})
+container.register<ISlotRepository>('ISlotRepository',{
+  useClass:SlotRepository
+})
+container.register<IBookingRepository>('IBookingRepository',{
+  useClass:BookingRepository
+})
+container.register<IRuleRepository>('IRuleRepository',{
+  useClass:RuleRepository
+})
+
+  }
+}

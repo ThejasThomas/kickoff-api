@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
-import { IRedisTokenRepository } from "../../../entities/repositoryInterface/redis/redis_token_repository_interface";
-import { redisClient } from "../../../frameworks/cache/redis.client";
+import { IRedisTokenRepository } from "../../../domain/repositoryInterface/redis/redis_token_repository_interface";
+import { redisClient } from "../../redis/redis.client";
 
 @injectable()
 export class RedisTokenRepository implements IRedisTokenRepository {

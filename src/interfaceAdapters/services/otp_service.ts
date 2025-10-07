@@ -1,8 +1,8 @@
 import { config } from "../../shared/config";
 import { inject, injectable } from "tsyringe";
-import { IOtpRepository } from "../../entities/repositoryInterface/auth/otp-repository.interface";
-import { IBcrypt } from "../../frameworks/security/bcrypt_interface";
-import { IOtpService } from "../../entities/serviceInterfaces/otp-service_interface";
+import { IOtpRepository } from "../../domain/repositoryInterface/auth/otp-repository.interface";
+import { IBcrypt } from "../../presentation/security/bcrypt_interface";
+import { IOtpService } from "../../domain/serviceInterfaces/otp-service_interface";
 
 @injectable()
 export class OtpService implements IOtpService {
@@ -20,7 +20,7 @@ export class OtpService implements IOtpService {
         )
         await this._otpRepository.save({ email,otp,expiresAt})
     }
-    async verifyOtp(email: string, otp: string): Promise<Boolean> {
+    async verifyOtp(email: string, otp: string): Promise<boolean> {
 		const otpEntry = await this._otpRepository.findLatestOtp(email);
 		if (!otpEntry) return false;
 		if (

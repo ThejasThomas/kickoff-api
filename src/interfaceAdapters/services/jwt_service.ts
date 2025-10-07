@@ -1,15 +1,14 @@
 import jwt,{ JwtPayload, Secret } from "jsonwebtoken";
 import { injectable } from "tsyringe";
-import { ITokenService } from "../../entities/serviceInterfaces/token_service_interface";
+import { ITokenService } from "../../domain/serviceInterfaces/token_service_interface";
 import { config } from "../../shared/config";
 import ms from "ms";
-import { error } from "console";
 
-interface JWTPayloadData {
-     userId:string,
-     email:string,
-     role:string,
-}
+// interface JWTPayloadData {
+//      userId:string,
+//      email:string,
+//      role:string,
+// }
 
 export interface ResetTokenPayload extends JwtPayload {
 
@@ -55,7 +54,7 @@ export class JWTService implements ITokenService {
         verifyRefreshToken(token: string): string | JwtPayload | null {
             try{
                 return jwt.verify(token,this._refreshSecret) as JwtPayload;
-            } catch(error){
+            } catch{
                 return null;
 
             }
@@ -63,7 +62,7 @@ export class JWTService implements ITokenService {
         decodeAccessToken(token: string): JwtPayload | null {
             try{
                 return jwt.decode(token) as JwtPayload;
-            }catch(error){
+            }catch{
                 return null;
                 
             }
@@ -84,7 +83,7 @@ export class JWTService implements ITokenService {
         decodeResetToken(token: string): ResetTokenPayload | null {
 		try {
 			return jwt.decode(token) as ResetTokenPayload;
-		} catch (error) {
+		} catch {
 			return null;
 		}
 	}
