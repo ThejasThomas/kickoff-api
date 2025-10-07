@@ -1,3 +1,4 @@
+import { IBookingModel } from "../../interfaceAdapters/database/mongoDb/models/booking_model";
 
 export interface IBookingEntity{
     id?:string;
@@ -12,4 +13,12 @@ export interface IBookingEntity{
     paymentStatus:string;
     createdAt:string;
 } 
+
+export interface PaginatedBookings {
+    bookings:IBookingModel[];
+    total:number;
+    page:number;
+    limit:number;
+    totalPages:number;
+}
 
