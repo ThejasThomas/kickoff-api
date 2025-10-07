@@ -44,7 +44,7 @@ export class AdminRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res);
       }
     );
-    this.router.post(
+    this.router.get(
       "/admin/refresh-session",
       verifyAuth,
       (req: Request, res: Response) => {

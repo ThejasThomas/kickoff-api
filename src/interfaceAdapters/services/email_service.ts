@@ -3,7 +3,7 @@ import { IEmailService } from "../../domain/serviceInterfaces/email_service_inte
 import { config } from "../../shared/config";
 import nodemailer from 'nodemailer'
 import chalk from "chalk";
-import { PASSWORD_RESET_MAIL_CONTENT, SENT_REJECTION_EMAIL, VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
+import { PASSWORD_RESET_MAIL_CONTENT, SENT_APPROVE_EMAIL, SENT_REJECTION_EMAIL, SENT_TURF_REJECTION_EMAIL, VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
 
 
 @injectable()
@@ -87,10 +87,60 @@ export class EmailService implements IEmailService {
 
 		 console.log(
       chalk.bgRedBright.bold(`❌ Rejection Email Sent:`),
-      chalk.yellowBright(`${entityLabel} - ${to}`)
+      chalk.yellowBright(`${entityLabel} - ${to}`),
+	  chalk.yellowBright('url',`${retryUrl}`)
     );
 		
 
+	}
+
+    async sendApprovalEmail(to: string, entityLabel: string): Promise<void> {
+		const subject=`${entityLabel} application -Accepted-kickoff`
+		console.log('subbbbbbbb',subject)
+		const mailOptions={
+			from:`"KicKOff"<${config.nodemailer.EMAIL_USER}>`,
+			to,
+			subject,
+			html:SENT_APPROVE_EMAIL(entityLabel)
+		}
+		await this._sendMail(mailOptions)
+		console.log(
+      chalk.bgRedBright.bold(` Approval Email Sent:`),
+      chalk.yellowBright(`${entityLabel} - ${to}`)
+    );
+	}
+
+	async sendTurfRejectionEmail(to: string, reason: string, turfName: string, retryUrl: string): Promise<void> {
+		const subject =`Turf Registration Rejected - ${turfName} -KickOff`;
+		const mailOptions ={
+			from:`"KickOff"<${config.nodemailer.EMAIL_USER}>`,
+			to,
+			subject,
+			html:SENT_TURF_REJECTION_EMAIL(turfName,reason,retryUrl)
+		}
+
+		await this._sendMail(mailOptions)
+		console.log(
+      chalk.bgGreenBright.bold(`✅ Turf Rejection Email Sent:`),
+      chalk.yellowBright(`${turfName} - ${to}`),
+	  chalk.yellowBright('url',`${retryUrl}`)
+    );
+
+	}
+
+	async sendTurfApprovalEmail(to: string, turfName: string): Promise<void> {
+		const subject =`Turf Registration Approved - ${turfName} - KickOff`
+		const mailOptions = {
+			from:`"KickOff"<${config.nodemailer.EMAIL_USER}`,
+			to,
+			subject,
+			html:SENT_APPROVE_EMAIL(turfName)
+		}
+		await this._sendMail(mailOptions)
+		console.log(
+      chalk.bgGreenBright.bold(`✅ Turf Approval Email Sent:`),
+      chalk.yellowBright(`${turfName} - ${to}`)
+    );
 	}
 
 

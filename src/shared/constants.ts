@@ -6,7 +6,7 @@ export const ROLES = {
   TURF_OWNER: "turfOwner",
 } as const;
 
-export type statusTypes = "active" | "pending" | "blocked"|"approved"|"updated"
+export type statusTypes = "active" | "pending" | "blocked" | "approved";
 
 export type TRole = "client" | "admin" | "turfOwner";
 
@@ -41,17 +41,23 @@ export const SUCCESS_MESSAGES = {
   REGISTRATION_SUCCESS: "Registration completed",
   OTP_SEND_SUCCESS: "OTP sent",
   OTP_VERIFIED: "OTP verified",
+  BOOKINGS_FETCHED_SUCCESSFULLY: "Bookings fetched successfully",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
   LOGOUT_SUCCESS: "Logged out",
+  TURF_DETAILS_FETCHED_SUCCESSFULLY:"Turf details fetched successfully",
   VERIFICATION_SUCCESS: "Verification done",
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
-    APPROVAL_REQUEST_SENT:"Approval request send to the admin",
+  APPROVAL_REQUEST_SENT: "Approval request send to the admin",
+  TURF_BOOKED_SUCCESSFULLY: "Your turf slot  Booked successfully",
 
   UPDATED: "Successfully Updated.",
-  TURF_ADDED_SUCCESSFULLY :"Turf added successfully",
-  PROFILE_UPDATED_SUCCESSFULLY :"Profile updated successfully",
+  TURF_ADDED_SUCCESSFULLY: "Turf added successfully",
+  TURF_UPDATED_SUCCESSFULLY: "Turf updated successfully",
+  TURF_RETRY_UPDATED_SUCCESSFULLY:
+    "Turf updated successfully and wait for admin approval",
+  PROFILE_UPDATED_SUCCESSFULLY: "Profile updated successfully",
 };
 
 export const ERROR_MESSAGES = {
@@ -60,15 +66,31 @@ export const ERROR_MESSAGES = {
   EMAIL_NOT_FOUND: "Email not found",
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
+  SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
+  DATABASE_ERROR: "Database Error",
+  OWNER_PERMISSION_DENIED:
+    "Access denied. Your account is not approved to add services.",
+  BOOKING_FAILED: "Slot booking failed",
+  INVALID_DAY_INDEX:"Invalid day index",
+  SLOT_NOT_FOUND: "Slot not found",
+  MISSING_REQUIRED_FIELDS: "Missing required field",
+  FAILED_TO_FETCH_BOOKINGS: "Failed to bookings",
   NOT_ALLOWED: "You can't do this action",
-FOLDER_NOT_FOUND:"Folder not Found",
+  TURF_NOT_FOUND: "Turf not found",
+  INVALID_TURFID_OR_DATE: "Invalid turfId or date",
+  LATITUDE_LONGITUDE_REQUIRED: "Latitude and longitude are required",
+  FOLDER_NOT_FOUND: "Folder not Found",
+  SLOT_UPDATE_FAILED: "Slot updated failed",
+  SLOT_NOT_FOUND_OR_ALREADY_BOOKED: "Slot not found or it already booked",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
-  OWNER_NOT_FOUND:"Owner not found",
-  TURF_CREATION_FAILED:'Failed to add turf. Please try again ',
-  OWNER_NOT_ACTIVE:"Owner is not active now please update your profile and try again",
+  OWNER_NOT_FOUND: "Owner not found",
+  FAILED_TO_FETCH_TURF_DETAILS:"Failed to fetch turf details",
+  TURF_CREATION_FAILED: "Failed to add turf. Please try again ",
+  OWNER_NOT_ACTIVE:
+    "Owner is not active now please update your profile and try again",
   PENDING_ADMIN_APPROVAL: "Your request is not approved by admin",
   SERVER_ERROR: "Something went wrong try again later",
   VALIDATION_ERROR: "Check your inputs and try again",
@@ -80,7 +102,7 @@ FOLDER_NOT_FOUND:"Folder not Found",
   INVALID_TOKEN: "Invalid session please login again",
   SAME_CURR_NEW_PASSWORD:
     "New password must be different from current password",
-    UPDATE_FAILED:"failed to update profile"
+  UPDATE_FAILED: "failed to update profile",
 };
 export const VERIFICATION_MAIL_CONTENT = (
   otp: string
@@ -332,6 +354,168 @@ export const SENT_REJECTION_EMAIL = (
       <em>This is an automated message. Please do not reply directly to this email.</em>
    </div>
 </div>`;
+
+export const SENT_TURF_APPROVAL_EMAIL = (turfName: string) => `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px;">
+    <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #28a745; margin: 0;">🎉 Turf Registration Approved!</h1>
+      </div>
+      
+      <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Dear Turf Owner,</p>
+      
+      <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+        Congratulations! Your turf registration for <strong>"${turfName}"</strong> has been approved by our admin team.
+      </p>
+      
+      <div style="background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; padding: 15px; margin: 20px 0;">
+        <h4 style="color: #155724; margin: 0 0 10px 0;">What's Next?</h4>
+        <p style="color: #155724; margin: 0;">
+          Your turf is now live and available for bookings. You can manage your turf settings, view bookings, and track earnings through your dashboard.
+        </p>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${config.cors.ALLOWED_ORIGIN}/turfOwner/dashboard" style="display: inline-block; background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Go to Dashboard
+        </a>
+      </div>
+      
+      <p style="font-size: 16px; color: #333; margin: 20px 0;">
+        Thank you for joining KickOff and contributing to our sports community!
+      </p>
+      
+      <div style="border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: center;">
+        <p style="font-size: 14px; color: #666; margin: 0;">
+          Best regards,<br>
+          <strong>KickOff Team</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+`;
+
+export const SENT_APPROVE_EMAIL = (
+  entityLabel: string
+) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; background: #fff;">
+   <!-- Logo Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
+         ⚽ <span style="color: #FEBA43;">KickOff</span>
+      </h1>
+   </div>
+
+   <!-- Header Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <div style="background-color: #dc3545; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+         <h2 style="color: white; margin: 0; font-size: 24px;">
+            ${entityLabel} Application Status 📋
+         </h2>
+      </div>
+      <p style="color: #666; font-size: 16px; margin: 10px 0;">
+         We've reviewed your application and have an update for you.
+      </p>
+   </div>
+
+   <!-- Main Content -->
+   <div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc); border: 1px solid #f0f0f0;">
+<div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc); border: 1px solid #f0f0f0;">
+  <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+    We happily to inform you that your <strong>${entityLabel.toLowerCase()}</strong> application has been 
+    <span style="color: #dc3545; font-weight: bold;">accepted</span>.
+  </p>
+</div>
+   </div>
+
+   <!-- Help Section -->
+   <div style="border-radius: 8px; padding: 20px; margin: 25px 0; background-color: #FFF8E1; border: 1px solid #FFE082;">
+      <div style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+         <span style="font-size: 24px; margin-right: 10px;">💡</span>
+         <h3 style="color: #B76E00; margin: 0; font-size: 18px;">Need Help?</h3>
+      </div>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Review our application guidelines carefully
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Ensure all required documents are complete and clear
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Contact our support team if you need clarification
+         </li>
+         ${
+           entityLabel === "Turf Owner"
+             ? `
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Ensure your turf facility meets our quality standards
+         </li>
+         `
+             : ""
+         }
+      </ul>
+   </div>
+
+   <!-- Contact Section -->
+   <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+      <p style="font-size: 14px; color: #888;">
+         Have questions about this decision? We're here to help! 💬<br>
+         Contact us at <a href="mailto:support@kickoff.in" style="color: #FEBA43; text-decoration: none;">support@kickoff.in</a>
+      </p>
+   </div>
+
+   <!-- Footer -->
+   <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
+      © ${new Date().getFullYear()} KickOff. All rights reserved.<br>
+      <span style="color: #FEBA43;">⚽</span> Building the Best Sports Experience <span style="color: #FEBA43;">⚽</span><br>
+      <em>This is an automated message. Please do not reply directly to this email.</em>
+   </div>
+</div>`;
+
+export const SENT_TURF_REJECTION_EMAIL = (
+  turfName: string,
+  reason: string,
+  retryUrl: string
+) => `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px;">
+    <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #dc3545; margin: 0;">Turf Registration Rejected</h1>
+      </div>
+      
+      <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Dear Turf Owner,</p>
+      
+      <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+        We regret to inform you that your turf registration for <strong>"${turfName}"</strong> has been rejected by our admin team.
+      </p>
+      
+      <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; padding: 15px; margin: 20px 0;">
+        <h4 style="color: #721c24; margin: 0 0 10px 0;">Rejection Reason:</h4>
+        <p style="color: #721c24; margin: 0;">${reason}</p>
+      </div>
+      
+      <p style="font-size: 16px; color: #333; margin: 20px 0;">
+        You can review and resubmit your turf registration by clicking the button below:
+      </p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${retryUrl}" style="display: inline-block; background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Resubmit Turf Registration
+        </a>
+      </div>
+      
+      <p style="font-size: 14px; color: #666; margin-top: 30px;">
+        If you have any questions, please contact our support team.
+      </p>
+      
+      <div style="border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: center;">
+        <p style="font-size: 14px; color: #666; margin: 0;">
+          Best regards,<br>
+          <strong>KickOff Team</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+`;
 
 export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
   fullName: string,

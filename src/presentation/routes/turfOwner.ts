@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import {
   authController,
+  bookingsController,
+  turfController,
   turfOwnerController,
   userController,
 } from "../di/resolver";
@@ -13,7 +15,7 @@ export class OwnerRoutes extends BaseRoute {
   }
 
   protected initializeRoutes(): void {
-    this.router.post(
+    this.router.get(
       "/turfOwner/refresh-session",
       verifyAuth,
       (req: Request, res: Response) => {
@@ -35,6 +37,13 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.getOwnerDetails(req, res);
       }
     );
+    this.router.put(
+      '/turfOwner/request-update-profile',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfOwnerController.requestUpdateProfile(req,res);
+      }
+    )
 
     this.router.post(
       "/turfOwner/refresh-token",
@@ -51,6 +60,60 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.updateTurfOwnerProfile(req, res);
       }
     );
+    this.router.get(
+      "/turfOwner/getbookedclient-details/:userId",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        userController.getBookedUserDetails(req,res)
+      }
+    )
+    this.router.get(
+      "/turfOwner/get-my-turf",
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfController.getMyTurf(req,res)
+      }
+    )
+
+    this.router.get('/turfOwner/get-turfdetails/:id',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        turfController.getTurfById(req,res)
+      }
+    )
+    this.router.put('/turfOwner/update-turf/:id',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.updateTurf(req,res)
+      }
+    )
+    this.router.get('/turfOwner/get-rules/:id',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.getrules(req,res)
+      }
+    )
+
+    this.router.post('/turfOwner/generateSlots',
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.generateSlots(req,res)
+      }
+    )
+    
+    this.router.post(
+      "/turfOwner/add-rules",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.addrules(req,res)
+      }
+    )
+    this.router.get('/turfOwner/get-all-bookings',
+      verifyAuth,
+      (req:Request,res:Response) =>{
+        bookingsController.getAllbookings(req,res)
+      }
+    )
 
     this.router.post(
       "/turfOwner/retry-approval",

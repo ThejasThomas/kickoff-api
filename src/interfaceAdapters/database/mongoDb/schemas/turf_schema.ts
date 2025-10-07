@@ -72,10 +72,22 @@ export const TurfSchema =new Schema<ITurf>(
       enum: ["active", "inactive", "pending", "rejected"],
       default: "pending",
     },
+    openingTime:{
+      type:String,
+      required:false,
+    },
+    closingTime:{
+      type:String,
+      required:false
+    },
+    slotDuration:{
+      type:String,
+      required:false
+    }
     
   },
   {
-    timestamps: true, // adds createdAt & updatedAt automatically
+    timestamps: true, 
   }
 )
 TurfSchema.index({ "location.coordinates": "2dsphere" });

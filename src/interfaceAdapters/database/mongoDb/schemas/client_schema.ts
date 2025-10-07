@@ -22,7 +22,7 @@ export const clientSchema = new Schema<IClientModel>(
         // default: "Point",
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [Number], 
       },
     },
     location: {
