@@ -64,8 +64,13 @@ export class BookingsController implements IBookingsController {
   async getUpcomingbookings(req: Request, res: Response): Promise<void> {
     try{
     const userId =(req as CustomRequest).user?.userId
-
+      const { page = 1, limit = 10, search = "" } = req.query;
     console.log('boookinguserIddd',userId)
+
+    const pageNumber = Math.max(Number(page), 1);
+        const pageSize = Math.max(Number(limit), 1);
+            const searchTerm = typeof search === "string" ? search : "";
+
 
     if(!userId){
       throw new CustomError(
@@ -73,12 +78,15 @@ export class BookingsController implements IBookingsController {
         HTTP_STATUS.UNAUTHORIZED
       )
     }
-    const bookings =await this._getUpcomingBookingsUseCase.execute(userId)
+   const { bookings, totalPages, total } =await this._getUpcomingBookingsUseCase.execute(userId,pageNumber,pageSize,searchTerm)
 console.log('bookingssss',bookings)
     res.status(HTTP_STATUS.OK).json({
       success:true,
       message:SUCCESS_MESSAGES.BOOKINGS_FETCHED_SUCCESSFULLY,
       bookings,
+      totalPages,
+      total,
+      currentPage:pageNumber
     })
   }catch(error){
     console.error("Error in upcoming bookings",error)

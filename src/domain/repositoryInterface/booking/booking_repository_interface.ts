@@ -4,6 +4,6 @@ import { IBaseRepository } from "../base-repository.interface";
 
 export interface IBookingRepository extends IBaseRepository<IBookingEntity> {
     findByTurfIdAndDate(turfId:string,date:string):Promise<IBookingModel[]>
-    findUpComingByUserId(userId:string):Promise<IBookingModel[]>;
+    findUpComingByUserId(userId:string,skip:number,limit:number,search:string):Promise<{bookings:IBookingModel[];total:number}>;
     findPastByUserId(userId:string):Promise<IBookingModel[]>
 }

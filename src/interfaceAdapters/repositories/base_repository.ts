@@ -12,6 +12,9 @@ export class BaseRepository<T> implements IBaseRepository<T> {
       this.model.find(filter).sort(sort).skip(skip).limit(limit).lean() as Promise<T[]>,
       this.model.countDocuments(filter),
     ]);
+    if(total===0){
+      console.log("No documents match filter")
+    }
     return { items, total };
   }
 
@@ -43,7 +46,7 @@ export class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   async findById(id: string) {
-    return this.model.findById(id).lean() as Promise<T>;  // 👈 Added
+    return this.model.findById(id).lean() as Promise<T>; 
   }
   async countDocuments(filter: FilterQuery<T>) {
     return this.model.countDocuments(filter);
