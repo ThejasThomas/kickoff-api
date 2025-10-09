@@ -8,6 +8,7 @@ export function mapOwnerDetails(entity: ITurfOwnerEntity): IOwnerDTO {
     email: entity.email,
     phoneNumber: entity.phoneNumber,
     profileImage: entity.profileImage,
+    status:entity.status,
     address: entity.address,
     city: entity.city,
     state: entity.state,

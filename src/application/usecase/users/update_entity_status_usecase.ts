@@ -72,7 +72,6 @@ export class UpdateEntityStatusUseCase implements IUpdateEntityStatusUseCase {
       );
     }
 
-    // const previousStatus = entity.status;
     await repo.update({ _id: entityId }, { status });
 
     if (

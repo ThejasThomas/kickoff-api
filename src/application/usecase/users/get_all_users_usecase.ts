@@ -43,15 +43,21 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
     } else if (excludeStatus.length > 0) {
       filter.status = { $nin: excludeStatus };
     }
-    const sortOptions={createdAt:-1}
+    const sortOptions = { createdAt: -1 };
 
     const repo =
       userType === "client"
         ? this._clientRepository
         : this._turfOwnerRepository;
 
-    const { items, total } = await repo.findAll(filter, skip, limit,sortOptions);
-    
+    const { items, total } = await repo.findAll(
+      filter,
+      skip,
+      limit,
+      sortOptions
+    );
+    console.log('total',total)
+
     const sanitizedUsers = items.map(mapUser);
     return {
       users: sanitizedUsers,

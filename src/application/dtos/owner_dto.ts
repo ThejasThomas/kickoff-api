@@ -5,6 +5,7 @@ export interface IOwnerDTO {
     phoneNumber?:string,
     profileImage?:string,
     address?:string,
+    status?:string,
     city?:string,
     state?:string,
     pinCode?:string

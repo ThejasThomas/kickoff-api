@@ -48,7 +48,7 @@ export class TurfController implements ITurfController {
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
     try {
-      const { page = 1, limit = 10, search = "", status } = req.query;
+      const { page = 1, limit = 6, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
