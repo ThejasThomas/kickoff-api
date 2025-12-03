@@ -13,11 +13,14 @@ import { CustomRequest } from "../middlewares/auth_middleware";
 import { IGetBookedUsersDetails } from "../../domain/useCaseInterfaces/users/get_bookedUsersDetails_interface";
 import { IGetUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/get_user_details_usecase_interface";
 import { IUpdateUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/update_userdetails_usecase_interface";
-import { success } from "zod";
+import { date, success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
+import Stripe from "stripe";
 
 @injectable()
 export class UserController implements IUserController {
+  private stripe: Stripe;
+
   constructor(
     @inject("IGetAllUsersUseCase")
     private _getAllUsersUseCase: IGetAllUsersUseCase,
@@ -26,10 +29,15 @@ export class UserController implements IUserController {
     @inject("IGetBookedUsersDetails")
     private _getBookedUserDetailsUseCase: IGetBookedUsersDetails,
     @inject("IGetUserDetailsUseCase")
-    private _getUserDetailsUseCase:IGetUserDetailsUseCase,
+    private _getUserDetailsUseCase: IGetUserDetailsUseCase,
     @inject("IUpdateUserDetailsUseCase")
-    private _updateUserDetailsUseCase:IUpdateUserDetailsUseCase,
-  ) {}
+    private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase
+  ) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("STRIPE_SECRET_KEY environment variable is not set");
+    }
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
 
   async refreshSession(req: Request, res: Response): Promise<void> {
     try {
@@ -89,53 +97,52 @@ export class UserController implements IUserController {
   }
 
   async getUserDetails(req: Request, res: Response): Promise<void> {
-    try{
-      const userId=(req as CustomRequest).user?.userId
-      console.log('userId',userId)
-      const userDetails=await this._getUserDetailsUseCase.execute(userId)
-      res.status(HTTP_STATUS.OK).json(userDetails)
-    }catch(error){
-      handleErrorResponse(req,res,error)
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      const userDetails = await this._getUserDetailsUseCase.execute(userId);
+      res.status(HTTP_STATUS.OK).json(userDetails);
+    } catch (error) {
+      handleErrorResponse(req, res, error);
     }
   }
 
   async updateUserDetails(req: Request, res: Response): Promise<void> {
-    try{
-      const userId=(req as CustomRequest).user?.userId
-      const profileDate=req.body 
-      console.log('profileDataa',profileDate)
-      if(!userId){
-         res.status(HTTP_STATUS.UNAUTHORIZED).json({
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      const profileDate = req.body;
+      if (!userId) {
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
           success: false,
           message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
         });
         return;
       }
-      const updatedProfile =await this._updateUserDetailsUseCase.execute(userId,profileDate)
+      const updatedProfile = await this._updateUserDetailsUseCase.execute(
+        userId,
+        profileDate
+      );
 
       res.status(HTTP_STATUS.OK).json({
-        success:true,
-        message:SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
-        data:updatedProfile
-      })
-    }catch(error){
+        success: true,
+        message: SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
+        data: updatedProfile,
+      });
+    } catch (error) {
       if (error instanceof CustomError) {
-              res.status(error.statusCode).json({
-                success: false,
-                message: error.message,
-              });
-            } else {
-              handleErrorResponse(req, res, error);
-            }
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+      } else {
+        handleErrorResponse(req, res, error);
+      }
     }
   }
-
 
   async updateEntityStatus(req: Request, res: Response): Promise<void> {
     try {
       const { entityType, entityId, status, reason, email } = req.body;
       const ownerId = req.body.ownerId;
-      console.log("iddddddddddddOwwwnerrr", ownerId);
       await this.__updateEntityStatusUseCase.execute(
         entityType,
         entityId,
@@ -156,20 +163,101 @@ export class UserController implements IUserController {
   async getBookedUserDetails(req: Request, res: Response): Promise<void> {
     try {
       const { userId } = req.params;
-      console.log("userIDDDd", userId);
       if (!userId) {
-         res.status(HTTP_STATUS.UNAUTHORIZED).json({
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
           success: false,
           message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
         });
       }
-        console.log('heyloo bro')
-        const userDetails = await this._getBookedUserDetailsUseCase.execute(
-          userId
-        );
-        console.log('userDetails',userDetails)
-        res.status(HTTP_STATUS.OK).json(userDetails);
-     
+      const userDetails = await this._getBookedUserDetailsUseCase.execute(
+        userId
+      );
+      res.status(HTTP_STATUS.OK).json(userDetails);
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+  async stripePaymentSession(req: Request, res: Response): Promise<void> {
+    try {
+      const { amount, bookingData } = req.body;
+
+      if (!amount || amount <= 0) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.INVALID_CREDENTIALS,
+        });
+        return;
+      }
+      let frontendUrl = process.env.FRONTEND_URL;
+      if (!frontendUrl) {
+        console.error("Missing FRONTEND_URL env var");
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: "Server config error: Missing frontend URL",
+        });
+        return;
+      }
+     let fullFrontendUrl = frontendUrl;
+    if (!fullFrontendUrl.startsWith("http://") && !fullFrontendUrl.startsWith("https://")) {
+      fullFrontendUrl = `http://${fullFrontendUrl}`;
+    }
+      const essentialMetadata = {
+        turfId: bookingData.turfId,
+        date: bookingData.date,
+        totalAmount: amount.toString(),
+      };
+      const encodedBookingData = encodeURIComponent(
+        JSON.stringify(bookingData)
+      );
+      const successUrl = `${fullFrontendUrl}/paymentpage?status=success&session_id={CHECKOUT_SESSION_ID}&bookingData=${encodedBookingData}`;
+      const cancelUrl = `${fullFrontendUrl}/paymentpage?status=cancelled`;
+
+
+      const session = await this.stripe.checkout.sessions.create({
+        
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: "Turf Booking",
+              },
+              unit_amount: Math.round(amount * 100),
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        mode: "payment",
+        metadata: essentialMetadata,
+      });
+      console.log("SESSION URL=", session.url);
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        url: session.url,
+      });
+    } catch (error) {
+      console.error("Stripe session creation error", error);
+      handleErrorResponse(req, res, error);
+    }
+  }
+  async verifyPaymentSession(req: Request, res: Response): Promise<void> {
+    try {
+      console.log('broo heyloooo are u finee??')
+      const { id:sessionId } = req.params;
+      if (!sessionId) {
+        res.status(400).json({ success: false, message: "Missing session ID" });
+        return;
+      }
+      const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+      if (session.payment_status !== "paid") {
+        res.status(400).json({ success: false, message: "Payment not paid" });
+        return;
+      }
+      res.status(200).json({ success: true });
     } catch (error) {
       handleErrorResponse(req, res, error);
     }

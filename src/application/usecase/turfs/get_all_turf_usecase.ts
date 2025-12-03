@@ -14,7 +14,6 @@ export class GetAllTurfsUsecase implements IGetAllTurfsUseCase {
     limit: number,
     search: string,
     status: string,
-    // excludeStatus: string[]=[]
   ): Promise<{ turfs: Omit<ITurfEntity, "ownerId">[]; totalPages: number }> {
     console.log('page','limit','search',page,limit,search)
     const skip = (page - 1) * limit;

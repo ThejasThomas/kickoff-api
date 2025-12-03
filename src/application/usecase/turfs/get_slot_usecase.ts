@@ -9,156 +9,124 @@ import { IBookingRepository } from "../../../domain/repositoryInterface/booking/
 
 @injectable()
 export class GetSlotsUseCase implements IGetSlotsUseCase {
-    constructor(
-        @inject("IRuleRepository")
-        private _ruleRepository: IRuleRepository,
-        @inject("IBookingRepository")
-        private _bookingRepository: IBookingRepository
-    ) {}
+  constructor(
+    @inject("IRuleRepository") private _ruleRepository: IRuleRepository,
+    @inject("IBookingRepository") private _bookingRepository: IBookingRepository
+  ) {}
 
-    async execute(
-        turfId: string,
-        date: string,
-        dayIndex: number
-    ): Promise<ISlotEntity[]> {
-        try {
-            console.log('broooiiiiii',turfId,date,dayIndex)
-            if (dayIndex < 0 || dayIndex > 6) {
-                throw new CustomError(
-                    ERROR_MESSAGES.INVALID_DAY_INDEX,
-                    HTTP_STATUS.BAD_REQUEST
-                );
-            }
+  async execute(
+    turfId: string,
+    date: string,
+    dayIndex: number
+  ): Promise<ISlotEntity[]> {
+    try {
+      const rules = await this._ruleRepository.findOne({ turfId });
+      if (!rules) return [];
 
-            const rules: IRules | null = await this._ruleRepository.findOne({ turfId });
-            
-            if (!rules) {
-                return this.generateDefaultSlots(turfId, date, dayIndex);
-            }
+      const weeklyRulesMap = rules.weeklyRules[0] || {};
+      const timeRanges: ITimeRange[] = weeklyRulesMap[dayIndex] || [];
 
-               const isExceptional= await this._ruleRepository.findExpetionalDates(turfId,date);
-               console.log('isExceptional',isExceptional)
-            if(isExceptional) {
-                return this.generateDefaultSlots(turfId, date, dayIndex)
-            }
+      const requestDate = date; // already ISO
+      const bookings = await this._bookingRepository.findByTurfIdAndDate(
+        turfId,
+        requestDate
+      );
 
+      const slots: ISlotEntity[] = [];
 
-            const weeklyRulesMap = rules.weeklyRules[0] || {};
-            const timeRangesForDay: ITimeRange[] = weeklyRulesMap[dayIndex.toString()] || [];
-            console.log('timerenge',timeRangesForDay)
-            const bookings = await this._bookingRepository.findByTurfIdAndDate(turfId, date);
+      for (const range of timeRanges) {
+        const rangeStart = this.parseTime(requestDate, range.startTime);
+        const rangeEnd = this.parseTime(requestDate, range.endTime);
 
-            const availableSlots: ISlotEntity[] = [];
-            for (const range of timeRangesForDay) {
-                console.log('range',range)
-                const startTime = this.parseTime(range.startTime);
-                console.log('startTime',startTime)
-                const endTime = this.parseTime(range.endTime);
-                console.log('endTime',endTime)
+        const durationMs = rules.slotDuration * 60 * 60 * 1000;
+        let current = rangeStart;
 
-                if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-                    continue; 
-                }
+        while (current < rangeEnd) {
+          const slotEnd = new Date(current.getTime() + durationMs);
+          if (slotEnd > rangeEnd) break;
 
-                const durationMs = rules.slotDuration*60 * 60 * 1000;
-                console.log('duration',durationMs)
-                let currentTime = startTime;
-                while (currentTime < endTime) {
-                    const slotEndTime = new Date(currentTime.getTime() + durationMs);
-                    console.log('slotEndtime',slotEndTime)
-                    if (slotEndTime <= endTime) {
-                        const startTimeStr = `${currentTime.getHours().toString().padStart(2, '0')}:${currentTime.getMinutes().toString().padStart(2, '0')}`;
-                        const endTimeStr = `${slotEndTime.getHours().toString().padStart(2, '0')}:${slotEndTime.getMinutes().toString().padStart(2, '0')}`;
-                        const slot: ISlotEntity = {
-                            id: `${turfId}-${date}-${currentTime.toISOString()}`,
-                            ownerId:"",
-                            turfId,
-                            date,
-                            startTime: startTimeStr,
-                            endTime: endTimeStr,  
-                            price: rules.price,
-                            duration: rules.slotDuration,
-                            isBooked: false
-                        };
-                        console.log('slotenddd',this.parseTime(slot.endTime))
+          const slotStart = current;
 
-                        const isSlotBooked = bookings.some(booking =>
-                            booking.date === date &&
-                            this.isTimeOverlap(
-                                { start: this.parseTime(booking.startTime), end: this.parseTime(booking.endTime) },
-                                { start: currentTime, end: slotEndTime }
-                            )
-                        );
-                        console.log('isSlotBooked',isSlotBooked)
+          // Check if booked
+          const isBooked = bookings.some((bk) => {
+            const bookingStart = this.parseTime(requestDate, bk.startTime);
+            const bookingEnd = this.parseTime(requestDate, bk.endTime);
 
-                        if (!isSlotBooked) {
-                            availableSlots.push(slot);
-                        }
-                    }
-                    currentTime = slotEndTime;
-                }
-            }
+            return bookingStart < slotEnd && bookingEnd > slotStart;
+          });
 
-            const now = new Date();
-            const currentDateStr = now.toISOString().split('T')[0];
-            console.log('currentDate',currentDateStr)
-            // const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            if (date === currentDateStr) {
-                return availableSlots.filter(slot =>
-                    this.parseTime(slot.endTime) > now
-                );
-            }
-
-            console.log('availableslots',availableSlots)
-
-            return availableSlots;
-        } catch (error) {
-            if (error instanceof CustomError) {
-                throw error;
-            }
-            throw new CustomError(
-                ERROR_MESSAGES.SLOT_NOT_FOUND,
-                HTTP_STATUS.INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    private generateDefaultSlots(turfId: string, date: string, dayIndex: number): ISlotEntity[] {
-        return [{
-            id: `${turfId}-${date}-${dayIndex}`,
+          slots.push({
+            id: `${turfId}-${date}-${slotStart.toISOString()}`,
             turfId,
             date,
-            ownerId:"",
-            startTime: "00:00",
-            endTime: "00:00",
-            price: 0,
-            duration: 1,
-            isBooked: false
-        }];
-    }
+            ownerId: "",
+            startTime: this.formatTime(slotStart),
+            endTime: this.formatTime(slotEnd),
+            price: rules.price,
+            duration: rules.slotDuration,
+            isBooked,
+          });
 
-    private parseTime(timeStr: string): Date {
-        if (!timeStr || typeof timeStr !== 'string') {
-            return new Date(NaN);
+          current = slotEnd;
         }
-        
-        const lower = timeStr.toLowerCase();
-        const [time, modifier] = lower.split(/(am|pm)/);
-        let [hours, minutes] = time.split(':').map(Number);
+      }
 
-        if (isNaN(hours) || isNaN(minutes)) {
-            return new Date(NaN);
-        }
+      // -------------------------------------------------
+      // 🔥 FILTER OUT PAST SLOTS IF SELECTED DATE IS TODAY
+      // -------------------------------------------------
+      const today = new Date().toISOString().split("T")[0];
 
-        if (modifier && modifier.includes('pm') && hours !== 12) hours += 12;
-        if (modifier && modifier.includes('am') && hours === 12) hours = 0;
+      if (requestDate === today) {
+        const now = new Date();
+        now.setMinutes(0, 0, 0); // remove minutes
+        now.setHours(now.getHours() + 1); // next full hour
 
-        const date = new Date();
-        date.setHours(hours, minutes, 0, 0);
-        return date;
+        return slots.filter((slot) => {
+          const slotStart = this.parseTime(requestDate, slot.startTime);
+          return slotStart >= now && !slot.isBooked;
+        });
+      }
+
+      // Future date → return only NOT booked
+      return slots.filter((slot) => !slot.isBooked);
+
+    } catch (err) {
+      console.log("Slot generation error", err);
+      throw new CustomError(
+        ERROR_MESSAGES.SLOT_NOT_FOUND,
+        HTTP_STATUS.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  // -----------------------------------------------------
+  // PARSE ANY TIME FORMAT: "17:00" OR "9:00AM"
+  // -----------------------------------------------------
+  private parseTime(dateStr: string, timeStr: string): Date {
+    let hours = 0, minutes = 0;
+
+    if (/am|pm/i.test(timeStr)) {
+      const lower = timeStr.toLowerCase();
+      const [timePart, modifier] = lower.split(/(am|pm)/);
+      const [h, m] = timePart.split(":").map(Number);
+
+      hours = h;
+      minutes = m;
+
+      if (modifier === "pm" && h !== 12) hours += 12;
+      if (modifier === "am" && h === 12) hours = 0;
+    } else {
+      [hours, minutes] = timeStr.split(":").map(Number);
     }
 
-    private isTimeOverlap(range1: { start: Date; end: Date }, range2: { start: Date; end: Date }): boolean {
-        return range1.start < range2.end && range1.end > range2.start;
-    }
+    const d = new Date(`${dateStr}T00:00:00`);
+    d.setHours(hours, minutes, 0, 0);
+    return d;
+  }
+
+  private formatTime(date: Date): string {
+    return `${date.getHours().toString().padStart(2, "0")}:${date
+      .getMinutes().toString()
+      .padStart(2, "0")}`;
+  }
 }

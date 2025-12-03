@@ -216,6 +216,7 @@ export class TurfController implements ITurfController {
         });
         return;
       }
+      
        const dateObj=new Date(date)
             const dayIndex =dateObj.getDay()
 

@@ -20,6 +20,7 @@ export class GetRulesUseCase implements IGetRulesUseCase{
         const filter ={turfId}
 
         const rules=await this._ruleRepository.findOne(filter);
+        console.log('ruless',rules)
 
        if (!rules) {
         return {

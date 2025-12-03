@@ -37,7 +37,7 @@ export class BookingRepository
     skip: number,
     limit: number,
     search: string
-  ): Promise<{ bookings: IBookingModel[]; total: number }> {
+  ) {
     try {
       const now = new Date();
       const currentDateStr = now.toISOString().split("T")[0];
@@ -45,31 +45,37 @@ export class BookingRepository
         .getHours()
         .toString()
         .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
-      const filter: any = {
+
+      const normalizedSearch = (search || "").trim();
+
+      let filter: any = {
         userId,
         $or: [
           { date: { $gt: currentDateStr } },
           { date: currentDateStr, endTime: { $gt: currentTimeStr } },
         ],
       };
-      const total = await BookinModel.countDocuments(filter).exec();
 
-      if (search) {
-        filter.$and = [
-          { ...filter },
-          {
-            $or: [
-              { turfName: { $regex: search, $options: "i" } },
-              { location: { $regex: search, $options: "i" } },
-            ],
-          },
-        ];
+      if (normalizedSearch.length > 0) {
+        filter = {
+          $and: [
+            filter,
+            {
+              $or: [
+                { turfName: { $regex: normalizedSearch, $options: "i" } },
+                { location: { $regex: normalizedSearch, $options: "i" } },
+              ],
+            },
+          ],
+        };
       }
+
+      const total = await BookinModel.countDocuments(filter);
       const bookings = await BookinModel.find(filter)
         .sort({ date: 1, startTime: 1 })
         .skip(skip)
-        .limit(limit)
-        .exec();
+        .limit(limit);
+
       return { bookings, total };
     } catch (error) {
       console.error("Error fetching upcoming bookings by userId:", error);
@@ -79,6 +85,7 @@ export class BookingRepository
       );
     }
   }
+
   async findPastByUserId(userId: string): Promise<IBookingModel[]> {
     try {
       const now = new Date();

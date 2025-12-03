@@ -19,10 +19,15 @@ export class BookSlotUseCase implements IBookSlotUseCase{
 
     async execute(bookData:IBookingEntity,userId:string): Promise<IBookingModel> {
         try{
+                const normalizedDate = this.formatToISODate(bookData.date);
+
         const newBooking:IBookingEntity ={
+            
             ...bookData,
+            date: normalizedDate,
             userId
         }
+        console.log('bookDaaaaataaaaaaaaaaaa',normalizedDate)
         
 
         const bookSlot=await this._bookingRepository.save(newBooking)
@@ -45,4 +50,12 @@ export class BookSlotUseCase implements IBookSlotUseCase{
         )
     }
     }
+    private formatToISODate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 }

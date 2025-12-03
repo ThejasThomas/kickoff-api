@@ -20,6 +20,7 @@ export class GetUpcomingBookingsUseCase implements IGetUpcomingBookingUseCase {
     const skip = (page - 1) * limit;
 
     console.log("heyyy iD", userId);
+    console.log('skip',skip,'limit',limit,'page',page,'search',search)
     const { bookings, total } =
       await this._bookingRepository.findUpComingByUserId(
         userId,
@@ -28,6 +29,7 @@ export class GetUpcomingBookingsUseCase implements IGetUpcomingBookingUseCase {
         search
       );
     const mappedBookings = mapBookingDTOList(bookings);
+    console.log('bookings',mappedBookings)
 
     return {
       bookings: mappedBookings,
