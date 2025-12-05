@@ -6,6 +6,8 @@ import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/model
 import { IBookingEntity } from "../../../domain/models/booking_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { BookingDTO } from "../../dtos/get_booking_dto";
+import { mapBookingDTO } from "../../mappers/getBookingapper";
 
 
 @injectable()
@@ -17,7 +19,7 @@ export class BookSlotUseCase implements IBookSlotUseCase{
         private _slotRepository:ISlotRepository
     ){}
 
-    async execute(bookData:IBookingEntity,userId:string): Promise<IBookingModel> {
+    async execute(bookData:IBookingEntity,userId:string): Promise<BookingDTO> {
         try{
                 const normalizedDate = this.formatToISODate(bookData.date);
 
@@ -37,7 +39,7 @@ export class BookSlotUseCase implements IBookSlotUseCase{
         //     bookData.date,
         //     bookData.startTime
         // )
-        return bookSlot;
+        return mapBookingDTO(bookSlot);
     } catch(error){
         console.error('Error in book slot use case ')
 

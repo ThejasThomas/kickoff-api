@@ -121,6 +121,13 @@ export class ClientRoutes extends BaseRoute {
             walletController.getWalletHistory(req,res)
           }
         )
+        this.router.post(
+          "/client/cancel-request/:bookingId",
+          verifyAuth,
+          (req:Request,res:Response)=>{
+            bookingsController.requestCancellation(req,res)
+          }
+        )
         
     
     this.router.post(

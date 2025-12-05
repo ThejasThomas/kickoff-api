@@ -3,6 +3,7 @@ import { IGetUpcomingBookingUseCase } from "../../../domain/useCaseInterfaces/Bo
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { mapBookingDTOList } from "../../mappers/getBookingapper";
+import { BookingDTO } from "../../dtos/get_booking_dto";
 
 @injectable()
 export class GetUpcomingBookingsUseCase implements IGetUpcomingBookingUseCase {
@@ -16,7 +17,7 @@ export class GetUpcomingBookingsUseCase implements IGetUpcomingBookingUseCase {
     page: number,
     limit: number,
     search: string
-  ): Promise<{ bookings: IBookingModel[]; totalPages: number; total: number }> {
+  ): Promise<{ bookings: BookingDTO[]; totalPages: number; total: number }> {
     const skip = (page - 1) * limit;
 
     console.log("heyyy iD", userId);

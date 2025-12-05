@@ -3,6 +3,7 @@ import { BookingDTO, PastBookingDTO } from "../dtos/get_booking_dto";
 
 export function mapBookingDTO(entity: IBookingModel): BookingDTO {
   return {
+    _id:entity._id?.toString(),
     userId: entity.userId,
     turfId: entity.turfId,
     startTime: entity.startTime,

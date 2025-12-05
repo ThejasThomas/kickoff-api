@@ -7,6 +7,9 @@ import {
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
+import { CancellationRequestModel } from "../../database/mongoDb/models/cancellationrequest_model";
+import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
+import { trusted } from "mongoose";
 
 @injectable()
 export class BookingRepository
@@ -105,5 +108,22 @@ export class BookingRepository
         HTTP_STATUS.INTERNAL_SERVER_ERROR
       );
     }
+  }
+   async updateStatus(id: string, status: string): Promise<ICancellationRequestEntity | null> {
+    return await CancellationRequestModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+  }
+  async getOwnerRequests(ownerId: string): Promise<ICancellationRequestEntity[]> {
+    return await CancellationRequestModel.find({ownerId})
+  }
+  async updateStatusById(bookingId: string, status: string): Promise<IBookingModel | null> {
+    return BookinModel.findByIdAndUpdate(
+      bookingId,
+      {status},
+      {new:true}
+    )
   }
 }

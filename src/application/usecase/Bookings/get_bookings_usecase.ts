@@ -5,6 +5,7 @@ import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/model
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { mapBookingDTOList } from "../../mappers/getBookingapper";
+import { BookingDTO } from "../../dtos/get_booking_dto";
 
 @injectable()
 export class GetBookingsUseCase implements IGetBookingsUseCase{
@@ -13,7 +14,7 @@ export class GetBookingsUseCase implements IGetBookingsUseCase{
         private _bookingRepository:IBookingRepository
     ){}
 
-    async execute(turfId: string, date: string): Promise<IBookingModel[]> {
+    async execute(turfId: string, date: string): Promise<BookingDTO[]> {
         try{
             if(!turfId ||!date){
                 throw new CustomError(

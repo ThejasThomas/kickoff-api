@@ -41,6 +41,9 @@ export class TurfRepository extends BaseRepository<ITurf>implements ITurfReposit
     const total = result.total[0]?.count || 0;
         return {items,total}
     }
+    async getTurfById(turfId: string): Promise<ITurf | null> {
+      return await TurfModel.findById(turfId)
+    }
 
   //   async findAll(filter: FilterQuery<ITurf>, skip: number, limit: number, sort: any): Promise<{ items: ITurf[]; total: number; }> {
   //       const [items, total] = await Promise.all([

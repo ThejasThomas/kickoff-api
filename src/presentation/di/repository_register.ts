@@ -18,6 +18,8 @@ import { IRuleRepository } from "../../domain/repositoryInterface/Turf/rule_repo
 import { RuleRepository } from "../../interfaceAdapters/repositories/turf/rule_repository";
 import { IWalletRepository } from "../../domain/repositoryInterface/wallet/wallet_repository_interface";
 import { WalletRepository } from "../../interfaceAdapters/repositories/wallet/wallet_repository";
+import { ICancelRequestRepository } from "../../domain/repositoryInterface/booking/cancel_request_repository";
+import { CancelrequestRepository } from "../../interfaceAdapters/repositories/booking/cancelRequestRepositoty";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -56,6 +58,9 @@ export class RepositoryRegistry {
     container.register<IWalletRepository>("IWalletRepository", {
       useClass: WalletRepository,
     });
+    container.register<ICancelRequestRepository>("ICancelRequestRepository",{
+      useClass:CancelrequestRepository
+    })
 
   }
 

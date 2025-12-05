@@ -1,5 +1,5 @@
 export interface BookingDTO {
-     id?: string;
+     _id: string;
   userId: string;
   turfId: string;
   startTime: string;

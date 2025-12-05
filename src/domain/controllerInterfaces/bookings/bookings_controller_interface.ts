@@ -5,5 +5,5 @@ export interface IBookingsController {
     getUpcomingbookings(req:Request,res:Response):Promise<void>
     getTurfdetails(req:Request,res:Response):Promise<void>
     getPastbookings(req:Request,res:Response):Promise<void>
-    
+    requestCancellation(req:Request,res:Response):Promise<void>
 }

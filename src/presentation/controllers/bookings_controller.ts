@@ -13,6 +13,10 @@ import { CustomRequest } from "../middlewares/auth_middleware";
 import { IGetUpcomingBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_bookings_usecase_interface";
 import { IGetBookedTurfUseCase } from "../../domain/useCaseInterfaces/Bookings/get_booked_useCase_interface";
 import { IGetPastBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_pastbookings_usecase_interface";
+import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_booking_usecase";
+import { success } from "zod";
+import { handleErrorResponse } from "../../shared/utils/error_handler";
+import { error } from "console";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -24,7 +28,9 @@ export class BookingsController implements IBookingsController {
     @inject('IGetBookedTurfUseCase')
     private _getBookedTurfUseCase:IGetBookedTurfUseCase,
     @inject('IGetPastBookingsUseCase')
-    private _getPastBookingsUseCase:IGetPastBookingsUseCase
+    private _getPastBookingsUseCase:IGetPastBookingsUseCase,
+    @inject("IRequestCancelBookingUseCase")
+    private _requestCancelBookingUseCase:IRequestCancelBookingUseCase
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -176,6 +182,45 @@ console.log('bookingssss',bookings)
           message:"Failed to fetch turf details",
           turfDetails:null
         })
+      }
+    }
+  }
+  async requestCancellation(req: Request, res: Response): Promise<void> {
+    try{
+      const userId=(req as CustomRequest).user?.userId;
+      const bookingId=req.params.bookingId;
+      const {reason}=req.body;
+      console.log('userIdd',userId+"    ",'bookingIs',bookingId)
+      if(!userId){
+         res.status(401).json({
+          success:false,
+          message:"Unauthorized"
+        })
+      }
+      if(!reason){
+         res.status(400).json({
+          success:false,
+          message:"Cancellation reason is required"
+        })
+      }
+
+      const result=await this._requestCancelBookingUseCase.execute(
+        userId,
+        bookingId,
+        reason
+      )
+      
+      res.status(200).json({
+        success:true,
+        message:"Cancellation request submitted successfully",
+        data:result
+      })
+    }catch(err){
+    if (err instanceof CustomError) {
+         res.status(err.statusCode || 400).json({
+          success: false,
+          message: err.message,
+        });
       }
     }
   }

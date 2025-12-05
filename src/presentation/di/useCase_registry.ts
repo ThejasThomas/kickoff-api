@@ -96,6 +96,8 @@ import { GetWalletBalanceUseCase } from "../../application/usecase/wallet/getWal
 import { IGetWalletBalanceUseCase } from "../../domain/useCaseInterfaces/wallet/getWalletBalanceUseCase_interface";
 import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
 import { GetWalletHistoryUseCase } from "../../application/usecase/wallet/getWalletHistory_usecase";
+import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_booking_usecase";
+import { RequestCancelBookingUseCase } from "../../application/usecase/Bookings/requestCancelBookingUsecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -268,6 +270,9 @@ export class UseCaseRegistry {
     })
     container.register<IGetWalletHistoryUseCase>("IGetWalletHistoryUseCase",{
       useClass:GetWalletHistoryUseCase
+    })
+    container.register<IRequestCancelBookingUseCase>("IRequestCancelBookingUseCase",{
+      useClass:RequestCancelBookingUseCase
     })
   }
 }
