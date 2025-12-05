@@ -90,6 +90,12 @@ import { IGetUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/get
 import { GetUserDetailsUseCase } from "../../application/usecase/users/get_user_details_usecase";
 import { IUpdateUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/update_userdetails_usecase_interface";
 import { UpdateUserDetailsUseCase } from "../../application/usecase/users/update_user_details_usecase";
+import { IAddMoneyUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_usecase_interface";
+import { AddMoneyUseCase } from "../../application/usecase/wallet/addmoney_usecase";
+import { GetWalletBalanceUseCase } from "../../application/usecase/wallet/getWalletBalanceUseCase";
+import { IGetWalletBalanceUseCase } from "../../domain/useCaseInterfaces/wallet/getWalletBalanceUseCase_interface";
+import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
+import { GetWalletHistoryUseCase } from "../../application/usecase/wallet/getWalletHistory_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -253,6 +259,15 @@ export class UseCaseRegistry {
     })
     container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase",{
       useClass:UpdateUserDetailsUseCase
+    })
+    container.register<IAddMoneyUseCase>("IAddMoneyUseCase",{
+      useClass:AddMoneyUseCase
+    })
+    container.register<IGetWalletBalanceUseCase>("IGetWalletBalanceUseCase",{
+      useClass:GetWalletBalanceUseCase
+    })
+    container.register<IGetWalletHistoryUseCase>("IGetWalletHistoryUseCase",{
+      useClass:GetWalletHistoryUseCase
     })
   }
 }

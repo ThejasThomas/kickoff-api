@@ -11,6 +11,9 @@ export class PaymentRoutes extends BaseRoute {
         this.router.post('/create-checkout-session',(req:Request,res:Response)=>{
             userController.stripePaymentSession(req,res)
         })
+        this.router.post('/create-wallet-session',(req:Request,res:Response)=>{
+            userController.createWalletCheckoutSession(req,res)
+        })
         this.router.get("/verify-session/:id",
             // verifyAuth,
             (req:Request,res:Response) =>{

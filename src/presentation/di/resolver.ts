@@ -10,6 +10,8 @@ import { UserController } from "../controllers/user_controller";
 import { AuthController } from "../controllers/auth/auth_controller";
 import { IBookingsController } from "../../domain/controllerInterfaces/bookings/bookings_controller_interface";
 import { BookingsController } from "../controllers/bookings_controller";
+import { IWalletController } from "../../domain/controllerInterfaces/wallet/wallet_controller_interface";
+import { WalletController } from "../controllers/wallet_controller";
 DependencyInjection.registerAll();
 
 export const authController =
@@ -26,4 +28,7 @@ export const userController =
 
   export const bookingsController =
   container.resolve<IBookingsController>(BookingsController)
+
+  export const walletController =
+  container.resolve<IWalletController>(WalletController)
 

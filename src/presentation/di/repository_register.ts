@@ -16,40 +16,47 @@ import { IBookingRepository } from "../../domain/repositoryInterface/booking/boo
 import { BookingRepository } from "../../interfaceAdapters/repositories/booking/booking_repository";
 import { IRuleRepository } from "../../domain/repositoryInterface/Turf/rule_repository_interface";
 import { RuleRepository } from "../../interfaceAdapters/repositories/turf/rule_repository";
+import { IWalletRepository } from "../../domain/repositoryInterface/wallet/wallet_repository_interface";
+import { WalletRepository } from "../../interfaceAdapters/repositories/wallet/wallet_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
-    container.register('IOtpRepository', {
-  useClass: OtpRepository,
-});
+    container.register("IOtpRepository", {
+      useClass: OtpRepository,
+    });
 
-container.register("IClientRepository",{
-    useClass:ClientRepository
-})
-container.register('ITurfOwnerRepository',{
-    useClass:TurfOwnerRepository
-})
+    container.register("IClientRepository", {
+      useClass: ClientRepository,
+    });
+    container.register("ITurfOwnerRepository", {
+      useClass: TurfOwnerRepository,
+    });
 
-container.register<IAdminRepository>('IAdminRepository', {
-  useClass:AdminRepository
-})
-container.register<IRefreshTokenRepository>('IRefreshTokenRepository',{
-  useClass:RefreshTokenRepository
-})
-container.register<IRedisTokenRepository>('IRedisTokenRepository',{
-  useClass:RedisTokenRepository
-})
-container.register<ITurfRepository>('ITurfRepository',{
-  useClass:TurfRepository
-})
-container.register<ISlotRepository>('ISlotRepository',{
-  useClass:SlotRepository
-})
-container.register<IBookingRepository>('IBookingRepository',{
-  useClass:BookingRepository
-})
-container.register<IRuleRepository>('IRuleRepository',{
-  useClass:RuleRepository
-})
+    container.register<IAdminRepository>("IAdminRepository", {
+      useClass: AdminRepository,
+    });
+    container.register<IRefreshTokenRepository>("IRefreshTokenRepository", {
+      useClass: RefreshTokenRepository,
+    });
+    container.register<IRedisTokenRepository>("IRedisTokenRepository", {
+      useClass: RedisTokenRepository,
+    });
+    container.register<ITurfRepository>("ITurfRepository", {
+      useClass: TurfRepository,
+    });
+    container.register<ISlotRepository>("ISlotRepository", {
+      useClass: SlotRepository,
+    });
+    container.register<IBookingRepository>("IBookingRepository", {
+      useClass: BookingRepository,
+    });
+    container.register<IRuleRepository>("IRuleRepository", {
+      useClass: RuleRepository,
+    });
+
+    container.register<IWalletRepository>("IWalletRepository", {
+      useClass: WalletRepository,
+    });
 
   }
+
 }

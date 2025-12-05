@@ -262,4 +262,64 @@ export class UserController implements IUserController {
       handleErrorResponse(req, res, error);
     }
   }
+  async createWalletCheckoutSession(req: Request, res: Response): Promise<void> {
+  try {
+    const { amount } = req.body;
+
+    if (!amount || amount <= 0) {
+       res.status(400).json({
+        success: false,
+        message: "Invalid wallet top-up amount",
+      });
+    }
+
+    let frontendUrl = process.env.FRONTEND_URL!;
+    if (!frontendUrl.startsWith("http")) {
+      frontendUrl = `http://${frontendUrl}`;
+    }
+
+    // Encode minimal safe metadata
+    const metadata = {
+      purpose: "wallet_topup",
+      amount: amount.toString(),
+    };
+
+    // SUCCESS redirect → wallet-success page
+    const successUrl = `${frontendUrl}/wallet?success=true&amount=${amount}`;
+
+    // CANCEL redirect
+    const cancelUrl = `${frontendUrl}/wallet?success=false`;
+
+    const session = await this.stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: { name: "Wallet Top-Up" },
+            unit_amount: amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata,
+    });
+
+     res.status(200).json({
+      success: true,
+      url: session.url,
+    });
+
+  } catch (err) {
+    console.error("Wallet checkout session error:", err);
+     res.status(500).json({
+      success: false,
+      message: "Failed to start wallet payment"
+    });
+  }
+}
+
 }

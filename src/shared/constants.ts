@@ -69,6 +69,7 @@ export const ERROR_MESSAGES = {
   SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR: "Database Error",
+  WALLET_TRANSACTION_FAILED : "Wallet transaction failed",
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
   BOOKING_FAILED: "Slot booking failed",
@@ -89,6 +90,7 @@ export const ERROR_MESSAGES = {
   OWNER_NOT_FOUND: "Owner not found",
   FAILED_TO_FETCH_TURF_DETAILS:"Failed to fetch turf details",
   TURF_CREATION_FAILED: "Failed to add turf. Please try again ",
+  AMOUNT_MUST_BE_POSITIVE:"Amount must be greater than 0",
   OWNER_NOT_ACTIVE:
     "Owner is not active now please update your profile and try again",
   PENDING_ADMIN_APPROVAL: "Your request is not approved by admin",

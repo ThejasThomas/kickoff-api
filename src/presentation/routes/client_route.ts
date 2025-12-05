@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { authController, bookingsController, turfController, userController } from "../di/resolver";
+import { authController, bookingsController, turfController, userController, walletController } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
@@ -99,6 +99,30 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.getPastbookings(req,res)
       }
     )
+   
+        this.router.post(
+            "/client/add-money",
+            verifyAuth,
+            (req:Request,res:Response)=>{
+                walletController.addMoney(req,res)
+            }
+        )
+        this.router.get(
+          "/client/walletbalance",
+          verifyAuth,
+          (req:Request,res:Response)=>{
+            walletController.getWalletBalance(req,res)
+          }
+        )
+        this.router.get(
+          "/client/transactionhistory",
+          verifyAuth,
+          (req:Request,res:Response)=>{
+            walletController.getWalletHistory(req,res)
+          }
+        )
+        
+    
     this.router.post(
       "/client/logout",
       verifyAuth,
