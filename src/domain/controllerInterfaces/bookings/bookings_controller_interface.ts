@@ -6,4 +6,6 @@ export interface IBookingsController {
     getTurfdetails(req:Request,res:Response):Promise<void>
     getPastbookings(req:Request,res:Response):Promise<void>
     requestCancellation(req:Request,res:Response):Promise<void>
+    handleOwnerCancelRequest(req:Request,res:Response):Promise<void>
+    getCancelRequestBookings(req:Request,res:Response):Promise<void>
 }

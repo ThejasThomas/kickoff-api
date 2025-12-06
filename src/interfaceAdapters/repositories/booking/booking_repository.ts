@@ -9,7 +9,6 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { CancellationRequestModel } from "../../database/mongoDb/models/cancellationrequest_model";
 import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
-import { trusted } from "mongoose";
 
 @injectable()
 export class BookingRepository
@@ -108,7 +107,7 @@ export class BookingRepository
         HTTP_STATUS.INTERNAL_SERVER_ERROR
       );
     }
-  }
+  } 
    async updateStatus(id: string, status: string): Promise<ICancellationRequestEntity | null> {
     return await CancellationRequestModel.findByIdAndUpdate(
       id,

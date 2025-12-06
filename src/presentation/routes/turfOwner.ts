@@ -122,6 +122,20 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.retryAdminApproval(req, res);
       }
     );
+    this.router.put(
+          "/turfOwner/handle-cancel-request/:requestId",
+          verifyAuth,
+          (req:Request,res:Response)=>{
+            bookingsController.handleOwnerCancelRequest(req,res)
+          }
+        )
+        this.router.get(
+          "/turfOwner/get-cancel-bookings",
+          verifyAuth,
+          (req:Request,res:Response)=>{
+            bookingsController.getCancelRequestBookings(req,res)
+          }
+        )
     this.router.post(
       "/turfOwner/logout",
       verifyAuth,

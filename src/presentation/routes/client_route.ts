@@ -129,6 +129,7 @@ export class ClientRoutes extends BaseRoute {
           }
         )
         
+        
     
     this.router.post(
       "/client/logout",

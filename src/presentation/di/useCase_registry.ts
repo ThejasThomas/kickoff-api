@@ -98,6 +98,10 @@ import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/
 import { GetWalletHistoryUseCase } from "../../application/usecase/wallet/getWalletHistory_usecase";
 import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_booking_usecase";
 import { RequestCancelBookingUseCase } from "../../application/usecase/Bookings/requestCancelBookingUsecase";
+import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
+import { HandleOwnerCancelrequestUseCase } from "../../application/usecase/Bookings/handle_owner_cance_request_usecase";
+import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
+import { GetCancelBookingRequestsUsecase } from "../../application/usecase/Bookings/get_cancel_booking_requests";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -273,6 +277,12 @@ export class UseCaseRegistry {
     })
     container.register<IRequestCancelBookingUseCase>("IRequestCancelBookingUseCase",{
       useClass:RequestCancelBookingUseCase
+    })
+    container.register<IHandlOwnerCancelRequestUseCase>("IHandlOwnerCancelRequestUseCase",{
+      useClass:HandleOwnerCancelrequestUseCase
+    })
+    container.register<IGetCancelRequestsUseCase>("IGetCancelRequestsUseCase",{
+      useClass:GetCancelBookingRequestsUsecase
     })
   }
 }

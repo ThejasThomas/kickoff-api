@@ -26,20 +26,15 @@ export class AddMoneyUseCase implements IAddMoneyUseCase {
         );
       }
 
-      await this._walletRepository.createTransaction({
+      const wallet=await this._walletRepository.addMoney(
         userId,
-        type: WalletTransactionType.CREDIT,
         amount,
-        reason,
-        status: WalletTransactionStatus.SUCCESS,
-        transaction_date: new Date().toISOString(),
-      });
-      console.log('created transactionn')
-      const balance = await this._walletRepository.getBalance(userId);
+        reason
+      )
 
       return {
         success: true,
-        balance,
+        balance:wallet.balance
       };
     } catch (err) {
       console.log(err);

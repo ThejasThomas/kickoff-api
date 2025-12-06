@@ -17,6 +17,8 @@ import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Boo
 import { success } from "zod";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
+import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
+import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -30,7 +32,11 @@ export class BookingsController implements IBookingsController {
     @inject('IGetPastBookingsUseCase')
     private _getPastBookingsUseCase:IGetPastBookingsUseCase,
     @inject("IRequestCancelBookingUseCase")
-    private _requestCancelBookingUseCase:IRequestCancelBookingUseCase
+    private _requestCancelBookingUseCase:IRequestCancelBookingUseCase,
+    @inject("IHandlOwnerCancelRequestUseCase")
+    private _handleOwnerCancelUseCase:IHandlOwnerCancelRequestUseCase,
+    @inject("IGetCancelRequestsUseCase")
+    private _getCancellBookingsUseCase:IGetCancelRequestsUseCase
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -222,6 +228,78 @@ console.log('bookingssss',bookings)
           message: err.message,
         });
       }
+    }
+  }
+
+  async handleOwnerCancelRequest(req: Request, res: Response): Promise<void> {
+    try{
+      const ownerId=(req as CustomRequest).user?.userId;
+      const {requestId}=req.params;
+      const {action}=req.body;
+
+      if(!ownerId){
+         res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success:false,
+          message:ERROR_MESSAGES.USER_NOT_FOUND
+        })
+      }
+      if(!requestId){
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success:false,
+          message:ERROR_MESSAGES.REQUEST_ID_REQUIRED
+        })
+      }
+      if(!["approved","rejected"].includes(action)){
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success:false,
+          message:ERROR_MESSAGES.INVALID_ACTION
+        })
+      }
+      const result=await this._handleOwnerCancelUseCase.execute(
+        requestId,
+        action
+      )
+
+       res.status(200).json({
+        success:true,
+        message:result.message
+       })
+    }catch(error:any){
+      if(error instanceof CustomError){
+        res.status(error.statusCode).json({
+          success:false,
+          messsage:error.message
+        })
+      }
+      res.status(500).json({
+        success:false,
+        message:HTTP_STATUS.INTERNAL_SERVER_ERROR
+      })
+    }
+  }
+  async getCancelRequestBookings(req: Request, res: Response): Promise<void> {
+    try{
+      const ownerId=(req as CustomRequest).user?.userId
+      if(!ownerId){
+        throw new CustomError(
+          ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+          HTTP_STATUS.UNAUTHORIZED
+        )
+        return;
+      }
+      const requests=await this._getCancellBookingsUseCase.execute(ownerId)
+      console.log('requesttss',requests)
+
+      res.status(200).json({
+        success:true,
+        message:"Cancellation requests fetched successfully",
+        data:requests
+      })
+    }catch(err){
+      res.status(500).json({
+        success:false,
+        message:"Failed to fetch cancellation requests"
+      })
     }
   }
 }
