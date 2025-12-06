@@ -102,6 +102,8 @@ import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/
 import { HandleOwnerCancelrequestUseCase } from "../../application/usecase/Bookings/handle_owner_cance_request_usecase";
 import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
 import { GetCancelBookingRequestsUsecase } from "../../application/usecase/Bookings/get_cancel_booking_requests";
+import { ICreateHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/create_hosted_game_usecase_interface";
+import { createHostedGameUseCase } from "../../application/usecase/Bookings/create_host_games_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -283,6 +285,9 @@ export class UseCaseRegistry {
     })
     container.register<IGetCancelRequestsUseCase>("IGetCancelRequestsUseCase",{
       useClass:GetCancelBookingRequestsUsecase
+    })
+    container.register<ICreateHostedGameUseCase>("ICreateHostedGameUseCase",{
+      useClass:createHostedGameUseCase
     })
   }
 }

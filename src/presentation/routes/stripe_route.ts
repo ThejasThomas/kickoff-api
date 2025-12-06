@@ -20,6 +20,9 @@ export class PaymentRoutes extends BaseRoute {
                 userController.verifyPaymentSession(req,res)
             }
         )
+        this.router.post("/create-host-session",(req:Request,res:Response)=>{
+            userController.createHostedGameCheckoutSession(req,res)
+        })
     }
 
 }

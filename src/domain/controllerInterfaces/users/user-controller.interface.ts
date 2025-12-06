@@ -10,5 +10,6 @@ export interface IUserController{
     stripePaymentSession(req:Request,res:Response):Promise<void>
     verifyPaymentSession(req:Request,res:Response):Promise<void>
     createWalletCheckoutSession(req:Request,res:Response):Promise<void>
+    createHostedGameCheckoutSession(req:Request,res:Response):Promise<void>
 }
 

@@ -1,5 +1,11 @@
 import { Request, Response } from "express";
-import { authController, bookingsController, turfController, userController, walletController } from "../di/resolver";
+import {
+  authController,
+  bookingsController,
+  turfController,
+  userController,
+  walletController,
+} from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
@@ -25,10 +31,10 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-user-profile",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        userController.getUserDetails(req,res)
+      (req: Request, res: Response) => {
+        userController.getUserDetails(req, res);
       }
-    )
+    );
 
     this.router.get(
       "/client/getslots/:id",
@@ -58,79 +64,84 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-user-profile",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        userController.getUserDetails(req,res)
+      (req: Request, res: Response) => {
+        userController.getUserDetails(req, res);
       }
-    )
+    );
     this.router.patch(
       "/client/update-user-details",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        userController.updateUserDetails(req,res)
+      (req: Request, res: Response) => {
+        userController.updateUserDetails(req, res);
       }
-    )
+    );
 
     this.router.get(
       "/client/getnearbyturf",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        turfController.getnearbyturfs(req,res)
+      (req: Request, res: Response) => {
+        turfController.getnearbyturfs(req, res);
       }
-    )
+    );
     this.router.get(
       "/client/get-upcoming-bookings",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        bookingsController.getUpcomingbookings(req,res)
+      (req: Request, res: Response) => {
+        bookingsController.getUpcomingbookings(req, res);
       }
-    )
+    );
     this.router.get(
       "/client/getbookingturf",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        bookingsController.getTurfdetails(req,res)
+      (req: Request, res: Response) => {
+        bookingsController.getTurfdetails(req, res);
       }
-    )
+    );
 
     this.router.get(
       "/client/get-past-bookings",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        bookingsController.getPastbookings(req,res)
+      (req: Request, res: Response) => {
+        bookingsController.getPastbookings(req, res);
       }
-    )
-   
-        this.router.post(
-            "/client/add-money",
-            verifyAuth,
-            (req:Request,res:Response)=>{
-                walletController.addMoney(req,res)
-            }
-        )
-        this.router.get(
-          "/client/walletbalance",
-          verifyAuth,
-          (req:Request,res:Response)=>{
-            walletController.getWalletBalance(req,res)
-          }
-        )
-        this.router.get(
-          "/client/transactionhistory",
-          verifyAuth,
-          (req:Request,res:Response)=>{
-            walletController.getWalletHistory(req,res)
-          }
-        )
-        this.router.post(
-          "/client/cancel-request/:bookingId",
-          verifyAuth,
-          (req:Request,res:Response)=>{
-            bookingsController.requestCancellation(req,res)
-          }
-        )
-        
-        
-    
+    );
+
+    this.router.post(
+      "/client/add-money",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        walletController.addMoney(req, res);
+      }
+    );
+    this.router.get(
+      "/client/walletbalance",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        walletController.getWalletBalance(req, res);
+      }
+    );
+    this.router.get(
+      "/client/transactionhistory",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        walletController.getWalletHistory(req, res);
+      }
+    );
+    this.router.post(
+      "/client/cancel-request/:bookingId",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.requestCancellation(req, res);
+      }
+    );
+    this.router.post(
+      "/client/host-game",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.createGame(req, res);
+      }
+    );
+
     this.router.post(
       "/client/logout",
       verifyAuth,

@@ -8,4 +8,5 @@ export interface IBookingsController {
     requestCancellation(req:Request,res:Response):Promise<void>
     handleOwnerCancelRequest(req:Request,res:Response):Promise<void>
     getCancelRequestBookings(req:Request,res:Response):Promise<void>
+    createGame(req:Request,res:Response):Promise<void>
 }

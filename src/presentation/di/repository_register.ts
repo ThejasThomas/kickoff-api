@@ -20,6 +20,8 @@ import { IWalletRepository } from "../../domain/repositoryInterface/wallet/walle
 import { WalletRepository } from "../../interfaceAdapters/repositories/wallet/wallet_repository";
 import { ICancelRequestRepository } from "../../domain/repositoryInterface/booking/cancel_request_repository";
 import { CancelrequestRepository } from "../../interfaceAdapters/repositories/booking/cancelRequestRepositoty";
+import { IHostedGameRepository } from "../../domain/repositoryInterface/booking/hosted_game_repository_interface";
+import { HostGameRepository } from "../../interfaceAdapters/repositories/booking/host_game_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -60,6 +62,9 @@ export class RepositoryRegistry {
     });
     container.register<ICancelRequestRepository>("ICancelRequestRepository",{
       useClass:CancelrequestRepository
+    })
+    container.register<IHostedGameRepository>("IHostedGameRepository",{
+      useClass:HostGameRepository
     })
 
   }

@@ -19,6 +19,7 @@ import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
 import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
+import { ICreateHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/create_hosted_game_usecase_interface";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -36,7 +37,9 @@ export class BookingsController implements IBookingsController {
     @inject("IHandlOwnerCancelRequestUseCase")
     private _handleOwnerCancelUseCase:IHandlOwnerCancelRequestUseCase,
     @inject("IGetCancelRequestsUseCase")
-    private _getCancellBookingsUseCase:IGetCancelRequestsUseCase
+    private _getCancellBookingsUseCase:IGetCancelRequestsUseCase,
+    @inject("ICreateHostedGameUseCase")
+    private _createHostedGameUseCase:ICreateHostedGameUseCase
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -299,6 +302,32 @@ console.log('bookingssss',bookings)
       res.status(500).json({
         success:false,
         message:"Failed to fetch cancellation requests"
+      })
+    }
+  }
+  async createGame(req: Request, res: Response): Promise<void> {
+    try{
+      const userId =(req as CustomRequest).user?.userId;
+      const {turfId,courtType,slotDate,startTime,endTime,pricePerPlayer}=req.body
+
+      const result=await this._createHostedGameUseCase.execute({
+        hostUserId:userId,
+        turfId,
+        courtType,
+        slotDate,
+        startTime,
+        endTime,
+        pricePerPlayer
+      })
+      res.status(HTTP_STATUS.CREATED).json({
+        success:true,
+        message:"Game Hosted Successfully",
+        game:result
+      })
+    }catch(err:any){
+      res.status(500).json({
+        success:false,
+        message:err.message ||"Failed to Host game"
       })
     }
   }

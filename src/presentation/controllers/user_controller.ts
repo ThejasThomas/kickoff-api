@@ -278,16 +278,13 @@ export class UserController implements IUserController {
       frontendUrl = `http://${frontendUrl}`;
     }
 
-    // Encode minimal safe metadata
     const metadata = {
       purpose: "wallet_topup",
       amount: amount.toString(),
     };
 
-    // SUCCESS redirect → wallet-success page
     const successUrl = `${frontendUrl}/wallet?success=true&amount=${amount}`;
 
-    // CANCEL redirect
     const cancelUrl = `${frontendUrl}/wallet?success=false`;
 
     const session = await this.stripe.checkout.sessions.create({
@@ -321,5 +318,80 @@ export class UserController implements IUserController {
     });
   }
 }
+async createHostedGameCheckoutSession(req: Request, res: Response): Promise<void> {
+  try {
+    const {
+      turfId,
+      slotId,
+      slotDate,
+      startTime,
+      endTime,
+      courtType,
+      pricePerPlayer
+    } = req.body;
+    console.log('heyyyyyy broohh')
+
+    if (!turfId || !slotId || !slotDate || !startTime || !endTime || !courtType || !pricePerPlayer) {
+      res.status(400).json({
+        success: false,
+        message: "Missing required game hosting details",
+      });
+      return;
+    }
+
+    let frontendUrl = process.env.FRONTEND_URL!;
+    if (!frontendUrl.startsWith("http")) {
+      frontendUrl = `http://${frontendUrl}`;
+    }
+
+    const metadata = {
+      purpose: "host_game",
+      turfId,
+      slotId,
+      slotDate,
+      startTime,
+      endTime,
+      courtType,
+      pricePerPlayer: pricePerPlayer.toString()
+    };
+
+    const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
+
+    // Payment redirect URLs
+    const successUrl = `${frontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${frontendUrl}/host-game-payment?status=cancelled`;
+
+    const session = await this.stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      metadata,
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: { name: `Host Game (${courtType})` },
+            unit_amount: pricePerPlayer * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: successUrl.replace("{CHECKOUT_SESSION_ID}", "{CHECKOUT_SESSION_ID}"),
+      cancel_url: cancelUrl,
+    });
+
+    res.status(200).json({
+      success: true,
+      url: session.url,
+    });
+
+  } catch (err) {
+    console.error("Hosted game checkout session error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to start hosted game payment"
+    });
+  }
+}
+
 
 }

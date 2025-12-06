@@ -73,6 +73,7 @@ export const ERROR_MESSAGES = {
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
   BOOKING_FAILED: "Slot booking failed",
+  INVALID_COURT_TYPE:"Invalid court type",
   REQUEST_ID_REQUIRED:"Request id is required",
   INVALID_ACTION:"Invalid action",
   REQUEST_NOT_FOUND:"request not found",
