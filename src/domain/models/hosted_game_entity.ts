@@ -6,6 +6,7 @@ export interface IHostedGameEntity{
     slotDate:string;
     startTime:string;
     endTime:string;
+    gameStartAt:Date,
     pricePerPlayer:number;
     capacity:number;
 

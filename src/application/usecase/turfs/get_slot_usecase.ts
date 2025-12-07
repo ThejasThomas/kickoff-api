@@ -6,12 +6,14 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IRuleRepository } from "../../../domain/repositoryInterface/Turf/rule_repository_interface";
 import { IRules, ITimeRange } from "../../../domain/models/rule_entity";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
+import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 
 @injectable()
 export class GetSlotsUseCase implements IGetSlotsUseCase {
   constructor(
     @inject("IRuleRepository") private _ruleRepository: IRuleRepository,
-    @inject("IBookingRepository") private _bookingRepository: IBookingRepository
+    @inject("IBookingRepository") private _bookingRepository: IBookingRepository,
+    @inject("IHostedGameRepository") private _hostedGamesRepository:IHostedGameRepository
   ) {}
 
   async execute(
@@ -26,11 +28,16 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
       const weeklyRulesMap = rules.weeklyRules[0] || {};
       const timeRanges: ITimeRange[] = weeklyRulesMap[dayIndex] || [];
 
-      const requestDate = date; // already ISO
+      const requestDate = date; 
       const bookings = await this._bookingRepository.findByTurfIdAndDate(
         turfId,
         requestDate
       );
+
+      const hostedGames=await this._hostedGamesRepository.findbyTurfIdAndDate(
+        turfId,
+        requestDate
+      )
 
       const slots: ISlotEntity[] = [];
 
@@ -47,13 +54,23 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
 
           const slotStart = current;
 
-          // Check if booked
-          const isBooked = bookings.some((bk) => {
+          
+
+          const isBookedByBooking  = bookings.some((bk) => {
             const bookingStart = this.parseTime(requestDate, bk.startTime);
             const bookingEnd = this.parseTime(requestDate, bk.endTime);
 
             return bookingStart < slotEnd && bookingEnd > slotStart;
           });
+
+          const isBookedByHostedGames =hostedGames.some((game)=>{
+            const gameStart=this.parseTime(requestDate,game.startTime);
+            const gameEnd=this.parseTime(requestDate,game.endTime)
+
+            return gameStart<slotEnd && gameEnd >slotStart
+          })
+
+          const isBooked =isBookedByBooking ||isBookedByHostedGames
 
           slots.push({
             id: `${turfId}-${date}-${slotStart.toISOString()}`,
@@ -71,15 +88,13 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
         }
       }
 
-      // -------------------------------------------------
-      // 🔥 FILTER OUT PAST SLOTS IF SELECTED DATE IS TODAY
-      // -------------------------------------------------
+   
       const today = new Date().toISOString().split("T")[0];
 
       if (requestDate === today) {
         const now = new Date();
-        now.setMinutes(0, 0, 0); // remove minutes
-        now.setHours(now.getHours() + 1); // next full hour
+        now.setMinutes(0, 0, 0);
+        now.setHours(now.getHours() + 1); 
 
         return slots.filter((slot) => {
           const slotStart = this.parseTime(requestDate, slot.startTime);
@@ -87,7 +102,6 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
         });
       }
 
-      // Future date → return only NOT booked
       return slots.filter((slot) => !slot.isBooked);
 
     } catch (err) {

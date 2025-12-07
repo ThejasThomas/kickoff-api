@@ -4,6 +4,7 @@ import { IHostedGameEntity } from "../../../domain/models/hosted_game_entity";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import moment from "moment-timezone";
 
 const capacityMap: Record<string, number> = {
   "5x5": 10,
@@ -35,12 +36,19 @@ export class createHostedGameUseCase implements ICreateHostedGameUseCase {
       );
     }
     const capacity = capacityMap[data.courtType];
+      const  gameStartAt=moment.tz(`${data.slotDate} ${data.startTime}`,"YYYY-MM-DD HH:mm", "Asia/Kolkata").utc().toDate()
 
-    const gameData = {
+    const gameData:Omit<IHostedGameEntity,"_id">= {
       ...data,
       capacity,
-      status: "open" as const,
-      players: [],
+      status: "open",
+      gameStartAt,
+      players: [{
+        userId:data.hostUserId,
+        status:"paid",
+        paymentId:"stripe",
+        joinedAt:new Date().toISOString(),
+      }],
     };
 
     return await this._hostedGameRepo.createGame(gameData);

@@ -20,6 +20,10 @@ import { error } from "console";
 import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
 import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
 import { ICreateHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/create_hosted_game_usecase_interface";
+import { IGetUpcomingHostedGamesUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hostedGame_useCase";
+import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/join_hostedGame_usecase_interface";
+import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
+import moment from "moment-timezone";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -39,7 +43,13 @@ export class BookingsController implements IBookingsController {
     @inject("IGetCancelRequestsUseCase")
     private _getCancellBookingsUseCase:IGetCancelRequestsUseCase,
     @inject("ICreateHostedGameUseCase")
-    private _createHostedGameUseCase:ICreateHostedGameUseCase
+    private _createHostedGameUseCase:ICreateHostedGameUseCase,
+    @inject("IGetUpcomingHostedGamesUseCase")
+    private _getUpcomingHostedGamesUseCase:IGetUpcomingHostedGamesUseCase,
+    @inject("IJoinHostedGameUseCase")
+    private _joinHostedGameUsecase:IJoinHostedGameUseCase,
+    @inject("IGetSingleHostedGameUseCase")
+    private _getSingleHostedGameUseCase:IGetSingleHostedGameUseCase
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -328,6 +338,63 @@ console.log('bookingssss',bookings)
       res.status(500).json({
         success:false,
         message:err.message ||"Failed to Host game"
+      })
+    }
+  }
+  async getUpcomingHostedGames(req: Request, res: Response): Promise<void> {
+    try{
+      const games=await this._getUpcomingHostedGamesUseCase.execute()
+      res.status(200).json({
+        success:true,
+        games
+      })
+    }catch(err){
+      res.status(500).json({
+        success:false,
+        message:"Failed to fetch upcoming hosted games"
+      })
+    }
+  }
+  async joinHostedGame(req: Request, res: Response): Promise<void> {
+    try{
+      const {gameId}=req.body;
+      const userId=(req as CustomRequest).user?.userId
+
+      if(!gameId || !userId){
+        res.status(400).json({
+          success:false,
+          message:"Game ID and user ID required"
+        })
+        return
+      }
+
+      const result =await this._joinHostedGameUsecase.execute({
+        gameId,
+        userId
+      })
+      res.status(200).json(result)
+    }catch(err:any){
+      res.status(err.statusCode || 500).json({
+        success:false,
+        message:err.message ||"Failed to join game"
+      })
+    }
+  }
+  async getSingleHostedGame(req: Request, res: Response): Promise<void> {
+    try{
+      const {id}=req.params
+      console.log('idddd',id)
+
+      const game =await this._getSingleHostedGameUseCase.execute(id)
+
+      res.status(200).json({
+        success:true,
+        game
+      })
+    }catch(err:any){
+      res.status(err.statusCode || 500).json({
+        success:false,
+        message:err.message||"Failed to fetch hosted game"
       })
     }
   }

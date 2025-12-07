@@ -9,4 +9,7 @@ export interface IBookingsController {
     handleOwnerCancelRequest(req:Request,res:Response):Promise<void>
     getCancelRequestBookings(req:Request,res:Response):Promise<void>
     createGame(req:Request,res:Response):Promise<void>
+    getUpcomingHostedGames(req:Request,res:Response):Promise<void>
+    joinHostedGame(req:Request,res:Response):Promise<void>
+    getSingleHostedGame(req:Request,res:Response):Promise<void>
 }

@@ -47,6 +47,11 @@ export const HostedGameSchema = new Schema<IHostedGameEntity>({
     type: Number,
     required: true,
   },
+  gameStartAt:{
+    type:Date,
+    required:true,
+    index:true
+  },
   players:{
     type:[PlayerSchema],
     default:[]

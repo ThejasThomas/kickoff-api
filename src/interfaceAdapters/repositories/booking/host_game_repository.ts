@@ -3,13 +3,232 @@ import { IHostedGameRepository } from "../../../domain/repositoryInterface/booki
 import { BaseRepository } from "../base_repository";
 import { IHostedGameEntity } from "../../../domain/models/hosted_game_entity";
 import { HostedGameModel } from "../../database/mongoDb/schemas/hosted_game_schema";
+import { IHostedGameItem } from "../../../domain/models/get_hosted_game_entity";
+import { TurfModel } from "../../database/mongoDb/models/turf_model";
+import { ClientModel } from "../../database/mongoDb/models/client_model";
+import { email } from "zod";
+import { CustomError } from "../../../domain/utils/custom.error";
+import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 
 @injectable()
-export class HostGameRepository implements IHostedGameRepository{
-    async createGame(data: IHostedGameEntity): Promise<IHostedGameEntity> {
-        return await HostedGameModel.create(data)
+export class HostGameRepository implements IHostedGameRepository {
+  async createGame(data: IHostedGameEntity): Promise<IHostedGameEntity> {
+    return await HostedGameModel.create(data);
+  }
+  async getById(id: string): Promise<IHostedGameEntity | null> {
+    return await HostedGameModel.findById(id);
+  }
+  async findbyTurfIdAndDate(
+    turfId: string,
+    slotDate: string
+  ): Promise<IHostedGameEntity[]> {
+    return HostedGameModel.find({
+      turfId,
+      slotDate,
+      status: { $in: ["open", "full"] },
+    });
+  }
+  async getUpComingGames(): Promise<IHostedGameItem[]> {
+    try {
+      const today = new Date();
+      console.log("today", today);
+      const todayStr = today.toISOString().split("T")[0];
+      const nowTime = today.toTimeString().slice(0, 5);
+      console.log("todayyystr", todayStr);
+      console.log("nowwTime", nowTime);
+      const now = new Date();
+
+      const games = await HostedGameModel.find({
+        status: { $in: ["open", "full"] },
+        gameStartAt: { $gt: now },
+      })
+        .sort({ gameStartAt: 1 })
+        .lean();
+
+      console.log("hostedddGamess", games);
+
+      if (!games || games.length === 0) {
+        return [];
+      }
+
+      const result: IHostedGameItem[] = [];
+      console.log("resultttt", result);
+      for (const game of games) {
+        const turf = await TurfModel.findById(game.turfId).lean();
+
+        const hostUser = await ClientModel.findOne({
+          userId: game.hostUserId,
+        }).lean();
+
+        const playersWithUser: IHostedGameItem["players"] = [];
+
+        for (const player of game.players || []) {
+          const playerUser = await ClientModel.findOne({
+            userId: player.userId,
+          }).lean();
+
+          playersWithUser.push({
+            userId: player.userId,
+            status: player.status,
+            joinedAt: player.joinedAt
+              ? new Date(player.joinedAt).toISOString()
+              : undefined,
+
+            user: playerUser
+              ? {
+                  name: playerUser.fullName,
+                  email: playerUser.email,
+                  phoneNumber: playerUser.phoneNumber,
+                }
+              : null,
+          });
+        }
+
+        result.push({
+          _id: game._id.toString(),
+
+          hostUserId: game.hostUserId,
+          turfId: game.turfId,
+          courtType: game.courtType,
+
+          slotDate: game.slotDate,
+          startTime: game.startTime,
+          endTime: game.endTime,
+
+          pricePerPlayer: game.pricePerPlayer,
+          capacity: game.capacity,
+          status: game.status,
+
+          players: playersWithUser,
+
+          createdAt: game.createdAt
+            ? new Date(game.createdAt).toISOString()
+            : new Date().toISOString(),
+
+          updatedAt: game.updatedAt
+            ? new Date(game.updatedAt).toISOString()
+            : new Date().toISOString(),
+
+          turf: turf
+            ? {
+                turfName: turf.turfName,
+                location: turf.location,
+                images: turf.images,
+              }
+            : undefined,
+
+          hostUser: hostUser
+            ? {
+                name: hostUser.fullName,
+                email: hostUser.email,
+                phoneNumber: hostUser.phoneNumber,
+              }
+            : undefined,
+        });
+      }
+
+      return result;
+    } catch (err) {
+      console.error("❌ getUpComingGames repository error:", err);
+      return [];
     }
-    async getById(id: string): Promise<IHostedGameEntity | null> {
-        return await HostedGameModel.findById(id)
+  }
+  async joinGame(gameId: string, userId: string): Promise<boolean> {
+    const game = await HostedGameModel.findById(gameId);
+
+    if (!game) {
+      throw new CustomError(
+        ERROR_MESSAGES.NOT_GAME_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
     }
+    if (!game.players) {
+      game.players = [];
+    }
+    const alreadyJoined = game.players.some(
+      (player) => player.userId === userId
+    );
+
+    if (alreadyJoined) return false;
+
+    game.players?.push({
+      userId,
+      status: "paid",
+    });
+
+    if (game.players?.length >= game.capacity) {
+      game.status = "full";
+    }
+
+    await game.save();
+    return true;
+  }
+  async getHostedGameById(id: string): Promise<IHostedGameItem | null> {
+    const game = await HostedGameModel.findById(id).lean();
+    if (!game) return null;
+
+    const turf = await TurfModel.findById(game.turfId).lean();
+    const hostUser = await ClientModel.findOne({
+      userId: game.hostUserId,
+    }).lean();
+
+    const playersWithUser = [];
+
+    for (const player of game.players || []) {
+      const playerUser = await ClientModel.findOne({
+        userId: player.userId,
+      }).lean();
+
+      playersWithUser.push({
+        userId: player.userId,
+        status: player.status,
+        joinedAt: player.joinedAt,
+        user: playerUser
+          ? {
+              name: playerUser.fullName,
+              email: playerUser.email,
+              phoneNumber: playerUser.phoneNumber,
+            }
+          : null,
+      });
+    }
+
+    return {
+      _id: game._id.toString(),
+      hostUserId: game.hostUserId,
+      turfId: game.turfId,
+      courtType: game.courtType,
+      slotDate: game.slotDate,
+      startTime: game.startTime,
+      endTime: game.endTime,
+      pricePerPlayer: game.pricePerPlayer,
+      capacity: game.capacity,
+      status: game.status,
+      players: playersWithUser,
+
+      createdAt: game.createdAt
+        ? new Date(game.createdAt).toISOString()
+        : new Date().toISOString(),
+
+      updatedAt: game.updatedAt
+        ? new Date(game.updatedAt).toISOString()
+        : new Date().toISOString(),
+
+      turf: turf
+        ? {
+            turfName: turf.turfName,
+            location: turf.location,
+            images: turf.images,
+          }
+        : undefined,
+
+      hostUser: hostUser
+        ? {
+            name: hostUser.fullName,
+            email: hostUser.email,
+            phoneNumber: hostUser.phoneNumber,
+          }
+        : undefined,
+    };
+  }
 }

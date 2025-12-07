@@ -141,6 +141,28 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.createGame(req, res);
       }
     );
+    this.router.get(
+      "/client/get-hosted-game",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.getUpcomingHostedGames(req, res);
+      }
+    );
+    this.router.post(
+      "/client/join-hosted-game",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        bookingsController.joinHostedGame(req,res)
+      }
+    )
+    this.router.get(
+      "/client/get-single-hosted-game/:id",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        console.log('heyyyy brooohh')
+        bookingsController.getSingleHostedGame(req,res)
+      }
+    )
 
     this.router.post(
       "/client/logout",

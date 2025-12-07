@@ -11,5 +11,6 @@ export interface IUserController{
     verifyPaymentSession(req:Request,res:Response):Promise<void>
     createWalletCheckoutSession(req:Request,res:Response):Promise<void>
     createHostedGameCheckoutSession(req:Request,res:Response):Promise<void>
+    createJoinHostedGameCheckoutSession(req:Request,res:Response):Promise<void>
 }
 

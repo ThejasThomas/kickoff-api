@@ -16,6 +16,7 @@ import { IUpdateUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/
 import { date, success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
 import Stripe from "stripe";
+import { HostedGameModel } from "../../interfaceAdapters/database/mongoDb/schemas/hosted_game_schema";
 
 @injectable()
 export class UserController implements IUserController {
@@ -357,7 +358,6 @@ async createHostedGameCheckoutSession(req: Request, res: Response): Promise<void
 
     const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
 
-    // Payment redirect URLs
     const successUrl = `${frontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${frontendUrl}/host-game-payment?status=cancelled`;
 
@@ -389,6 +389,81 @@ async createHostedGameCheckoutSession(req: Request, res: Response): Promise<void
     res.status(500).json({
       success: false,
       message: "Failed to start hosted game payment"
+    });
+  }
+}
+async createJoinHostedGameCheckoutSession(req: Request, res: Response): Promise<void> {
+  try {
+    const { gameId } = req.body;
+
+    if (!gameId) {
+      res.status(400).json({
+        success: false,
+        message: "Game ID is required",
+      });
+      return;
+    }
+
+    const game = await HostedGameModel.findById(gameId);
+
+    if (!game) {
+      res.status(404).json({
+        success: false,
+        message: "Hosted game not found",
+      });
+      return;
+    }
+
+    let frontendUrl = process.env.FRONTEND_URL!;
+    if (!frontendUrl.startsWith("http")) {
+      frontendUrl = `http://${frontendUrl}`;
+    }
+
+    const metadata = {
+      purpose: "join_game",
+      gameId: game._id.toString(),
+      turfId: game.turfId,
+      slotDate: game.slotDate,
+      startTime: game.startTime,
+      endTime: game.endTime,
+      pricePerPlayer: game.pricePerPlayer.toString(),
+    };
+
+    const successUrl = `${frontendUrl}/hosted-games/join-hosted-game/${game._id}?status=success&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${frontendUrl}/hosted-games/join-hosted-game/${game._id}?status=cancelled`;
+
+    const session = await this.stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      metadata,
+
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: `Join Game (${game.courtType})`,
+              description: `${game.slotDate} | ${game.startTime} - ${game.endTime}`,
+            },
+            unit_amount: Math.round(game.pricePerPlayer * 100),
+          },
+          quantity: 1,
+        },
+      ],
+
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    });
+
+    res.status(200).json({
+      success: true,
+      url: session.url,
+    });
+  } catch (err) {
+    console.error("❌ Join hosted game checkout error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to start join game payment",
     });
   }
 }

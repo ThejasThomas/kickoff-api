@@ -104,6 +104,12 @@ import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookin
 import { GetCancelBookingRequestsUsecase } from "../../application/usecase/Bookings/get_cancel_booking_requests";
 import { ICreateHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/create_hosted_game_usecase_interface";
 import { createHostedGameUseCase } from "../../application/usecase/Bookings/create_host_games_usecase";
+import { IGetUpcomingHostedGamesUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hostedGame_useCase";
+import { GetUpcomingHostedGamesUseCase } from "../../application/usecase/Bookings/get_hostedGames_usecase";
+import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/join_hostedGame_usecase_interface";
+import { JoinHostedGameUseCase } from "../../application/usecase/Bookings/join_hosted_game_usecase";
+import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
+import { GetSingleHostedGameUseCase } from "../../application/usecase/Bookings/get_single_hosted_game_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -288,6 +294,15 @@ export class UseCaseRegistry {
     })
     container.register<ICreateHostedGameUseCase>("ICreateHostedGameUseCase",{
       useClass:createHostedGameUseCase
+    })
+    container.register<IGetUpcomingHostedGamesUseCase>("IGetUpcomingHostedGamesUseCase",{
+      useClass:GetUpcomingHostedGamesUseCase
+    })
+    container.register<IJoinHostedGameUseCase>("IJoinHostedGameUseCase",{
+      useClass:JoinHostedGameUseCase
+    })
+    container.register<IGetSingleHostedGameUseCase>("IGetSingleHostedGameUseCase",{
+      useClass:GetSingleHostedGameUseCase
     })
   }
 }
