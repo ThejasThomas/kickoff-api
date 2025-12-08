@@ -231,4 +231,11 @@ export class HostGameRepository implements IHostedGameRepository {
         : undefined,
     };
   }
+  async findByTurfAndDateForOwner(turfId: string, date: string): Promise<IHostedGameEntity[]> {
+    return HostedGameModel.find({
+      turfId,
+      slotDate:date,
+      status:{$in:["open","full","completed"]}
+    }).lean()
+  }
 }

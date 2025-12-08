@@ -136,6 +136,14 @@ export class OwnerRoutes extends BaseRoute {
             bookingsController.getCancelRequestBookings(req,res)
           }
         )
+        this.router.get(
+              "/turfOwner/get-single-hosted-game/:id",
+              verifyAuth,
+              (req:Request,res:Response)=>{
+                console.log('heyyyy brooohh')
+                bookingsController.getSingleHostedGame(req,res)
+              }
+            )
     this.router.post(
       "/turfOwner/logout",
       verifyAuth,

@@ -1,5 +1,7 @@
+import { Types } from "mongoose";
+
 export interface IHostedGameEntity{
-    id?:string;
+    _id?: Types.ObjectId;
     hostUserId:string;
     turfId:string;
     courtType:string;

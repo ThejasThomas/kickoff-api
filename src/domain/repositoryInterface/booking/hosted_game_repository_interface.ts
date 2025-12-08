@@ -8,4 +8,5 @@ export interface IHostedGameRepository{
     getUpComingGames():Promise<IHostedGameItem[]>
     joinGame(gameId:string,userId:string):Promise<boolean>
     getHostedGameById(id:string):Promise<IHostedGameItem |null>
+    findByTurfAndDateForOwner(turfId:string,date:string):Promise<IHostedGameEntity[]>
 }

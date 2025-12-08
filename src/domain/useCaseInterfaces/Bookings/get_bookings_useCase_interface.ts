@@ -1,6 +1,7 @@
 import { BookingDTO } from "../../../application/dtos/get_booking_dto";
+import { OwnerBookingDTO } from "../../../application/dtos/Owner_booking_dto";
 import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 
 export interface IGetBookingsUseCase {
-    execute(turfId:string,date:string):Promise<BookingDTO[]>
+    execute(turfId:string,date:string):Promise<OwnerBookingDTO[]>
 }
