@@ -11,4 +11,6 @@ export interface ITurfController {
   getnearbyturfs(req: Request, res: Response): Promise<void>;
   addrules(req: Request, res: Response): Promise<void>;
   getrules(req: Request, res: Response): Promise<void>;
+  checkIsSlotBooked(req:Request,res:Response):Promise<void>
+  cancelSlot(req:Request,res:Response):Promise<void>
 }

@@ -38,12 +38,12 @@ export class OwnerRoutes extends BaseRoute {
       }
     );
     this.router.put(
-      '/turfOwner/request-update-profile',
+      "/turfOwner/request-update-profile",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        turfOwnerController.requestUpdateProfile(req,res);
+      (req: Request, res: Response) => {
+        turfOwnerController.requestUpdateProfile(req, res);
       }
-    )
+    );
 
     this.router.post(
       "/turfOwner/refresh-token",
@@ -63,57 +63,62 @@ export class OwnerRoutes extends BaseRoute {
     this.router.get(
       "/turfOwner/getbookedclient-details/:userId",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        userController.getBookedUserDetails(req,res)
+      (req: Request, res: Response) => {
+        userController.getBookedUserDetails(req, res);
       }
-    )
+    );
     this.router.get(
       "/turfOwner/get-my-turf",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        turfController.getMyTurf(req,res)
+      (req: Request, res: Response) => {
+        turfController.getMyTurf(req, res);
       }
-    )
+    );
 
-    this.router.get('/turfOwner/get-turfdetails/:id',
+    this.router.get(
+      "/turfOwner/get-turfdetails/:id",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        turfController.getTurfById(req,res)
+      (req: Request, res: Response) => {
+        turfController.getTurfById(req, res);
       }
-    )
-    this.router.put('/turfOwner/update-turf/:id',
+    );
+    this.router.put(
+      "/turfOwner/update-turf/:id",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        turfController.updateTurf(req,res)
+      (req: Request, res: Response) => {
+        turfController.updateTurf(req, res);
       }
-    )
-    this.router.get('/turfOwner/get-rules/:id',
+    );
+    this.router.get(
+      "/turfOwner/get-rules/:id",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        turfController.getrules(req,res)
+      (req: Request, res: Response) => {
+        turfController.getrules(req, res);
       }
-    )
+    );
 
-    this.router.post('/turfOwner/generateSlots',
+    this.router.post(
+      "/turfOwner/generateSlots",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        turfController.generateSlots(req,res)
+      (req: Request, res: Response) => {
+        turfController.generateSlots(req, res);
       }
-    )
-    
+    );
+
     this.router.post(
       "/turfOwner/add-rules",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        turfController.addrules(req,res)
+      (req: Request, res: Response) => {
+        turfController.addrules(req, res);
       }
-    )
-    this.router.get('/turfOwner/get-all-bookings',
+    );
+    this.router.get(
+      "/turfOwner/get-all-bookings",
       verifyAuth,
-      (req:Request,res:Response) =>{
-        bookingsController.getAllbookings(req,res)
+      (req: Request, res: Response) => {
+        bookingsController.getAllbookings(req, res);
       }
-    )
+    );
 
     this.router.post(
       "/turfOwner/retry-approval",
@@ -123,27 +128,40 @@ export class OwnerRoutes extends BaseRoute {
       }
     );
     this.router.put(
-          "/turfOwner/handle-cancel-request/:requestId",
-          verifyAuth,
-          (req:Request,res:Response)=>{
-            bookingsController.handleOwnerCancelRequest(req,res)
-          }
-        )
-        this.router.get(
-          "/turfOwner/get-cancel-bookings",
-          verifyAuth,
-          (req:Request,res:Response)=>{
-            bookingsController.getCancelRequestBookings(req,res)
-          }
-        )
-        this.router.get(
-              "/turfOwner/get-single-hosted-game/:id",
-              verifyAuth,
-              (req:Request,res:Response)=>{
-                console.log('heyyyy brooohh')
-                bookingsController.getSingleHostedGame(req,res)
-              }
-            )
+      "/turfOwner/handle-cancel-request/:requestId",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.handleOwnerCancelRequest(req, res);
+      }
+    );
+    this.router.get(
+      "/turfOwner/get-cancel-bookings",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.getCancelRequestBookings(req, res);
+      }
+    );
+    this.router.get(
+      "/turfOwner/get-single-hosted-game/:id",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        console.log("heyyyy brooohh");
+        bookingsController.getSingleHostedGame(req, res);
+      }
+    );
+    this.router.get(
+      "/turfOwner/check-slot-availability",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        turfController.checkIsSlotBooked(req,res);
+      }
+    );
+    this.router.post(
+      "/turfOwner/cancel-slot",
+    (req:Request,res:Response)=>{
+      turfController.cancelSlot(req,res)
+    }
+    )
     this.router.post(
       "/turfOwner/logout",
       verifyAuth,

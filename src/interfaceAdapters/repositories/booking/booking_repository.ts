@@ -9,6 +9,9 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { CancellationRequestModel } from "../../database/mongoDb/models/cancellationrequest_model";
 import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
+import { IBookingEntity } from "../../../domain/models/booking_entity";
+import { mapBookingDTO } from "../../../application/mappers/getBookingapper";
+import { Types } from "mongoose";
 
 @injectable()
 export class BookingRepository
@@ -107,22 +110,74 @@ export class BookingRepository
         HTTP_STATUS.INTERNAL_SERVER_ERROR
       );
     }
-  } 
-   async updateStatus(id: string, status: string): Promise<ICancellationRequestEntity | null> {
+  }
+  async updateStatus(
+    id: string,
+    status: string
+  ): Promise<ICancellationRequestEntity | null> {
     return await CancellationRequestModel.findByIdAndUpdate(
       id,
       { status },
       { new: true }
     );
   }
-  async getOwnerRequests(ownerId: string): Promise<ICancellationRequestEntity[]> {
-    return await CancellationRequestModel.find({ownerId})
+  async getOwnerRequests(
+    ownerId: string
+  ): Promise<ICancellationRequestEntity[]> {
+    return await CancellationRequestModel.find({ ownerId });
   }
-  async updateStatusById(bookingId: string, status: string): Promise<IBookingModel | null> {
-    return BookinModel.findByIdAndUpdate(
-      bookingId,
-      {status},
-      {new:true}
+  async updateStatusById(
+    bookingId: string,
+    status: string
+  ): Promise<IBookingModel | null> {
+    return BookinModel.findByIdAndUpdate(bookingId, { status }, { new: true });
+  }
+  
+  async findSlotBooking(
+    turfId: string,
+    date: string,
+    startTime: string,
+    endTime: string
+  ): Promise<IBookingEntity | null> {
+    const normalizedstartTime =normalizeTime(startTime)
+    const normalizedendtime=normalizeTime(endTime)
+    console.log(
+      "turfId",
+      turfId,
+      "date",
+      date,
+      "starttime",
+      startTime,
+      "endTime",
+      endTime
+    );
+
+    const booking = await BookinModel.findOne({
+      turfId:turfId,
+      date:date,
+      startTime:normalizedstartTime,
+      endTime:normalizedendtime,
+      status: { $ne: "cancelled" },
+    });
+
+    if (!booking) return null;
+    return mapBookingDTO(booking);
+  }
+  async updateStatusBookings(filter: { _id: string; }, update: Partial<IBookingEntity>): Promise<void> {
+    await this.model.updateOne(
+      {_id:new Types.ObjectId(filter._id)},
+      {$set:update}
     )
   }
 }
+
+const normalizeTime = (time: string): string => {
+  const [hourStr, period] = time.split(" ");
+  let hour = parseInt(hourStr, 10);
+
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
+
+  return hour.toString().padStart(2, "0") + ":00";
+};
+

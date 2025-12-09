@@ -110,6 +110,10 @@ import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/
 import { JoinHostedGameUseCase } from "../../application/usecase/Bookings/join_hosted_game_usecase";
 import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
 import { GetSingleHostedGameUseCase } from "../../application/usecase/Bookings/get_single_hosted_game_usecase";
+import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/checkslotIsBookedUseCase_interface";
+import { CheckSlotIsBooked } from "../../application/usecase/turfs/checkslotIsBookedUseCase_";
+import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
+import { CancelSlotUseCase } from "../../application/usecase/turfs/cance_slot_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -303,6 +307,12 @@ export class UseCaseRegistry {
     })
     container.register<IGetSingleHostedGameUseCase>("IGetSingleHostedGameUseCase",{
       useClass:GetSingleHostedGameUseCase
+    })
+    container.register<ICheckSlotIsBookedUseCase>("ICheckSlotIsBookedUseCase",{
+      useClass:CheckSlotIsBooked
+    })
+    container.register<ICancelSlotUseCase>("ICancelSlotUseCase",{
+      useClass:CancelSlotUseCase
     })
   }
 }

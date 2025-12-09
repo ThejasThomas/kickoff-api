@@ -22,6 +22,8 @@ import { ICancelRequestRepository } from "../../domain/repositoryInterface/booki
 import { CancelrequestRepository } from "../../interfaceAdapters/repositories/booking/cancelRequestRepositoty";
 import { IHostedGameRepository } from "../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { HostGameRepository } from "../../interfaceAdapters/repositories/booking/host_game_repository";
+import { IBlockedSlotRepository } from "../../domain/repositoryInterface/Turf/blocked_slot_repository_interface";
+import { BlockedSlotRepository } from "../../interfaceAdapters/repositories/booking/blockedSlot_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -65,6 +67,9 @@ export class RepositoryRegistry {
     })
     container.register<IHostedGameRepository>("IHostedGameRepository",{
       useClass:HostGameRepository
+    })
+    container.register<IBlockedSlotRepository>("IBlockedSlotRepository",{
+      useClass:BlockedSlotRepository
     })
 
   }

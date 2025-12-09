@@ -20,6 +20,9 @@ import { CustomError } from "../../domain/utils/custom.error";
 import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_nearby_turf_usecase_interface";
 import { IAddRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/add_rules_useCase_interface";
 import { IGetRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_rules_useCase_interface";
+import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/checkslotIsBookedUseCase_interface";
+import { success } from "zod";
+import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -43,7 +46,11 @@ export class TurfController implements ITurfController {
     @inject("IAddRulesUseCase")
     private _addRulesUseCase: IAddRulesUseCase,
     @inject("IGetRulesUseCase")
-    private _getRulesUseCase: IGetRulesUseCase
+    private _getRulesUseCase: IGetRulesUseCase,
+    @inject("ICheckSlotIsBookedUseCase")
+    private _checkSlotIsBookedUseCase:ICheckSlotIsBookedUseCase,
+    @inject("ICancelSlotUseCase")
+    private _cancelSlotUseCase:ICancelSlotUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -375,6 +382,46 @@ export class TurfController implements ITurfController {
       });
     } catch (error) {
       handleErrorResponse(req, res, error);
+    }
+  }
+  async checkIsSlotBooked(req: Request, res: Response): Promise<void> {
+    try{
+     const{turfId,date,startTime,endTime} =req.query;
+
+     const result=await this._checkSlotIsBookedUseCase.execute(
+      turfId as string,
+      date as string,
+      startTime as string,
+      endTime as string
+     )
+     console.log('result',result)
+
+     res.status(HTTP_STATUS.OK).json({
+      success:true,
+      message:"Slot availability checked suuccessfully",
+      result
+     })
+    }catch(error){
+      handleErrorResponse(req,res,error)
+    }
+  }
+  async cancelSlot(req: Request, res: Response): Promise<void> {
+    try{
+      const {turfId,date,startTime,endTime}=req.body;
+
+      await this._cancelSlotUseCase.execute({
+        turfId,
+        date,
+        startTime,
+        endTime
+      })
+
+       res.status(200).json({
+        success:true,
+        message:"Slot cancelled successfully"
+      })
+    }catch(error){
+      handleErrorResponse(req,res,error)
     }
   }
 }

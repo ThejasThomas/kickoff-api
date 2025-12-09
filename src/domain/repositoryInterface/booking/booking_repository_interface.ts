@@ -10,4 +10,6 @@ export interface IBookingRepository extends IBaseRepository<IBookingModel> {
     updateStatus(bookingId:string,status:string):Promise<ICancellationRequestEntity |null>
     getOwnerRequests(ownerId:string):Promise<ICancellationRequestEntity[]>
     updateStatusById(bookingId:string,status:string):Promise<IBookingModel|null>
+    findSlotBooking(turfId:string,date:string,startTime:string,endTime:string):Promise<IBookingEntity | null>
+    updateStatusBookings(filter:{_id:string},update:Partial<IBookingEntity>):Promise<void>
 }

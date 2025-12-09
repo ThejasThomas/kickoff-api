@@ -11,7 +11,10 @@ import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 
 @injectable()
-export class HostGameRepository implements IHostedGameRepository {
+export class HostGameRepository extends BaseRepository<IHostedGameEntity>  implements IHostedGameRepository {
+  constructor(){
+    super(HostedGameModel)
+  }
   async createGame(data: IHostedGameEntity): Promise<IHostedGameEntity> {
     return await HostedGameModel.create(data);
   }
@@ -238,4 +241,28 @@ export class HostGameRepository implements IHostedGameRepository {
       status:{$in:["open","full","completed"]}
     }).lean()
   }
+  async findBySlot(turfId: string, date: string, startTime: string, endTime: string): Promise<IHostedGameEntity | null> {
+        const normalizedstartTime =normalizeTime(startTime)
+    const normalizedendtime=normalizeTime(endTime)
+
+    const hostedGame =await HostedGameModel.findOne({
+      turfId:turfId,
+      slotDate:date,
+      startTime:normalizedstartTime,
+      endTime:normalizedendtime,
+      status:{$ne:"cancelled"}
+    })
+    if(!hostedGame) return null
+
+    return hostedGame;
+  }
 }
+const normalizeTime = (time: string): string => {
+  const [hourStr, period] = time.split(" ");
+  let hour = parseInt(hourStr, 10);
+
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
+
+  return hour.toString().padStart(2, "0") + ":00";
+};
