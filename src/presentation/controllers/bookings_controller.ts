@@ -247,30 +247,35 @@ console.log('bookingssss',bookings)
   async handleOwnerCancelRequest(req: Request, res: Response): Promise<void> {
     try{
       const ownerId=(req as CustomRequest).user?.userId;
-      const {requestId}=req.params;
+      const {requestId,userId}=req.params;
       const {action}=req.body;
+      console.log('userrrIddddd',ownerId)
 
       if(!ownerId){
          res.status(HTTP_STATUS.UNAUTHORIZED).json({
           success:false,
           message:ERROR_MESSAGES.USER_NOT_FOUND
         })
+        return
       }
       if(!requestId){
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success:false,
           message:ERROR_MESSAGES.REQUEST_ID_REQUIRED
         })
+        return
       }
       if(!["approved","rejected"].includes(action)){
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success:false,
           message:ERROR_MESSAGES.INVALID_ACTION
         })
+        return
       }
       const result=await this._handleOwnerCancelUseCase.execute(
         requestId,
-        action
+        action,
+        userId
       )
 
        res.status(200).json({
@@ -283,11 +288,9 @@ console.log('bookingssss',bookings)
           success:false,
           messsage:error.message
         })
+        return
       }
-      res.status(500).json({
-        success:false,
-        message:HTTP_STATUS.INTERNAL_SERVER_ERROR
-      })
+      
     }
   }
   async getCancelRequestBookings(req: Request, res: Response): Promise<void> {

@@ -142,7 +142,7 @@ export class OwnerRoutes extends BaseRoute {
       }
     );
     this.router.put(
-      "/turfOwner/handle-cancel-request/:requestId",
+      "/turfOwner/handle-cancel-request/:requestId/:userId",
       verifyAuth,
       (req: Request, res: Response) => {
         bookingsController.handleOwnerCancelRequest(req, res);
