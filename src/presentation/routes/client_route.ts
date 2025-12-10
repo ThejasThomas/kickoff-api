@@ -50,7 +50,8 @@ export class ClientRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res);
       }
     );
-    this.router.get("/client/getturfs", (req: Request, res: Response) => {
+    this.router.get("/client/getturfs", 
+      (req: Request, res: Response) => {
       turfController.getAllTurfs(req, res);
     });
     this.router.post(
@@ -151,18 +152,18 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/join-hosted-game",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        bookingsController.joinHostedGame(req,res)
+      (req: Request, res: Response) => {
+        bookingsController.joinHostedGame(req, res);
       }
-    )
+    );
     this.router.get(
       "/client/get-single-hosted-game/:id",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        console.log('heyyyy brooohh')
-        bookingsController.getSingleHostedGame(req,res)
+      (req: Request, res: Response) => {
+        console.log("heyyyy brooohh");
+        bookingsController.getSingleHostedGame(req, res);
       }
-    )
+    );
 
     this.router.post(
       "/client/logout",

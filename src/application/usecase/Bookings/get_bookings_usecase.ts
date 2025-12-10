@@ -8,6 +8,7 @@ import { mapBookingDTOList } from "../../mappers/getBookingapper";
 import { BookingDTO } from "../../dtos/get_booking_dto";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { OwnerBookingDTO } from "../../dtos/Owner_booking_dto";
+import { ITurfOwnerRepository } from "../../../domain/repositoryInterface/users/turf_owner-repository.interface";
 
 @injectable()
 export class GetBookingsUseCase implements IGetBookingsUseCase {
@@ -15,7 +16,9 @@ export class GetBookingsUseCase implements IGetBookingsUseCase {
     @inject("IBookingRepository")
     private _bookingRepository: IBookingRepository,
     @inject("IHostedGameRepository")
-    private _hostedGameRepository: IHostedGameRepository
+    private _hostedGameRepository: IHostedGameRepository,
+    @inject("ITurfOwnerRepository")
+    private _turfOwnerRepository:ITurfOwnerRepository
   ) {}
 
   async execute(turfId: string, date: string): Promise<OwnerBookingDTO[]> {
@@ -27,12 +30,16 @@ export class GetBookingsUseCase implements IGetBookingsUseCase {
         );
       }
 
+      const ownerUserIds=await this._turfOwnerRepository.getAllOwnerUserIds()
+
       const bookings = await this._bookingRepository.findByTurfIdAndDate(
         turfId,
         date
       );
       const mappedBookings: OwnerBookingDTO[] = mapBookingDTOList(bookings).map(
-        (book) => ({
+        (book) => {
+          const isOffline =ownerUserIds.includes(book.userId)
+          return{
           _id: book._id!,
           turfId: book.turfId,
           userId: book.userId,
@@ -40,20 +47,25 @@ export class GetBookingsUseCase implements IGetBookingsUseCase {
           startTime: book.startTime,
           endTime: book.endTime,
           date: book.date,
-          bookingType: "normal",
+          bookingType: isOffline? "offline":"normal",
           price: book.price,
+          paymentStatus:book.paymentStatus==="completed"?"completed":"pending",
           status: book.status as OwnerBookingDTO["status"],
           createdAt:book.createdAt? new Date(book.createdAt).toISOString():new Date().toISOString(),
-        })
+        }
+      }
       );
+      console.log('boookings',mappedBookings)
 
       const hostedGames =
         await this._hostedGameRepository.findByTurfAndDateForOwner(
           turfId,
           date
         );
+      
 
       const mappedHostedGames: OwnerBookingDTO[] = hostedGames.map((game) => ({
+        
        _id: game._id!.toString(),
        hostedGameId:game._id!.toString(),
         turfId: game.turfId,

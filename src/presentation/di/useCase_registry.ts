@@ -114,6 +114,8 @@ import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOw
 import { CheckSlotIsBooked } from "../../application/usecase/turfs/checkslotIsBookedUseCase_";
 import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
 import { CancelSlotUseCase } from "../../application/usecase/turfs/cance_slot_usecase";
+import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
+import { OfflineBookingUseCase } from "../../application/usecase/Bookings/offline_booking_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -313,6 +315,9 @@ export class UseCaseRegistry {
     })
     container.register<ICancelSlotUseCase>("ICancelSlotUseCase",{
       useClass:CancelSlotUseCase
+    })
+    container.register<IOfflineBookingsUseCase>("IOfflineBookingsUseCase",{
+      useClass:OfflineBookingUseCase
     })
   }
 }

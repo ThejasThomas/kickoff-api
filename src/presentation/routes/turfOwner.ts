@@ -119,12 +119,26 @@ export class OwnerRoutes extends BaseRoute {
         bookingsController.getAllbookings(req, res);
       }
     );
+    this.router.post(
+      "/turfOwner/bookslot",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        turfController.bookslotsoffline(req, res);
+      }
+    );
 
     this.router.post(
       "/turfOwner/retry-approval",
       verifyAuth,
       (req: Request, res: Response) => {
         turfOwnerController.retryAdminApproval(req, res);
+      }
+    );
+    this.router.get(
+      "/turfOwner/getslots/:id",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        turfController.getSlots(req, res);
       }
     );
     this.router.put(

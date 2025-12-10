@@ -21,6 +21,7 @@ export class BookSlotUseCase implements IBookSlotUseCase{
 
     async execute(bookData:IBookingEntity,userId:string): Promise<BookingDTO> {
         try{
+            console.log('dataas',bookData,userId)
                 const normalizedDate = this.formatToISODate(bookData.date);
 
         const newBooking:IBookingEntity ={

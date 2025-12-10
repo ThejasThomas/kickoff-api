@@ -9,7 +9,7 @@ export interface BookingDTO {
   status: string;
   paymentMethod: string;
   paymentStatus: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface PastBookingDTO {

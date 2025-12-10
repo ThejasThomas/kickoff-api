@@ -11,7 +11,7 @@ export interface IBookingEntity{
     status:string,
     paymentMethod:string,
     paymentStatus:string;
-    createdAt:string;
+    createdAt?:string;
 } 
 
 export interface PaginatedBookings {
