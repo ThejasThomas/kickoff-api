@@ -68,6 +68,7 @@ export class RepositoryRegistry {
     container.register<IHostedGameRepository>("IHostedGameRepository",{
       useClass:HostGameRepository
     })
+   
     container.register<IBlockedSlotRepository>("IBlockedSlotRepository",{
       useClass:BlockedSlotRepository
     })

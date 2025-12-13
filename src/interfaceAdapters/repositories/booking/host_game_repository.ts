@@ -9,11 +9,15 @@ import { ClientModel } from "../../database/mongoDb/models/client_model";
 import { email } from "zod";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { GetUpcomingHostedGamesParams } from "../../../domain/models/GetUpcomingHostedGameParams";
 
 @injectable()
-export class HostGameRepository extends BaseRepository<IHostedGameEntity>  implements IHostedGameRepository {
-  constructor(){
-    super(HostedGameModel)
+export class HostGameRepository
+  extends BaseRepository<IHostedGameEntity>
+  implements IHostedGameRepository
+{
+  constructor() {
+    super(HostedGameModel);
   }
   async createGame(data: IHostedGameEntity): Promise<IHostedGameEntity> {
     return await HostedGameModel.create(data);
@@ -31,8 +35,11 @@ export class HostGameRepository extends BaseRepository<IHostedGameEntity>  imple
       status: { $in: ["open", "full"] },
     });
   }
-  async getUpComingGames(): Promise<IHostedGameItem[]> {
+  async getUpComingGames(
+    params: GetUpcomingHostedGamesParams
+  ): Promise<IHostedGameItem[]> {
     try {
+    const {page,limit,search,minPrice,maxPrice}=params;
       const today = new Date();
       console.log("today", today);
       const todayStr = today.toISOString().split("T")[0];
@@ -41,18 +48,46 @@ export class HostGameRepository extends BaseRepository<IHostedGameEntity>  imple
       console.log("nowwTime", nowTime);
       const now = new Date();
 
-      const games = await HostedGameModel.find({
+      let turfIds: any[] = [];
+
+      if (search) {
+        const turfs = await TurfModel.find({
+          $or: [
+            { turfName: { $regex: search, $options: "i" } },
+            { "location.address": { $regex: search, $options: "i" } },
+            { "location.city": { $regex: search, $options: "i" } },
+            { "location.state": { $regex: search, $options: "i" } },
+          ],
+        }).select("_id");
+        turfIds = turfs.map((t) => t._id);
+        if (turfIds.length === 0) return [];
+      }
+
+      const gameFilter: any = {
         status: { $in: ["open", "full"] },
         gameStartAt: { $gt: now },
-      })
+      };
+
+      if (turfIds.length) {
+        gameFilter.turfId = { $in: turfIds };
+      }
+
+      if (minPrice || maxPrice) {
+        gameFilter.pricePerPlayer = {
+          ...(minPrice && { $gte: minPrice }),
+          ...(maxPrice && { $lte: maxPrice }),
+        };
+      }
+
+      const skip = (page - 1) * limit;
+
+      const games = await HostedGameModel.find(gameFilter)
         .sort({ gameStartAt: 1 })
+        .skip(skip)
+        .limit(limit)
         .lean();
 
-      console.log("hostedddGamess", games);
-
-      if (!games || games.length === 0) {
-        return [];
-      }
+      if (!games.length) return [];
 
       const result: IHostedGameItem[] = [];
       console.log("resultttt", result);
@@ -234,25 +269,33 @@ export class HostGameRepository extends BaseRepository<IHostedGameEntity>  imple
         : undefined,
     };
   }
-  async findByTurfAndDateForOwner(turfId: string, date: string): Promise<IHostedGameEntity[]> {
+  async findByTurfAndDateForOwner(
+    turfId: string,
+    date: string
+  ): Promise<IHostedGameEntity[]> {
     return HostedGameModel.find({
       turfId,
-      slotDate:date,
-      status:{$in:["open","full","completed"]}
-    }).lean()
+      slotDate: date,
+      status: { $in: ["open", "full", "completed"] },
+    }).lean();
   }
-  async findBySlot(turfId: string, date: string, startTime: string, endTime: string): Promise<IHostedGameEntity | null> {
-        const normalizedstartTime =normalizeTime(startTime)
-    const normalizedendtime=normalizeTime(endTime)
+  async findBySlot(
+    turfId: string,
+    date: string,
+    startTime: string,
+    endTime: string
+  ): Promise<IHostedGameEntity | null> {
+    const normalizedstartTime = normalizeTime(startTime);
+    const normalizedendtime = normalizeTime(endTime);
 
-    const hostedGame =await HostedGameModel.findOne({
-      turfId:turfId,
-      slotDate:date,
-      startTime:normalizedstartTime,
-      endTime:normalizedendtime,
-      status:{$ne:"cancelled"}
-    })
-    if(!hostedGame) return null
+    const hostedGame = await HostedGameModel.findOne({
+      turfId: turfId,
+      slotDate: date,
+      startTime: normalizedstartTime,
+      endTime: normalizedendtime,
+      status: { $ne: "cancelled" },
+    });
+    if (!hostedGame) return null;
 
     return hostedGame;
   }

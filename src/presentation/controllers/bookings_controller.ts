@@ -14,7 +14,7 @@ import { IGetUpcomingBookingUseCase } from "../../domain/useCaseInterfaces/Booki
 import { IGetBookedTurfUseCase } from "../../domain/useCaseInterfaces/Bookings/get_booked_useCase_interface";
 import { IGetPastBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_pastbookings_usecase_interface";
 import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_booking_usecase";
-import { success } from "zod";
+import { string, success } from "zod";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
@@ -346,7 +346,21 @@ console.log('bookingssss',bookings)
   }
   async getUpcomingHostedGames(req: Request, res: Response): Promise<void> {
     try{
-      const games=await this._getUpcomingHostedGamesUseCase.execute()
+      const {
+        page="1",
+        limit="6",
+        search="",
+        minPrice,
+        maxPrice
+      } =req.query;
+
+      const games=await this._getUpcomingHostedGamesUseCase.execute({
+        page:Number(page),
+        limit:Number(limit),
+        search:search as string,
+        minPrice:minPrice ? Number(minPrice):undefined,
+        maxPrice:maxPrice ?Number(maxPrice):undefined,
+      })
       res.status(200).json({
         success:true,
         games

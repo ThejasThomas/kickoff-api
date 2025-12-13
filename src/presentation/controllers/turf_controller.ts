@@ -94,7 +94,7 @@ export class TurfController implements ITurfController {
         return;
       }
 
-      const { page = 1, limit = 8, search = "", status } = req.query;
+      const { page = 1, limit = 4, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
@@ -235,6 +235,7 @@ export class TurfController implements ITurfController {
         date as string,
         dayIndex
       );
+      console.log('Slotttsssss',slots)
       res.status(HTTP_STATUS.OK).json({
         success: true,
         slots,
