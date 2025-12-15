@@ -5,6 +5,7 @@ import { IHostedGameRepository } from "../../../domain/repositoryInterface/booki
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import moment from "moment-timezone";
+import { ICreateChatGroupUseCase } from "../../../domain/useCaseInterfaces/users/create_chat_group_usecase_interface";
 
 const capacityMap: Record<string, number> = {
   "5x5": 10,
@@ -17,7 +18,9 @@ const capacityMap: Record<string, number> = {
 export class createHostedGameUseCase implements ICreateHostedGameUseCase {
   constructor(
     @inject("IHostedGameRepository")
-    private _hostedGameRepo: IHostedGameRepository
+    private _hostedGameRepo: IHostedGameRepository,
+    @inject("ICreateChatGroupUseCase")
+    private _createChatGroupUseCase:ICreateChatGroupUseCase
   ) {}
 
   async execute(data: {
@@ -51,6 +54,14 @@ export class createHostedGameUseCase implements ICreateHostedGameUseCase {
       }],
     };
 
-    return await this._hostedGameRepo.createGame(gameData);
+   const game= await this._hostedGameRepo.createGame(gameData);
+
+   await this._createChatGroupUseCase.execute({
+    hostedGameId:game._id!.toString(),
+    hostUserId:data.hostUserId
+   })
+   return game;
+    
   }
 }
+

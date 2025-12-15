@@ -69,9 +69,12 @@ export const ERROR_MESSAGES = {
   SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR: "Database Error",
+  GROUP_ID_REQUIRED:"Group id is required",
+  CHAT_GROUP_NOT_FOUND:"Chat group not found",
   WALLET_TRANSACTION_FAILED : "Wallet transaction failed",
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
+    INVALID_TEXT_MESSAGE:"Invalid text message data",
   BOOKING_FAILED: "Slot booking failed",
   INVALID_ID:"Invalid booking id",
   ALREADY_JOINED:"You already joined the game",

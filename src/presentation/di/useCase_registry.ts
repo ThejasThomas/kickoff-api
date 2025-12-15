@@ -116,6 +116,16 @@ import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/tur
 import { CancelSlotUseCase } from "../../application/usecase/turfs/cance_slot_usecase";
 import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
 import { OfflineBookingUseCase } from "../../application/usecase/Bookings/offline_booking_usecase";
+import { ICreateChatGroupUseCase } from "../../domain/useCaseInterfaces/users/create_chat_group_usecase_interface";
+import { CreateChatGroupUseCase } from "../../application/usecase/users/create_chat_group_usecase";
+import { IGetUserChatGroupsUseCase } from "../../domain/useCaseInterfaces/users/get_user_caht_group_interface";
+import { GetUserChatGroupUseCase } from "../../application/usecase/users/get_user_chat_group_usecase";
+import { ISaveChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/saveChatMessage_usecase_interface";
+import { SaveChatMessageUseCase } from "../../application/usecase/messages/saveChatMessage_usecase";
+import { IGetChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/getChatMessageUsecase_interface";
+import { GetChatMessagesUseCase } from "../../application/usecase/messages/getChatMessage_usecase";
+import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages/getChatPageData_usecase";
+import { GetChatPageDataUseCase } from "../../application/usecase/messages/getChatPageData_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -318,6 +328,22 @@ export class UseCaseRegistry {
     })
     container.register<IOfflineBookingsUseCase>("IOfflineBookingsUseCase",{
       useClass:OfflineBookingUseCase
+    })
+    container.register<ICreateChatGroupUseCase>("ICreateChatGroupUseCase",{
+      useClass:CreateChatGroupUseCase
+    })
+    container.register<IGetUserChatGroupsUseCase>("IGetUserChatGroupsUseCase",{
+      useClass:GetUserChatGroupUseCase
+    })
+    container.register<ISaveChatMessageUseCase>(
+      "ISaveChatMessageUseCase",
+      {useClass:SaveChatMessageUseCase}
+    )
+    container.register<IGetChatMessageUseCase>("IGetChatMessageUseCase",{
+      useClass:GetChatMessagesUseCase
+    })
+    container.register<IGetChatPageDataUseCase>("IGetChatPageDataUseCase",{
+      useClass:GetChatPageDataUseCase
     })
   }
 }

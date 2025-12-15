@@ -17,6 +17,9 @@ import { date, success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
 import Stripe from "stripe";
 import { HostedGameModel } from "../../interfaceAdapters/database/mongoDb/schemas/hosted_game_schema";
+import { IGetUserChatGroupsUseCase } from "../../domain/useCaseInterfaces/users/get_user_caht_group_interface";
+import { IGetChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/getChatMessageUsecase_interface";
+import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages/getChatPageData_usecase";
 
 @injectable()
 export class UserController implements IUserController {
@@ -32,7 +35,13 @@ export class UserController implements IUserController {
     @inject("IGetUserDetailsUseCase")
     private _getUserDetailsUseCase: IGetUserDetailsUseCase,
     @inject("IUpdateUserDetailsUseCase")
-    private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase
+    private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase,
+    @inject("IGetUserChatGroupsUseCase")
+    private _getUserChatGroupsUseCase:IGetUserChatGroupsUseCase,
+    @inject("IGetChatMessageUseCase")
+    private _getChatMessageUseCase:IGetChatMessageUseCase,
+    @inject("IGetChatPageDataUseCase")
+    private _getChatPageDataUseCase:IGetChatPageDataUseCase
   ) {
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY environment variable is not set");
@@ -460,7 +469,7 @@ async createJoinHostedGameCheckoutSession(req: Request, res: Response): Promise<
       url: session.url,
     });
   } catch (err) {
-    console.error("❌ Join hosted game checkout error:", err);
+    console.error("Join hosted game checkout error:", err);
     res.status(500).json({
       success: false,
       message: "Failed to start join game payment",
@@ -468,5 +477,40 @@ async createJoinHostedGameCheckoutSession(req: Request, res: Response): Promise<
   }
 }
 
+async getMyChatGroup(req: Request, res: Response): Promise<void> {
+  try{
+    const userId=(req as CustomRequest).user?.userId;
+    console.log('userrIDDD',userId)
 
+    if(!userId){
+       res.status(401).json({success:false})
+       return;
+    }
+    const groups=await this._getUserChatGroupsUseCase.execute(userId);
+
+    console.log('groupsss',groups)
+
+    res.status(200).json({
+      success:true,
+      groups,
+    })
+  }catch(error){
+    handleErrorResponse(req,res,error)
+  }
+}
+async getMessages(req: Request, res: Response): Promise<void> {
+  try{
+    const{groupId}=req.params;
+
+    const data=await this._getChatPageDataUseCase.execute(groupId)
+
+    res.status(HTTP_STATUS.OK).json({
+      success:true,
+      group:data.group,
+      messages:data.messages
+    })
+  }catch(error){
+    handleErrorResponse(req,res,error)
+  }
+}
 }

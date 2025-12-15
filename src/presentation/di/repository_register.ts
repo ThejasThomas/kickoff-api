@@ -24,6 +24,10 @@ import { IHostedGameRepository } from "../../domain/repositoryInterface/booking/
 import { HostGameRepository } from "../../interfaceAdapters/repositories/booking/host_game_repository";
 import { IBlockedSlotRepository } from "../../domain/repositoryInterface/Turf/blocked_slot_repository_interface";
 import { BlockedSlotRepository } from "../../interfaceAdapters/repositories/booking/blockedSlot_repository";
+import { IChatGroupRepository } from "../../domain/repositoryInterface/chatgroup/chat_group_repository_interface";
+import { ChatGroupRepository } from "../../interfaceAdapters/repositories/chatgroup/chat_group_repository";
+import { IChatMessageRepository } from "../../domain/repositoryInterface/chatgroup/chat_message_repository_interface";
+import { ChatMessageRepository } from "../../interfaceAdapters/repositories/chatgroup/chat_message_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -71,6 +75,12 @@ export class RepositoryRegistry {
    
     container.register<IBlockedSlotRepository>("IBlockedSlotRepository",{
       useClass:BlockedSlotRepository
+    })
+    container.register<IChatGroupRepository>("IChatGroupRepository",{
+      useClass:ChatGroupRepository
+    })
+    container.register<IChatMessageRepository>("IChatMessageRepository",{
+      useClass:ChatMessageRepository
     })
 
   }

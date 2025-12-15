@@ -50,8 +50,7 @@ export class ClientRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res);
       }
     );
-    this.router.get("/client/getturfs", 
-      (req: Request, res: Response) => {
+    this.router.get("/client/getturfs", (req: Request, res: Response) => {
       turfController.getAllTurfs(req, res);
     });
     this.router.post(
@@ -156,6 +155,11 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.joinHostedGame(req, res);
       }
     );
+    this.router.get("/client/my-chat-groups",
+       verifyAuth,
+      (req:Request, res:Response) => {
+      userController.getMyChatGroup(req, res);
+    });
     this.router.get(
       "/client/get-single-hosted-game/:id",
       verifyAuth,
@@ -164,6 +168,13 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.getSingleHostedGame(req, res);
       }
     );
+    this.router.get(
+      "/client/get-chats/:groupId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        userController.getMessages(req,res)
+      }
+    )
 
     this.router.post(
       "/client/logout",
