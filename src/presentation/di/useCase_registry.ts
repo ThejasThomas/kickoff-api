@@ -126,6 +126,10 @@ import { IGetChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/
 import { GetChatMessagesUseCase } from "../../application/usecase/messages/getChatMessage_usecase";
 import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages/getChatPageData_usecase";
 import { GetChatPageDataUseCase } from "../../application/usecase/messages/getChatPageData_usecase";
+import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
+import {  AddMoneyOwnerWalletUseCase } from "../../application/usecase/wallet/addMoney_owner_wallet_usecase";
+import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
+import { GetOwnerWalletTransactionUseCase } from "../../application/usecase/wallet/getowner_wallet_transaction";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -344,6 +348,12 @@ export class UseCaseRegistry {
     })
     container.register<IGetChatPageDataUseCase>("IGetChatPageDataUseCase",{
       useClass:GetChatPageDataUseCase
+    })
+    container.register<IAddMoneyOwnerWalletUseCase>("IAddMoneyOwnerWalletUseCase",{
+      useClass:AddMoneyOwnerWalletUseCase
+    })
+    container.register<IGetOwnerWalletTransactionsUseCase>("IGetOwnerWalletTransactionsUseCase",{
+      useClass:GetOwnerWalletTransactionUseCase
     })
   }
 }

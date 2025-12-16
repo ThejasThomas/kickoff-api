@@ -28,6 +28,10 @@ import { IChatGroupRepository } from "../../domain/repositoryInterface/chatgroup
 import { ChatGroupRepository } from "../../interfaceAdapters/repositories/chatgroup/chat_group_repository";
 import { IChatMessageRepository } from "../../domain/repositoryInterface/chatgroup/chat_message_repository_interface";
 import { ChatMessageRepository } from "../../interfaceAdapters/repositories/chatgroup/chat_message_repository";
+import { IOwnerWalletRepository } from "../../domain/repositoryInterface/wallet/ownerWalletRepository_interface";
+import { OwnerWalletRepository } from "../../interfaceAdapters/repositories/wallet/owner_wallet_repository";
+import { IOwnerWalletTransactionRepository } from "../../domain/repositoryInterface/wallet/owner_wallet_transactionRepository_interface";
+import { OwnerWalletTransactionRepository } from "../../interfaceAdapters/repositories/wallet/owner_wallet_transaction_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -66,23 +70,27 @@ export class RepositoryRegistry {
     container.register<IWalletRepository>("IWalletRepository", {
       useClass: WalletRepository,
     });
-    container.register<ICancelRequestRepository>("ICancelRequestRepository",{
-      useClass:CancelrequestRepository
-    })
-    container.register<IHostedGameRepository>("IHostedGameRepository",{
-      useClass:HostGameRepository
-    })
-   
-    container.register<IBlockedSlotRepository>("IBlockedSlotRepository",{
-      useClass:BlockedSlotRepository
-    })
-    container.register<IChatGroupRepository>("IChatGroupRepository",{
-      useClass:ChatGroupRepository
-    })
-    container.register<IChatMessageRepository>("IChatMessageRepository",{
-      useClass:ChatMessageRepository
-    })
+    container.register<ICancelRequestRepository>("ICancelRequestRepository", {
+      useClass: CancelrequestRepository,
+    });
+    container.register<IHostedGameRepository>("IHostedGameRepository", {
+      useClass: HostGameRepository,
+    });
 
+    container.register<IBlockedSlotRepository>("IBlockedSlotRepository", {
+      useClass: BlockedSlotRepository,
+    });
+    container.register<IChatGroupRepository>("IChatGroupRepository", {
+      useClass: ChatGroupRepository,
+    });
+    container.register<IChatMessageRepository>("IChatMessageRepository", {
+      useClass: ChatMessageRepository,
+    });
+    container.register<IOwnerWalletRepository>("IOwnerWalletRepository", {
+      useClass: OwnerWalletRepository,
+    });
+    container.register<IOwnerWalletTransactionRepository>("IOwnerWalletTransactionRepository",{
+      useClass:OwnerWalletTransactionRepository
+    })
   }
-
 }

@@ -5,6 +5,7 @@ import {
   turfController,
   turfOwnerController,
   userController,
+  walletController,
 } from "../di/resolver";
 import { BaseRoute } from "./base_route";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
@@ -170,6 +171,13 @@ export class OwnerRoutes extends BaseRoute {
         turfController.checkIsSlotBooked(req,res);
       }
     );
+    this.router.get(
+      "/turfOwner/transactions",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getOwnerWalletTransactions(req,res)
+      }
+    )
     this.router.post(
       "/turfOwner/cancel-slot",
     (req:Request,res:Response)=>{

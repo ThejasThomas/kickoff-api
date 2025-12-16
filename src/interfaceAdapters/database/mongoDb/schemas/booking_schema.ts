@@ -1,10 +1,10 @@
 import { Schema } from "mongoose";
 import { IBookingModel } from "../models/booking_model";
-import { timeStamp } from "console";
 
 export const BookingSchema = new Schema<IBookingModel>({
   userId: {
     type: String,
+    ref:"Client",
     required: true,
   },
   turfId: {

@@ -9,6 +9,8 @@ export enum WalletTransactionStatus {
 }
 export interface IWalletTransactionEntity {
     userId:string,
+    ownerId:string,
+    turfId:string,
     type:WalletTransactionType,
     amount:number,
     reason:string,

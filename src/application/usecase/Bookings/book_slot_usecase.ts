@@ -15,8 +15,7 @@ export class BookSlotUseCase implements IBookSlotUseCase{
     constructor(
         @inject('IBookingRepository')
         private _bookingRepository:IBookingRepository,
-        @inject('ISlotRepository')
-        private _slotRepository:ISlotRepository
+
     ){}
 
     async execute(bookData:IBookingEntity,userId:string): Promise<BookingDTO> {

@@ -49,6 +49,7 @@ export const SUCCESS_MESSAGES = {
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
+  WALLET_TRANSACTION_FETCHED:"Owner wallet transactions fetched successfully",
   APPROVAL_REQUEST_SENT: "Approval request send to the admin",
   TURF_BOOKED_SUCCESSFULLY: "Your turf slot  Booked successfully",
 
@@ -72,6 +73,7 @@ export const ERROR_MESSAGES = {
   GROUP_ID_REQUIRED:"Group id is required",
   CHAT_GROUP_NOT_FOUND:"Chat group not found",
   WALLET_TRANSACTION_FAILED : "Wallet transaction failed",
+  WALLET_TRANSACTION_FETCH_FAILED:"Failed to fetch wallet transactions",
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
     INVALID_TEXT_MESSAGE:"Invalid text message data",

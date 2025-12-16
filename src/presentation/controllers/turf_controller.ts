@@ -24,6 +24,7 @@ import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOw
 import { success } from "zod";
 import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
 import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
+import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -53,7 +54,9 @@ export class TurfController implements ITurfController {
     @inject("ICancelSlotUseCase")
     private _cancelSlotUseCase: ICancelSlotUseCase,
     @inject("IOfflineBookingsUseCase")
-    private _offlineBookingUseCase: IOfflineBookingsUseCase
+    private _offlineBookingUseCase: IOfflineBookingsUseCase,
+    @inject("IAddMoneyOwnerWalletUseCase")
+    private _addMoneyOwnerWalletUsecase:IAddMoneyOwnerWalletUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -292,7 +295,7 @@ export class TurfController implements ITurfController {
       const bookData = req.body;
       const userId = (req as CustomRequest).user?.userId;
       console.log("userrrrrrID", userId);
-      console.log("bookDAAtaaa", bookData);
+      console.log("bookDAAtaaa", bookData.ownerId);
 
       if (!userId) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({
@@ -303,6 +306,9 @@ export class TurfController implements ITurfController {
       }
       console.log("bookdataaaaas", bookData);
       const bookslot = await this._bookSlotUseCase.execute(bookData, userId);
+
+      await this._addMoneyOwnerWalletUsecase.execute(bookslot._id)
+      
 
       res.status(HTTP_STATUS.CREATED).json({
         success: true,

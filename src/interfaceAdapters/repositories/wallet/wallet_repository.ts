@@ -3,9 +3,9 @@ import { BaseRepository } from "../base_repository";
 import { IWallet } from "../../database/mongoDb/models/wallet_model";
 import { WalletModel } from "../../database/mongoDb/schemas/wallet_schema";
 import { IWalletRepository } from "../../../domain/repositoryInterface/wallet/wallet_repository_interface";
-import { IWalletEntity } from "../../../domain/models/wallet_entity";
+import { IWalletEntity, WalletTransactionType } from "../../../domain/models/wallet_entity";
 import { WalletTransactionModel } from "../../database/mongoDb/models/wallet_transaction_model";
-import { IWalletTransactionEntity } from "../../../domain/models/wallet_transaction_entity";
+import { IWalletTransactionEntity, WalletTransactionStatus } from "../../../domain/models/wallet_transaction_entity";
 
 @injectable()
 export class WalletRepository
@@ -52,6 +52,7 @@ export class WalletRepository
     return { transactions, total };
   }
   async addMoney(userId:string,amount:number,reason:string): Promise<IWalletEntity> {
+    console.log('heyybrooohh')
     let wallet = await WalletModel.findOne({userId})
     console.log('wallettt',wallet)
     if(!wallet){
@@ -65,12 +66,13 @@ export class WalletRepository
 
     await WalletTransactionModel.create({
       userId,
-      type:"credit",
+      type:WalletTransactionType.CREDIT,
       amount,
       reason,
-      status:"success",
+      status:WalletTransactionStatus.SUCCESS,
       transaction_date:new Date().toISOString()
     })
+    console.log('userwalletcredited')
 
     return wallet;
   }

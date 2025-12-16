@@ -3,7 +3,7 @@ import { IWalletController } from "../../domain/controllerInterfaces/wallet/wall
 import { IAddMoneyUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_usecase_interface";
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { Request, Response } from "express";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
 import { success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
@@ -11,6 +11,7 @@ import { error } from "console";
 import { IGetWalletBalanceUseCase } from "../../domain/useCaseInterfaces/wallet/getWalletBalanceUseCase_interface";
 import { IWalletTransaction } from "../../interfaceAdapters/database/mongoDb/models/wallet_transaction_model";
 import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
+import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
 
 @injectable()
 export class WalletController implements IWalletController {
@@ -20,7 +21,9 @@ export class WalletController implements IWalletController {
     @inject("IGetWalletBalanceUseCase")
     private _getWalletBalanceUseCase: IGetWalletBalanceUseCase,
     @inject("IGetWalletHistoryUseCase")
-    private _getWalletHistoryUseCase: IGetWalletHistoryUseCase
+    private _getWalletHistoryUseCase: IGetWalletHistoryUseCase,
+    @inject("IGetOwnerWalletTransactionsUseCase")
+    private _getOwnerWalletTransactionUsecase:IGetOwnerWalletTransactionsUseCase
   ) {}
 
   async addMoney(req: Request, res: Response): Promise<void> {
@@ -92,6 +95,29 @@ export class WalletController implements IWalletController {
         success: false,
         message: "failed to fetch wallet history",
       });
+    }
+  }
+  async getOwnerWalletTransactions(req: Request, res: Response): Promise<void> {
+    try{
+      const ownerId =(req as CustomRequest).user?.userId;
+      const page =Number(req.query.page)||1;
+      const limit =Number(req.query.limit)||10
+
+      const result = await this._getOwnerWalletTransactionUsecase.execute(
+        ownerId,
+        page,
+        limit
+      );
+      res.status(HTTP_STATUS.OK).json({
+        success:true,
+        message:SUCCESS_MESSAGES.WALLET_TRANSACTION_FETCHED,
+        ...result
+      })
+    }catch(error){
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success:false,
+        message:ERROR_MESSAGES.WALLET_TRANSACTION_FETCH_FAILED
+      })
     }
   }
 }
