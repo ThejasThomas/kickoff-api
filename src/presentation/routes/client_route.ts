@@ -175,6 +175,20 @@ export class ClientRoutes extends BaseRoute {
         userController.getMessages(req,res)
       }
     )
+    this.router.post(
+      "/client/add-review",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.addReview(req,res)
+      }
+    )
+    this.router.get(
+      "/client/get-reviews/:turfId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.getTurfReviews(req,res)
+      }
+    )
 
     this.router.post(
       "/client/logout",

@@ -6,6 +6,7 @@ import { config } from './shared/config';
 import chalk from "chalk";
 import { MongoConnect } from "./interfaceAdapters/database/mongoDb/mongoConnect";
 import { initSocket } from './presentation/socket/socket';
+import { startBookingCompletionCron } from './presentation/cron/bookingCompletion.cron';
 
 async function startApp() {
   const expressServer = new ExpressServer();
@@ -13,6 +14,7 @@ async function startApp() {
 
   try {
     await mongoConnect.connectDB(); 
+    startBookingCompletionCron()
     const httpServer = createServer(expressServer.getApp());
 
     initSocket(httpServer)

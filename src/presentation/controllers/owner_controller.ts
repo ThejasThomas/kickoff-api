@@ -14,6 +14,8 @@ import { ITurfOwnerDetailsUseCase } from "../../domain/useCaseInterfaces/turfOwn
 import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
 import { IRetryAdminApprovalUseCase } from "../../domain/useCaseInterfaces/turfOwner/retry_admin_approval_usecase_interface";
 import { IRequestUpdateProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/request_profile_update_usecase";
+import { success } from "zod";
+import { IGetOwnerDashboardUseCase } from "../../domain/useCaseInterfaces/ownerDashboard/owner_dashboard_usecase";
 
 @injectable()
 export class TurfOwnerController implements ITurfOwnerController {
@@ -27,7 +29,9 @@ export class TurfOwnerController implements ITurfOwnerController {
     @inject("IRetryAdminApprovalUseCase")
     private __retryAdminApprovalUseCase: IRetryAdminApprovalUseCase,
     @inject("IRequestUpdateProfileUseCase")
-    private _requestupdateprofile: IRequestUpdateProfileUseCase
+    private _requestupdateprofile: IRequestUpdateProfileUseCase,
+    @inject("IGetOwnerDashboardUseCase")
+    private _getOwnerDashboardUseCase:IGetOwnerDashboardUseCase
   ) {}
 
   async addTurf(req: Request, res: Response): Promise<void> {
@@ -190,6 +194,36 @@ export class TurfOwnerController implements ITurfOwnerController {
       } else {
         handleErrorResponse(req, res, error);
       }
+    }
+  }
+  async getDashboard(req: Request, res: Response): Promise<void> {
+    try{
+      const ownerId=(req as CustomRequest).user?.userId;
+
+      if(!ownerId){
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success:false,
+          message:ERROR_MESSAGES.UNAUTHORIZED_ACCESS
+        })
+        return;
+      }
+      const days =req.query.days
+      ?Number(req.query.days):7
+
+      const dashboardDate =await this._getOwnerDashboardUseCase.execute(ownerId,{
+        dailyDays:days
+
+      });
+      res.status(HTTP_STATUS.OK).json({
+        success:true,
+        message:SUCCESS_MESSAGES,
+        data:dashboardDate
+      })
+    }catch(error){
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success:false,
+        message:"Failed to fetch owner dashboard data"
+      })
     }
   }
 }

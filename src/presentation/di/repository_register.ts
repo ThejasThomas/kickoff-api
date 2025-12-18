@@ -32,6 +32,10 @@ import { IOwnerWalletRepository } from "../../domain/repositoryInterface/wallet/
 import { OwnerWalletRepository } from "../../interfaceAdapters/repositories/wallet/owner_wallet_repository";
 import { IOwnerWalletTransactionRepository } from "../../domain/repositoryInterface/wallet/owner_wallet_transactionRepository_interface";
 import { OwnerWalletTransactionRepository } from "../../interfaceAdapters/repositories/wallet/owner_wallet_transaction_repository";
+import { IOwnerDashboardRepository } from "../../domain/repositoryInterface/ownerDashboard/owner_dashboard_repository_interface";
+import { OwnerDashboardRepository } from "../../interfaceAdapters/repositories/ownerDashboard/owner_dashboard";
+import { IReviewRepository } from "../../domain/repositoryInterface/Turf/review_repository_interface";
+import { ReviewRepository } from "../../interfaceAdapters/repositories/turf/review_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -91,6 +95,12 @@ export class RepositoryRegistry {
     });
     container.register<IOwnerWalletTransactionRepository>("IOwnerWalletTransactionRepository",{
       useClass:OwnerWalletTransactionRepository
+    })
+    container.register<IOwnerDashboardRepository>("IOwnerDashboardRepository",{
+      useClass:OwnerDashboardRepository
+    })
+    container.register<IReviewRepository>("IReviewRepository",{
+      useClass:ReviewRepository
     })
   }
 }

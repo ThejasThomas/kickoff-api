@@ -184,6 +184,13 @@ export class OwnerRoutes extends BaseRoute {
       turfController.cancelSlot(req,res)
     }
     )
+    this.router.get(
+      "/turfOwner/dashboard",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfOwnerController.getDashboard(req,res)
+      }
+    )
     this.router.post(
       "/turfOwner/logout",
       verifyAuth,

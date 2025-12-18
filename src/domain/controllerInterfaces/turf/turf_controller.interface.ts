@@ -14,4 +14,8 @@ export interface ITurfController {
   getrules(req: Request, res: Response): Promise<void>;
   checkIsSlotBooked(req:Request,res:Response):Promise<void>
   cancelSlot(req:Request,res:Response):Promise<void>
+  addReview(req:Request,res:Response):Promise<void>
+  getTurfReviews(req:Request,res:Response):Promise<void>
+  getTurfReviewsForAdmin(req:Request,res:Response):Promise<void>
+  deleteReviewAdmin(req:Request,res:Response):Promise<void>
 }

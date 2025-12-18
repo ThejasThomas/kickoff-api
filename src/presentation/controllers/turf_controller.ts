@@ -25,6 +25,9 @@ import { success } from "zod";
 import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
 import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
 import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
+import { IAddReviewUseCase } from "../../domain/useCaseInterfaces/review/add_review_usecase_interface";
+import { IGetTurfReviewsUseCase } from "../../domain/useCaseInterfaces/review/get_turf_review_usecase_interface";
+import { IDeleteReviewUseCase } from "../../domain/useCaseInterfaces/review/deleteReviewUseCase_interface";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -56,7 +59,13 @@ export class TurfController implements ITurfController {
     @inject("IOfflineBookingsUseCase")
     private _offlineBookingUseCase: IOfflineBookingsUseCase,
     @inject("IAddMoneyOwnerWalletUseCase")
-    private _addMoneyOwnerWalletUsecase:IAddMoneyOwnerWalletUseCase
+    private _addMoneyOwnerWalletUsecase:IAddMoneyOwnerWalletUseCase,
+    @inject("IAddReviewUseCase")
+    private _addReviewUseCase:IAddReviewUseCase,
+    @inject("IGetTurfReviewsUseCase")
+    private _getTurfReviewsUsecase:IGetTurfReviewsUseCase,
+    @inject("IDeleteReviewUseCase")
+    private _deleteReviewUseCase:IDeleteReviewUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
@@ -483,5 +492,66 @@ export class TurfController implements ITurfController {
         });
       }
     }
+  }
+  async addReview(req: Request, res: Response): Promise<void> {
+    try{
+      const userId =(req as CustomRequest).user?.userId;
+      const {turfId,bookingId,comment}=req.body;
+
+      const review =await this._addReviewUseCase.execute({
+        userId,
+        turfId,
+        bookingId,
+        comment
+      })
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success:true,
+        review,
+      })
+    }catch(error:any){
+      res.status(error.statusCode|| 500).json({
+        success:false,
+        message:error.message||"Failed to add review"
+      })
+
+    }
+  }
+  async getTurfReviews(req: Request, res: Response): Promise<void> {
+    const {turfId}= req.params;
+    const page =Number(req.query.page||1);
+    const limit =Number(req.query.limit||5);
+
+    const data =await this._getTurfReviewsUsecase.execute(
+      turfId,
+      page,
+      limit
+    );
+
+    res.status(200).json({
+      success:true,
+      ...data
+    })
+  }
+  async getTurfReviewsForAdmin(req: Request, res: Response): Promise<void> {
+      const {turfId}=req.params;
+      const page =Number(req.query.page||1);
+    const limit =Number(req.query.limit||5);
+
+    const result =await this._getTurfReviewsUsecase.execute(turfId,page,limit)
+    res.status(200).json({
+      success:true,
+      ...result
+    })
+  }
+  async deleteReviewAdmin(req: Request, res: Response): Promise<void> {
+    const {reviewId}=req.params;
+
+    await this._deleteReviewUseCase.execute(reviewId);
+
+    res.status(200).json({
+      success:true,
+      message:"Review deleted successfullt"
+    })
   }
 }

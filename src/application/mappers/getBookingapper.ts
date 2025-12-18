@@ -19,12 +19,15 @@ export function mapBookingDTO(entity: IBookingModel): BookingDTO {
 
 export function mapPastBookingDTO(entity: IBookingModel): PastBookingDTO {
   return {
+    _id:entity._id.toString(),
     date: entity.date,
     startTime: entity.startTime,
     endTime: entity.endTime,
+    turfId:entity.turfId,
     price: entity.price,
     status: entity.status,
     paymentStatus: entity.paymentStatus,
+    
   };
 }
 

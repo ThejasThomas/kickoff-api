@@ -51,5 +51,19 @@ export class AdminRoutes extends BaseRoute {
         userController.refreshSession(req, res);
       }
     );
+    this.router.get(
+      "/admin/get-turf-reviews/:turfId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.getTurfReviewsForAdmin(req,res)
+      }
+    )
+    this.router.delete(
+      "/admin/delete-review/:reviewId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.deleteReviewAdmin(req,res)
+      }
+    )
   }
 }

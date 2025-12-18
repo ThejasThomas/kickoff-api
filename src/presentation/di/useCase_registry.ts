@@ -130,6 +130,14 @@ import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wall
 import {  AddMoneyOwnerWalletUseCase } from "../../application/usecase/wallet/addMoney_owner_wallet_usecase";
 import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
 import { GetOwnerWalletTransactionUseCase } from "../../application/usecase/wallet/getowner_wallet_transaction";
+import { IGetOwnerDashboardUseCase } from "../../domain/useCaseInterfaces/ownerDashboard/owner_dashboard_usecase";
+import { GetOwnerDashboardUseCase } from "../../application/usecase/ownerDashboard/owner_dashboard_usecase";
+import { IAddReviewUseCase } from "../../domain/useCaseInterfaces/review/add_review_usecase_interface";
+import { AddReviewUseCase } from "../../application/usecase/review/add_review_usecase";
+import { IGetTurfReviewsUseCase } from "../../domain/useCaseInterfaces/review/get_turf_review_usecase_interface";
+import { GetTurfReviewsUseCase } from "../../application/usecase/review/getTurfReview_usecase";
+import { IDeleteReviewUseCase } from "../../domain/useCaseInterfaces/review/deleteReviewUseCase_interface";
+import { DeleteReviewUseCase } from "../../application/usecase/review/delete_review_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -354,6 +362,18 @@ export class UseCaseRegistry {
     })
     container.register<IGetOwnerWalletTransactionsUseCase>("IGetOwnerWalletTransactionsUseCase",{
       useClass:GetOwnerWalletTransactionUseCase
+    })
+    container.register<IGetOwnerDashboardUseCase>("IGetOwnerDashboardUseCase",{
+      useClass:GetOwnerDashboardUseCase
+    })
+    container.register<IAddReviewUseCase>("IAddReviewUseCase",{
+      useClass:AddReviewUseCase
+    })
+    container.register<IGetTurfReviewsUseCase>("IGetTurfReviewsUseCase",{
+      useClass:GetTurfReviewsUseCase
+    })
+    container.register<IDeleteReviewUseCase>("IDeleteReviewUseCase",{
+      useClass:DeleteReviewUseCase
     })
   }
 }

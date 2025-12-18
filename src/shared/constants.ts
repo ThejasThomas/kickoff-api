@@ -44,6 +44,7 @@ export const SUCCESS_MESSAGES = {
   BOOKINGS_FETCHED_SUCCESSFULLY: "Bookings fetched successfully",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
   LOGOUT_SUCCESS: "Logged out",
+  OWNER_DASHBOARD_DATA_FETCHED:"Owner dashboard data fetched successfully",
   TURF_DETAILS_FETCHED_SUCCESSFULLY:"Turf details fetched successfully",
   VERIFICATION_SUCCESS: "Verification done",
   OPERATION_SUCCESS: "Action completed",
@@ -74,6 +75,8 @@ export const ERROR_MESSAGES = {
   CHAT_GROUP_NOT_FOUND:"Chat group not found",
   WALLET_TRANSACTION_FAILED : "Wallet transaction failed",
   WALLET_TRANSACTION_FETCH_FAILED:"Failed to fetch wallet transactions",
+  REVIEW_ONLY_COMPLETED_BOOKINGS:"You can review only completed bookings",
+  REVIEW_ALREADY_SUBMITTED:"Review already submitted for this booking",
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
     INVALID_TEXT_MESSAGE:"Invalid text message data",
