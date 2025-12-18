@@ -3,7 +3,11 @@ import { IWalletController } from "../../domain/controllerInterfaces/wallet/wall
 import { IAddMoneyUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_usecase_interface";
 import { CustomRequest } from "../middlewares/auth_middleware";
 import { Request, Response } from "express";
-import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants";
+import {
+  ERROR_MESSAGES,
+  HTTP_STATUS,
+  SUCCESS_MESSAGES,
+} from "../../shared/constants";
 import { success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
@@ -12,6 +16,9 @@ import { IGetWalletBalanceUseCase } from "../../domain/useCaseInterfaces/wallet/
 import { IWalletTransaction } from "../../interfaceAdapters/database/mongoDb/models/wallet_transaction_model";
 import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
 import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
+import { IGetOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_usecase_interface";
+import { IGetAdminWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_usecase_interface";
+import { IAdminWalletTransactionUSeCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_transaction_usecase_interface";
 
 @injectable()
 export class WalletController implements IWalletController {
@@ -23,7 +30,13 @@ export class WalletController implements IWalletController {
     @inject("IGetWalletHistoryUseCase")
     private _getWalletHistoryUseCase: IGetWalletHistoryUseCase,
     @inject("IGetOwnerWalletTransactionsUseCase")
-    private _getOwnerWalletTransactionUsecase:IGetOwnerWalletTransactionsUseCase
+    private _getOwnerWalletTransactionUsecase: IGetOwnerWalletTransactionsUseCase,
+    @inject("IGetOwnerWalletUseCase")
+    private _getOwnerWalletUseCase: IGetOwnerWalletUseCase,
+    @inject("IGetAdminWalletUseCase")
+    private _getAdminWalletUseCase: IGetAdminWalletUseCase,
+    @inject("IAdminWalletTransactionUSeCase")
+    private _getAdminWalletTransactionUseCase: IAdminWalletTransactionUSeCase
   ) {}
 
   async addMoney(req: Request, res: Response): Promise<void> {
@@ -88,7 +101,7 @@ export class WalletController implements IWalletController {
         transactions: transactions,
         total,
         page,
-        limit
+        limit,
       });
     } catch {
       res.status(500).json({
@@ -98,10 +111,10 @@ export class WalletController implements IWalletController {
     }
   }
   async getOwnerWalletTransactions(req: Request, res: Response): Promise<void> {
-    try{
-      const ownerId =(req as CustomRequest).user?.userId;
-      const page =Number(req.query.page)||1;
-      const limit =Number(req.query.limit)||10
+    try {
+      const ownerId = (req as CustomRequest).user?.userId;
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
 
       const result = await this._getOwnerWalletTransactionUsecase.execute(
         ownerId,
@@ -109,15 +122,45 @@ export class WalletController implements IWalletController {
         limit
       );
       res.status(HTTP_STATUS.OK).json({
-        success:true,
-        message:SUCCESS_MESSAGES.WALLET_TRANSACTION_FETCHED,
-        ...result
-      })
-    }catch(error){
+        success: true,
+        message: SUCCESS_MESSAGES.WALLET_TRANSACTION_FETCHED,
+        ...result,
+      });
+    } catch (error) {
       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-        success:false,
-        message:ERROR_MESSAGES.WALLET_TRANSACTION_FETCH_FAILED
-      })
+        success: false,
+        message: ERROR_MESSAGES.WALLET_TRANSACTION_FETCH_FAILED,
+      });
     }
+  }
+  async getOwnerWallet(req: Request, res: Response): Promise<void> {
+    const ownerId = (req as CustomRequest).user?.userId;
+
+    const wallet = await this._getOwnerWalletUseCase.execute(ownerId);
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      wallet,
+    });
+  }
+  async getAdminwallet(req: Request, res: Response): Promise<void> {
+    const wallet = await this._getAdminWalletUseCase.execute();
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      wallet,
+    });
+  }
+  async getAdminWalletTransactions(req: Request, res: Response): Promise<void> {
+    const page = Number(req.query.page || 1);
+    const limit = Number(req.query.limit) || 10;
+
+    const result =await this._getAdminWalletTransactionUseCase.execute(page,limit)
+
+    res.status(HTTP_STATUS.OK).json({
+      success:true,
+      message:SUCCESS_MESSAGES.ADMIN_WALLET_FETCHED_SCCESSFULLY,
+      ...result
+    })
   }
 }

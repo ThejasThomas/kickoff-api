@@ -50,6 +50,7 @@ export const SUCCESS_MESSAGES = {
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
+  ADMIN_WALLET_FETCHED_SCCESSFULLY:"Admin wallet fetched successfully",
   WALLET_TRANSACTION_FETCHED:"Owner wallet transactions fetched successfully",
   APPROVAL_REQUEST_SENT: "Approval request send to the admin",
   TURF_BOOKED_SUCCESSFULLY: "Your turf slot  Booked successfully",

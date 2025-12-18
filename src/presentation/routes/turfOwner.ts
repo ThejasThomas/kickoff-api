@@ -191,6 +191,13 @@ export class OwnerRoutes extends BaseRoute {
         turfOwnerController.getDashboard(req,res)
       }
     )
+    this.router.get(
+      "/turfOwner/get-wallet",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getOwnerWallet(req,res)
+      }
+    )
     this.router.post(
       "/turfOwner/logout",
       verifyAuth,

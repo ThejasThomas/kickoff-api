@@ -138,6 +138,12 @@ import { IGetTurfReviewsUseCase } from "../../domain/useCaseInterfaces/review/ge
 import { GetTurfReviewsUseCase } from "../../application/usecase/review/getTurfReview_usecase";
 import { IDeleteReviewUseCase } from "../../domain/useCaseInterfaces/review/deleteReviewUseCase_interface";
 import { DeleteReviewUseCase } from "../../application/usecase/review/delete_review_usecase";
+import { IGetOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_usecase_interface";
+import { GetOwnerWalletUseCase } from "../../application/usecase/wallet/get_owner_wallet_usecase";
+import { IGetAdminWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_usecase_interface";
+import { GetAdminWalletUseCase } from "../../application/usecase/wallet/get_admin_wallet_usecase";
+import { IAdminWalletTransactionUSeCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_transaction_usecase_interface";
+import { GetAdminWalletTransactionUseCase } from "../../application/usecase/wallet/get_admin_wallet_transaction_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -374,6 +380,15 @@ export class UseCaseRegistry {
     })
     container.register<IDeleteReviewUseCase>("IDeleteReviewUseCase",{
       useClass:DeleteReviewUseCase
+    })
+    container.register<IGetOwnerWalletUseCase>("IGetOwnerWalletUseCase",{
+      useClass:GetOwnerWalletUseCase
+    })
+    container.register<IGetAdminWalletUseCase>("IGetAdminWalletUseCase",{
+      useClass:GetAdminWalletUseCase
+    })
+    container.register<IAdminWalletTransactionUSeCase>("IAdminWalletTransactionUSeCase",{
+      useClass:GetAdminWalletTransactionUseCase
     })
   }
 }
