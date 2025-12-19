@@ -20,7 +20,7 @@ const OwnerWalletTransactionSchema =
 
       bookingId: {
         type: Schema.Types.ObjectId,
-        ref: "Booking",
+        ref: "Bookings",
         required: true,
         index: true,
       },

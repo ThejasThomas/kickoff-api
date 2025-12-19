@@ -86,5 +86,19 @@ export class AdminRoutes extends BaseRoute {
         adminController.adminDashboard(req,res)
       }
     )
+    this.router.get(
+      "/admin/owners-transaction",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getAllOwnersTransactions(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/transaction-details/:transactionId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getTransactionDetails(req,res)
+      }
+    )
   }
 }

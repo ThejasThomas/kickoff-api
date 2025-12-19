@@ -146,6 +146,10 @@ import { IAdminWalletTransactionUSeCase } from "../../domain/useCaseInterfaces/w
 import { GetAdminWalletTransactionUseCase } from "../../application/usecase/wallet/get_admin_wallet_transaction_usecase";
 import { IGetAdminDashboardUseCase } from "../../domain/useCaseInterfaces/admindashboard/get_admin_dashboard_usecase_interface";
 import { GetAdminDashboardUseCase } from "../../application/usecase/admindashboard/get_admin_dashboard_usecase";
+import { IGetAllOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_all_owners_wallet_transaction_usecase_interface";
+import { GetAllOwnersWalletTransactionUseCase } from "../../application/usecase/wallet/ge_all_owners_wallet_transaction_usecase";
+import { IGetTransactionDetailsUseCse } from "../../domain/useCaseInterfaces/wallet/get_admin_transaction_details_usecase_interface";
+import { GetTrasactionDetailsUseCase } from "../../application/usecase/wallet/getAdminTransaction_details_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -394,6 +398,12 @@ export class UseCaseRegistry {
     })
     container.register<IGetAdminDashboardUseCase>("IGetAdminDashboardUseCase",{
       useClass:GetAdminDashboardUseCase
+    })
+    container.register<IGetAllOwnerWalletTransactionsUseCase>("IGetAllOwnerWalletTransactionsUseCase",{
+      useClass:GetAllOwnersWalletTransactionUseCase
+    })
+    container.register<IGetTransactionDetailsUseCse>("IGetTransactionDetailsUseCse",{
+      useClass:GetTrasactionDetailsUseCase
     })
   }
 }

@@ -29,50 +29,63 @@ export class AdminDashboardRepository implements IAdminDashboardRepository {
     pending: number;
     rejected: number;
   }> {
-    const [total, approved, pending,rejected ] = await Promise.all([
+    const [total, approved, pending, rejected] = await Promise.all([
       TurfModel.countDocuments(),
       TurfModel.countDocuments({ status: "approved" }),
       TurfModel.countDocuments({ status: "pending" }),
       TurfModel.countDocuments({ status: "rejected" }),
     ]);
-    return {total,approved,pending,rejected}
+    return { total, approved, pending, rejected };
   }
-  async getOwnerStats(): Promise<{ total: number; active: number; blocked: number; pending: number; }> {
-    const [total,active,blocked,pending] = await Promise.all([
-        TurfOwnerModel.countDocuments(),
-        TurfOwnerModel.countDocuments({ status: "approved" }),
+  async getOwnerStats(): Promise<{
+    total: number;
+    active: number;
+    blocked: number;
+    pending: number;
+  }> {
+    const [total, active, blocked, pending] = await Promise.all([
+      TurfOwnerModel.countDocuments(),
+      TurfOwnerModel.countDocuments({ status: "approved" }),
       TurfOwnerModel.countDocuments({ status: "blocked" }),
       TurfOwnerModel.countDocuments({ status: "pending" }),
-
-    ])
-    return {total,active,blocked,pending}
+    ]);
+    return { total, active, blocked, pending };
   }
 
-  async getBookingStats(): Promise<{ total: number; completed: number; confirmed: number; }> {
-      const [total,completed,confirmed] =await Promise.all([
-        BookinModel.countDocuments(),
-        BookinModel.countDocuments({status:"completed"}),
-        BookinModel.countDocuments({status:"confirmed"})
-      ])
-      return {total,completed,confirmed}
+  async getBookingStats(): Promise<{
+    total: number;
+    completed: number;
+    confirmed: number;
+  }> {
+    const [total, completed, confirmed] = await Promise.all([
+      BookinModel.countDocuments(),
+      BookinModel.countDocuments({ status: "completed" }),
+      BookinModel.countDocuments({ status: "confirmed" }),
+    ]);
+    return { total, completed, confirmed };
   }
-  async getRevenueAnalytics(period: RevenuePeriod): Promise<{ totalBalance: number; data: { label: string; amount: number; }[]; }> {
-      const wallet =await AdminWalletModel.findOne()
-      const totalBalance=wallet?.balance??0;
+  async getRevenueAnalytics(
+    period: RevenuePeriod
+  ): Promise<{
+    totalBalance: number;
+    data: { label: string; amount: number }[];
+  }> {
+    const wallet = await AdminWalletModel.findOne();
+    const totalBalance = wallet?.balance ?? 0;
 
-      const groupStage =this.getGroupStage(period);
+    const groupStage = this.getGroupStage(period);
 
-      const revenue = await AdminWalletTransactionModel.aggregate([
-        {$match:{type:"CREDIT"}},
-        {
-            $group:{
-                _id:groupStage,
-                amount:{$sum:"$amount"}
-            }
+    const revenue = await AdminWalletTransactionModel.aggregate([
+      { $match: { type: "CREDIT" } },
+      {
+        $group: {
+          _id: groupStage,
+          amount: { $sum: "$amount" },
         },
-        {$sort:{"_id.label":1}},
-      ])
-      return {
+      },
+      { $sort: { "_id.label": 1 } },
+    ]);
+    return {
       totalBalance,
       data: revenue.map((r) => ({
         label: r._id.label,
@@ -80,7 +93,7 @@ export class AdminDashboardRepository implements IAdminDashboardRepository {
       })),
     };
   }
- private getGroupStage(period: RevenuePeriod) {
+  private getGroupStage(period: RevenuePeriod) {
     switch (period) {
       case "daily":
         return {
@@ -116,4 +129,3 @@ export class AdminDashboardRepository implements IAdminDashboardRepository {
     }
   }
 }
-

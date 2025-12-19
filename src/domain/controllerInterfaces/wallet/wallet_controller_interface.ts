@@ -8,4 +8,6 @@ export interface IWalletController{
     getOwnerWallet(req:Request,res:Response):Promise<void>
     getAdminwallet(req:Request,res:Response):Promise<void>
     getAdminWalletTransactions(req:Request,res:Response):Promise<void>
+    getAllOwnersTransactions(req:Request,res:Response):Promise<void>
+    getTransactionDetails(req:Request,res:Response):Promise<void>
 }

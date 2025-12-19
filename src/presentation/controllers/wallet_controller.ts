@@ -19,6 +19,8 @@ import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfac
 import { IGetOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_usecase_interface";
 import { IGetAdminWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_usecase_interface";
 import { IAdminWalletTransactionUSeCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_transaction_usecase_interface";
+import { IGetAllOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_all_owners_wallet_transaction_usecase_interface";
+import { IGetTransactionDetailsUseCse } from "../../domain/useCaseInterfaces/wallet/get_admin_transaction_details_usecase_interface";
 
 @injectable()
 export class WalletController implements IWalletController {
@@ -36,7 +38,11 @@ export class WalletController implements IWalletController {
     @inject("IGetAdminWalletUseCase")
     private _getAdminWalletUseCase: IGetAdminWalletUseCase,
     @inject("IAdminWalletTransactionUSeCase")
-    private _getAdminWalletTransactionUseCase: IAdminWalletTransactionUSeCase
+    private _getAdminWalletTransactionUseCase: IAdminWalletTransactionUSeCase,
+    @inject("IGetAllOwnerWalletTransactionsUseCase")
+    private _getAllOwnersTransactionsUsecase:IGetAllOwnerWalletTransactionsUseCase,
+    @inject("IGetTransactionDetailsUseCse")
+    private _getTrasactionDetailsUseCase:IGetTransactionDetailsUseCse
   ) {}
 
   async addMoney(req: Request, res: Response): Promise<void> {
@@ -162,5 +168,36 @@ export class WalletController implements IWalletController {
       message:SUCCESS_MESSAGES.ADMIN_WALLET_FETCHED_SCCESSFULLY,
       ...result
     })
+  }
+
+  async getAllOwnersTransactions(req: Request, res: Response): Promise<void> {
+    try{
+      const page =Number(req.query.page)||1;
+      const limit =Number(req.query.limit) || 10;
+
+      const data = await this._getAllOwnersTransactionsUsecase.execute(page,limit)
+      console.log('data',data)
+
+      res.status(HTTP_STATUS.OK).json({
+        success:true,
+        ...data
+      })
+    }catch(error){
+      handleErrorResponse(req,res,error)
+    }
+  }
+  async getTransactionDetails(req: Request, res: Response): Promise<void> {
+    try{
+      const {transactionId}=req.params;
+
+      const data = await this._getTrasactionDetailsUseCase.execute(transactionId)
+
+      res.status(HTTP_STATUS.OK).json({
+        success:true,
+        data,
+      })
+    }catch(error){
+      handleErrorResponse(req,res,error)
+    }
   }
 }

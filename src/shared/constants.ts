@@ -72,6 +72,7 @@ export const ERROR_MESSAGES = {
   SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR: "Database Error",
+  TRANSACTION_NOT_FOUND:"Transaction not found",
   GROUP_ID_REQUIRED:"Group id is required",
   CHAT_GROUP_NOT_FOUND:"Chat group not found",
   WALLET_TRANSACTION_FAILED : "Wallet transaction failed",
