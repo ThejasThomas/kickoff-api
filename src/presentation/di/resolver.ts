@@ -12,6 +12,8 @@ import { IBookingsController } from "../../domain/controllerInterfaces/bookings/
 import { BookingsController } from "../controllers/bookings_controller";
 import { IWalletController } from "../../domain/controllerInterfaces/wallet/wallet_controller_interface";
 import { WalletController } from "../controllers/wallet_controller";
+import { IAdminController } from "../../domain/controllerInterfaces/admin/admin_dashboard_controller_interface";
+import { AdminController } from "../controllers/admin_controller";
 DependencyInjection.registerAll();
 
 export const authController =
@@ -20,15 +22,16 @@ export const authController =
 export const userController =
   container.resolve<IUserController>(UserController);
 
-  export const turfOwnerController = 
-  container.resolve<ITurfOwnerController>(TurfOwnerController)
+export const turfOwnerController =
+  container.resolve<ITurfOwnerController>(TurfOwnerController);
 
-  export const turfController =
-  container.resolve<ITurfController>(TurfController)
+export const turfController =
+  container.resolve<ITurfController>(TurfController);
 
-  export const bookingsController =
-  container.resolve<IBookingsController>(BookingsController)
+export const bookingsController =
+  container.resolve<IBookingsController>(BookingsController);
 
-  export const walletController =
-  container.resolve<IWalletController>(WalletController)
-
+export const walletController =
+  container.resolve<IWalletController>(WalletController);
+export const adminController =
+  container.resolve<IAdminController>(AdminController);

@@ -34,6 +34,7 @@ export class OfflineBookingUseCase implements IOfflineBookingsUseCase{
                     status:"confirmed",
                     paymentStatus:"pending",
                     paymentMethod: "offline",
+                    adminCommissionProcessed:true
                 }
 
                 const savedBooking =await this._bookingRepository.save(newBooking)

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BaseRoute } from "./base_route";
-import { authController, turfController, userController, walletController } from "../di/resolver";
+import { adminController, authController, turfController, userController, walletController } from "../di/resolver";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
 export class AdminRoutes extends BaseRoute {
@@ -66,7 +66,7 @@ export class AdminRoutes extends BaseRoute {
       }
     )
     this.router.get(
-      "/admin/wallet-transaction-history",
+      "/admin/wallet-transaction",
       verifyAuth,
       (req:Request,res:Response)=>{
         walletController.getAdminWalletTransactions(req,res)
@@ -77,6 +77,13 @@ export class AdminRoutes extends BaseRoute {
       verifyAuth,
       (req:Request,res:Response)=>{
         turfController.deleteReviewAdmin(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/get-dashboard",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        adminController.adminDashboard(req,res)
       }
     )
   }

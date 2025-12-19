@@ -13,6 +13,7 @@ export function mapBookingDTO(entity: IBookingModel): BookingDTO {
     status: entity.status,
     paymentMethod: entity.paymentMethod,
     paymentStatus: entity.paymentStatus,
+    adminCommissionProcessed:entity.adminCommissionProcessed,
     createdAt: entity.createdAt,
   };
 }

@@ -35,6 +35,10 @@ export const BookingSchema = new Schema<IBookingModel>({
     type: String,
     required: true,
   },
+  adminCommissionProcessed:{
+    type:Boolean,
+    default:false
+  }
 
 },
 {timestamps:true}

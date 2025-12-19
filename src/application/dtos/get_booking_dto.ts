@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export interface BookingDTO {
-     _id: string;
+  _id: string;
   userId: string;
   turfId: string;
   startTime: string;
@@ -11,17 +11,18 @@ export interface BookingDTO {
   status: string;
   paymentMethod: string;
   paymentStatus: string;
+  adminCommissionProcessed: boolean;
   createdAt?: string;
 }
 
 export interface PastBookingDTO {
-  _id:string;
-    date:string,
-    startTime:string,
-    endTime:string,
-    turfId:string,
-    price:number,
-    status:string,
-    paymentStatus:string;
-    hasReviewed?: boolean;
+  _id: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  turfId: string;
+  price: number;
+  status: string;
+  paymentStatus: string;
+  hasReviewed?: boolean;
 }
