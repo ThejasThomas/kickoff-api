@@ -54,6 +54,13 @@ export class ClientRoutes extends BaseRoute {
       turfController.getAllTurfs(req, res);
     });
     this.router.post(
+      "/client/hold-slot",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.holdSlot(req, res);
+      }
+    );
+    this.router.post(
       "/client/bookslots",
       verifyAuth,
       (req: Request, res: Response) => {
@@ -155,11 +162,13 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.joinHostedGame(req, res);
       }
     );
-    this.router.get("/client/my-chat-groups",
-       verifyAuth,
-      (req:Request, res:Response) => {
-      userController.getMyChatGroup(req, res);
-    });
+    this.router.get(
+      "/client/my-chat-groups",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        userController.getMyChatGroup(req, res);
+      }
+    );
     this.router.get(
       "/client/get-single-hosted-game/:id",
       verifyAuth,
@@ -171,24 +180,24 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-chats/:groupId",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        userController.getMessages(req,res)
+      (req: Request, res: Response) => {
+        userController.getMessages(req, res);
       }
-    )
+    );
     this.router.post(
       "/client/add-review",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        turfController.addReview(req,res)
+      (req: Request, res: Response) => {
+        turfController.addReview(req, res);
       }
-    )
+    );
     this.router.get(
       "/client/get-reviews/:turfId",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        turfController.getTurfReviews(req,res)
+      (req: Request, res: Response) => {
+        turfController.getTurfReviews(req, res);
       }
-    )
+    );
 
     this.router.post(
       "/client/logout",

@@ -150,6 +150,8 @@ import { IGetAllOwnerWalletTransactionsUseCase } from "../../domain/useCaseInter
 import { GetAllOwnersWalletTransactionUseCase } from "../../application/usecase/wallet/ge_all_owners_wallet_transaction_usecase";
 import { IGetTransactionDetailsUseCse } from "../../domain/useCaseInterfaces/wallet/get_admin_transaction_details_usecase_interface";
 import { GetTrasactionDetailsUseCase } from "../../application/usecase/wallet/getAdminTransaction_details_usecase";
+import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
+import { HoldSlotUseCase } from "../../application/usecase/Bookings/hold_slot_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -404,6 +406,9 @@ export class UseCaseRegistry {
     })
     container.register<IGetTransactionDetailsUseCse>("IGetTransactionDetailsUseCse",{
       useClass:GetTrasactionDetailsUseCase
+    })
+    container.register<IHoldSlotUseCase>("IHoldSlotUseCase",{
+      useClass:HoldSlotUseCase
     })
   }
 }

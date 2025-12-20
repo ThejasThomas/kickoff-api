@@ -332,6 +332,7 @@ export class TurfController implements ITurfController {
           success: false,
           message: error.message,
         });
+        return
       } else {
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
           success: false,
