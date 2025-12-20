@@ -120,7 +120,7 @@ export class WalletController implements IWalletController {
     try {
       const ownerId = (req as CustomRequest).user?.userId;
       const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 10;
+      const limit = Number(req.query.limit) || 5;
 
       const result = await this._getOwnerWalletTransactionUsecase.execute(
         ownerId,
