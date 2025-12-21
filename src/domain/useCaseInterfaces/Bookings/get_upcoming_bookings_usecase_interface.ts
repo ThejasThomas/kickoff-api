@@ -1,5 +1,3 @@
-import { number } from "zod";
-import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { BookingDTO } from "../../../application/dtos/get_booking_dto";
 
 export interface IGetUpcomingBookingUseCase {

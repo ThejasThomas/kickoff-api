@@ -1,5 +1,4 @@
 import { Schema, Types } from "mongoose";
-import { IChatMessageEntity } from "../../../../domain/models/chat_message_entity";
 
 
 export interface IChatMessageModel {

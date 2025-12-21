@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { authController, turfController, userController } from "../di/resolver";
+import { userController } from "../di/resolver";
 import { BaseRoute } from "./base_route";
-import { verifyAuth } from "../middlewares/auth_middleware";
 
 export class PaymentRoutes extends BaseRoute {
     constructor(){

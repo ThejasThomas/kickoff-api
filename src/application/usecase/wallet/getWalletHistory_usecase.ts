@@ -1,7 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IGetWalletHistoryUseCase } from "../../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
 import { IWalletRepository } from "../../../domain/repositoryInterface/wallet/wallet_repository_interface";
-import { IWalletEntity } from "../../../domain/models/wallet_entity";
 import { IWalletTransactionEntity } from "../../../domain/models/wallet_transaction_entity";
 
 @injectable()

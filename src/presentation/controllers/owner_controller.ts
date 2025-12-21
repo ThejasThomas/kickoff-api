@@ -14,7 +14,6 @@ import { ITurfOwnerDetailsUseCase } from "../../domain/useCaseInterfaces/turfOwn
 import { IUpdateTurfOwnerProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/update_turf_owner_profile_usecase";
 import { IRetryAdminApprovalUseCase } from "../../domain/useCaseInterfaces/turfOwner/retry_admin_approval_usecase_interface";
 import { IRequestUpdateProfileUseCase } from "../../domain/useCaseInterfaces/turfOwner/request_profile_update_usecase";
-import { success } from "zod";
 import { IGetOwnerDashboardUseCase } from "../../domain/useCaseInterfaces/ownerDashboard/owner_dashboard_usecase";
 
 @injectable()
@@ -220,6 +219,7 @@ export class TurfOwnerController implements ITurfOwnerController {
         data:dashboardDate
       })
     }catch(error){
+      console.log(error)
       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success:false,
         message:"Failed to fetch owner dashboard data"

@@ -21,7 +21,6 @@ import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/
 import { IAddRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/add_rules_useCase_interface";
 import { IGetRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_rules_useCase_interface";
 import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/checkslotIsBookedUseCase_interface";
-import { success } from "zod";
 import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
 import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
 import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";

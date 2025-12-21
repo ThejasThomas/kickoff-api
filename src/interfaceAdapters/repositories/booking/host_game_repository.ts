@@ -6,7 +6,6 @@ import { HostedGameModel } from "../../database/mongoDb/schemas/hosted_game_sche
 import { IHostedGameItem } from "../../../domain/models/get_hosted_game_entity";
 import { TurfModel } from "../../database/mongoDb/models/turf_model";
 import { ClientModel } from "../../database/mongoDb/models/client_model";
-import { email } from "zod";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { GetUpcomingHostedGamesParams } from "../../../domain/models/GetUpcomingHostedGameParams";

@@ -1,11 +1,8 @@
-//*                  🛠️ VerifyAuth Middleware
 
 import { NextFunction, Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { JwtPayload } from "jsonwebtoken";
 import { JWTService } from "../../interfaceAdapters/services/jwt_service";
-import { handleErrorResponse } from "../../shared/utils/error_handler";
-import { error } from "console";
 
 const tokenService = new JWTService();
 
@@ -125,5 +122,7 @@ export const decodeToken = async (
       refresh_token: token.refresh_token,
     };
     next();
-  } catch {}
+  } catch(err) {
+    console.log(err)
+  }
 };

@@ -1,6 +1,5 @@
 import { model, Schema } from "mongoose";
 import { IHostedGameEntity } from "../../../../domain/models/hosted_game_entity";
-import { required } from "zod/v4/core/util.cjs";
 
 const PlayerSchema = new Schema(
   {

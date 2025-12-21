@@ -3,12 +3,6 @@ import { IAddMoneyUseCase } from "../../../domain/useCaseInterfaces/wallet/add_m
 import { IWalletRepository } from "../../../domain/repositoryInterface/wallet/wallet_repository_interface";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
-import {
-  IWalletEntity,
-  WalletTransactionStatus,
-  WalletTransactionType,
-} from "../../../domain/models/wallet_entity";
-import { IWallet } from "../../../interfaceAdapters/database/mongoDb/models/wallet_model";
 
 @injectable()
 export class AddMoneyUseCase implements IAddMoneyUseCase {

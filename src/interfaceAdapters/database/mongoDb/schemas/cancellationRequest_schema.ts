@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema } from "mongoose";
 import { ICancellationRequestEntity } from "../../../../domain/models/cancellationRequest_entity";
 
 export const CancellationRequestSchema = new Schema<ICancellationRequestEntity>(

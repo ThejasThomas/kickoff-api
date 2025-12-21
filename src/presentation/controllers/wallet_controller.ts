@@ -8,12 +8,10 @@ import {
   HTTP_STATUS,
   SUCCESS_MESSAGES,
 } from "../../shared/constants";
-import { success } from "zod";
 import { CustomError } from "../../domain/utils/custom.error";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { error } from "console";
 import { IGetWalletBalanceUseCase } from "../../domain/useCaseInterfaces/wallet/getWalletBalanceUseCase_interface";
-import { IWalletTransaction } from "../../interfaceAdapters/database/mongoDb/models/wallet_transaction_model";
 import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
 import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
 import { IGetOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_usecase_interface";
@@ -133,6 +131,7 @@ export class WalletController implements IWalletController {
         ...result,
       });
     } catch (error) {
+      console.log(error)
       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: ERROR_MESSAGES.WALLET_TRANSACTION_FETCH_FAILED,

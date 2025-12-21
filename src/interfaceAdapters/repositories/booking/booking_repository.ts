@@ -105,6 +105,7 @@ export class BookingRepository
       }).exec();
       return bookings;
     } catch (error) {
+      console.log(error)
       throw new CustomError(
         ERROR_MESSAGES.FAILED_TO_FETCH_BOOKINGS,
         HTTP_STATUS.INTERNAL_SERVER_ERROR

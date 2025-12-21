@@ -1,6 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IWalletEntity, WalletTransactionStatus, WalletTransactionType } from "../../../../domain/models/wallet_entity";
-import { required } from "zod/v4/core/util.cjs";
+import { IWalletEntity } from "../../../../domain/models/wallet_entity";
 
 export const WalletSchema =new Schema<IWalletEntity>(
     {

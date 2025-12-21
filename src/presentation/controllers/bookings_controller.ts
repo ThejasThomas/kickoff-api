@@ -14,16 +14,12 @@ import { IGetUpcomingBookingUseCase } from "../../domain/useCaseInterfaces/Booki
 import { IGetBookedTurfUseCase } from "../../domain/useCaseInterfaces/Bookings/get_booked_useCase_interface";
 import { IGetPastBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_pastbookings_usecase_interface";
 import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_booking_usecase";
-import { string, success } from "zod";
-import { handleErrorResponse } from "../../shared/utils/error_handler";
-import { error } from "console";
 import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
 import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
 import { ICreateHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/create_hosted_game_usecase_interface";
 import { IGetUpcomingHostedGamesUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hostedGame_useCase";
 import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/join_hostedGame_usecase_interface";
 import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
-import moment from "moment-timezone";
 import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
 
 @injectable()
@@ -316,6 +312,7 @@ export class BookingsController implements IBookingsController {
         data: requests,
       });
     } catch (err) {
+      console.log(err)
       res.status(500).json({
         success: false,
         message: "Failed to fetch cancellation requests",
@@ -377,6 +374,7 @@ export class BookingsController implements IBookingsController {
         games,
       });
     } catch (err) {
+      console.log(err)
       res.status(500).json({
         success: false,
         message: "Failed to fetch upcoming hosted games",

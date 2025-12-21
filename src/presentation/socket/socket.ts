@@ -11,13 +11,13 @@ export const initSocket = (server: http.Server) => {
       credentials: true,
     },
   });
-  const SaveChatMessageUseCase =container.resolve<ISaveChatMessageUseCase>(
+  const SaveChatMessageUseCase = container.resolve<ISaveChatMessageUseCase>(
     "ISaveChatMessageUseCase"
-  )
+  );
 
   io.on("connection", (socket) => {
     console.log(" User connected:", socket.id);
-    
+
     socket.on("joinGroup", (groupId: string) => {
       socket.join(groupId);
       console.log(`User ${socket.id} joined group ${groupId}`);

@@ -1,4 +1,4 @@
-import { model, Schema,Types } from "mongoose";
+import { model, Schema } from "mongoose";
 import { IChatGroupEntity } from "../../../../domain/models/Chat_group_entity";
 
 export const chatGroupSchema = new Schema<IChatGroupEntity>(

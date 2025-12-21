@@ -1,8 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IBookSlotUseCase } from "../../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
-import { ISlotRepository } from "../../../domain/repositoryInterface/Turf/slot_repository_interface";
-import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { IBookingEntity } from "../../../domain/models/booking_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";

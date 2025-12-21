@@ -3,8 +3,6 @@ import { IOwnerWalletTransactionEntity } from "../../../domain/models/ownerWalle
 import { IOwnerWalletTransactionRepository } from "../../../domain/repositoryInterface/wallet/owner_wallet_transactionRepository_interface";
 import { OwnerWalletTransactionModel } from "../../database/mongoDb/schemas/ownerWalletTransactionSchema";
 import { injectable } from "tsyringe";
-import path from "path";
-import { OwnerWalletTransactionDTO } from "../../../application/dtos/ownerwalletTransaction_dto";
 import { AdminTransactionDetailsEntity } from "../../../domain/models/admin_transaction_details_entity";
 import { BookinModel } from "../../database/mongoDb/models/booking_model";
 import { TurfModel } from "../../database/mongoDb/models/turf_model";

@@ -1,20 +1,20 @@
 export interface ITimeRange {
-    startTime:string,
-    endTime:string
+  startTime: string;
+  endTime: string;
 }
 
-export interface IException{
-    date:string;
+export interface IException {
+  date: string;
 }
 export interface IWeekRules {
-    [key:string]:ITimeRange[];
+  [key: string]: ITimeRange[];
 }
 
 export interface IAddRulesDTO {
-    turfId:string,
-    ownerId:string,
-    slotDuration:number,
-    price:number,
-    weeklyRules:IWeekRules[]
-    exceptions:IException[]
+  turfId: string;
+  ownerId: string;
+  slotDuration: number;
+  price: number;
+  weeklyRules: IWeekRules[];
+  exceptions: IException[];
 }

@@ -1,8 +1,5 @@
-import { number } from "zod";
-import { IWallet } from "../../../interfaceAdapters/database/mongoDb/models/wallet_model";
 import { IWalletEntity } from "../../models/wallet_entity";
 import { IBaseRepository } from "../base-repository.interface";
-import { IWalletTransaction } from "../../../interfaceAdapters/database/mongoDb/models/wallet_transaction_model";
 import { IWalletTransactionEntity } from "../../models/wallet_transaction_entity";
 
 export interface IWalletRepository extends IBaseRepository<IWalletEntity>{
