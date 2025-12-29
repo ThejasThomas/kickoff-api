@@ -152,6 +152,10 @@ import { IGetTransactionDetailsUseCse } from "../../domain/useCaseInterfaces/wal
 import { GetTrasactionDetailsUseCase } from "../../application/usecase/wallet/getAdminTransaction_details_usecase";
 import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
 import { HoldSlotUseCase } from "../../application/usecase/Bookings/hold_slot_usecase";
+import { AddRatingUseCase } from "../../application/usecase/rating/add_rating_usecase";
+import { IAddRatingUseCase } from "../../domain/useCaseInterfaces/ratings/add_rating_usecase_interface";
+import { IGetTurfRatingsUseCase } from "../../domain/useCaseInterfaces/ratings/get_turf_ratings_usecase_interface";
+import { GetTurfRatingUseCase } from "../../application/usecase/rating/get_turf_rating_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -409,6 +413,12 @@ export class UseCaseRegistry {
     })
     container.register<IHoldSlotUseCase>("IHoldSlotUseCase",{
       useClass:HoldSlotUseCase
+    })
+    container.register<IAddRatingUseCase>("IAddRatingUseCase",{
+      useClass:AddRatingUseCase
+    })
+    container.register<IGetTurfRatingsUseCase>("IGetTurfRatingsUseCase",{
+      useClass:GetTurfRatingUseCase
     })
   }
 }

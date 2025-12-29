@@ -11,7 +11,6 @@ export type statusTypes = "active" | "pending" | "blocked" | "approved";
 export type TRole = "client" | "admin" | "turfOwner";
 
 export const HTTP_STATUS = {
-  // ✅ Success responses
   OK: 200, // Request was successful (e.g., fetching data, updating without response body)
   CREATED: 201, // Resource successfully created (e.g., user registration, new booking)
   ACCEPTED: 202, // Request accepted for processing but not completed yet (e.g., background job)

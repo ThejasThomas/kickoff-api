@@ -42,6 +42,8 @@ import { IAdminWalletTransactionRepository } from "../../domain/repositoryInterf
 import { AdminWalletTransactionRepository } from "../../interfaceAdapters/repositories/wallet/admin_wallet_transaction_repository";
 import { IAdminDashboardRepository } from "../../domain/repositoryInterface/admindashboard/admin_dashboard_repository_interface";
 import { AdminDashboardRepository } from "../../interfaceAdapters/repositories/admindashboard/admin_dashboard_repository_interface";
+import { IRatingRepository } from "../../domain/repositoryInterface/Turf/rating_repository_interface";
+import { RatingRepository } from "../../interfaceAdapters/repositories/turf/rating_repository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -116,6 +118,9 @@ export class RepositoryRegistry {
     })
     container.register<IAdminDashboardRepository>("IAdminDashboardRepository",{
       useClass:AdminDashboardRepository
+    })
+    container.register<IRatingRepository>("IRatingRepository",{
+      useClass:RatingRepository
     })
   }
 }

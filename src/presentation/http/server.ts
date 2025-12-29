@@ -14,6 +14,7 @@ import { ClientRoutes } from "../routes/client_route";
 import fs from "fs";
 import path from "path";
 import { PaymentRoutes } from "../routes/stripe_route";
+import { handleErrorResponse } from "../../shared/utils/error_handler";
 
 
 export class ExpressServer {
@@ -69,7 +70,9 @@ export class ExpressServer {
     this._app.use("/_cl", new ClientRoutes().router);
     this._app.use("/api/cloudinary", new CloudinaryRoutes().router);
     this._app.use("/api/payment",new PaymentRoutes().router)
+    this._app.use(handleErrorResponse)
   }
+
 
   public getApp(): Application {
     return this._app;

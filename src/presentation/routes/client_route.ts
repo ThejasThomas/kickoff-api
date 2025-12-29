@@ -191,11 +191,25 @@ export class ClientRoutes extends BaseRoute {
         turfController.addReview(req, res);
       }
     );
+    this.router.post(
+      "/client/add-rating",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        turfController.addRating(req, res);
+      }
+    );
     this.router.get(
       "/client/get-reviews/:turfId",
       verifyAuth,
       (req: Request, res: Response) => {
         turfController.getTurfReviews(req, res);
+      }
+    );
+    this.router.get(
+      "/client/get-ratings/:turfId",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        turfController.getTurfRatings(req, res);
       }
     );
 

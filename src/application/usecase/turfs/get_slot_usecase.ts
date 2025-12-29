@@ -113,9 +113,6 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
     }
   }
 
-  // -----------------------------------------------------
-  // PARSE ANY TIME FORMAT: "17:00" OR "9:00AM"
-  // -----------------------------------------------------
   private parseTime(dateStr: string, timeStr: string): Date {
     let hours = 0, minutes = 0;
 

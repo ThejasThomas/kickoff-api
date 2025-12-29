@@ -24,4 +24,5 @@ export interface PastBookingDTO {
   status: string;
   paymentStatus: string;
   hasReviewed?: boolean;
+  hasRated?:boolean;
 }

@@ -18,4 +18,6 @@ export interface ITurfController {
   getTurfReviews(req:Request,res:Response):Promise<void>
   getTurfReviewsForAdmin(req:Request,res:Response):Promise<void>
   deleteReviewAdmin(req:Request,res:Response):Promise<void>
+  addRating(req:Request,res:Response):Promise<void>
+  getTurfRatings(req:Request,res:Response):Promise<void>
 }

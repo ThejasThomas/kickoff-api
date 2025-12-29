@@ -4,7 +4,6 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../constants";
 import { CustomError } from "../../domain/utils/custom.error";
 import logger from "./error.logger";
 
-
 export const handleErrorResponse = (
   req: Request,
   res: Response,
@@ -17,18 +16,11 @@ export const handleErrorResponse = (
   });
 
   if (error instanceof ZodError) {
-
-//   const errors = (error as ZodError).errors.map((err) => ({
-//     message: err.message,
-//   }));
-
-  return res.status(HTTP_STATUS.BAD_REQUEST).json({
-    success: false,
-    message: ERROR_MESSAGES.VALIDATION_ERROR,
-    // errors,
-  });
-}
-
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({
+      success: false,
+      message: ERROR_MESSAGES.VALIDATION_ERROR,
+    });
+  }
 
   if (error instanceof CustomError) {
     return res.status(error.statusCode).json({
@@ -36,10 +28,6 @@ export const handleErrorResponse = (
       message: error.message,
     });
   }
-
-  // if (error instanceof Error) {
-  // } else {
-  // }
 
   return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
     success: false,
