@@ -68,6 +68,7 @@ export const ERROR_MESSAGES = {
   EMAIL_NOT_FOUND: "Email not found",
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
+  MESSAGE_NOT_FOUND:"Message not found",
   SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR: "Database Error",

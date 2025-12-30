@@ -20,8 +20,6 @@ export class GetUpcomingBookingsUseCase implements IGetUpcomingBookingUseCase {
   ): Promise<{ bookings: BookingDTO[]; totalPages: number; total: number }> {
     const skip = (page - 1) * limit;
 
-    console.log("heyyy iD", userId);
-    console.log('skip',skip,'limit',limit,'page',page,'search',search)
     const { bookings, total } =
       await this._bookingRepository.findUpComingByUserId(
         userId,

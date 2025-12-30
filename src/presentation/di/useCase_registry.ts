@@ -156,6 +156,8 @@ import { AddRatingUseCase } from "../../application/usecase/rating/add_rating_us
 import { IAddRatingUseCase } from "../../domain/useCaseInterfaces/ratings/add_rating_usecase_interface";
 import { IGetTurfRatingsUseCase } from "../../domain/useCaseInterfaces/ratings/get_turf_ratings_usecase_interface";
 import { GetTurfRatingUseCase } from "../../application/usecase/rating/get_turf_rating_usecase";
+import { IDeleteChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/delete_chat_message_usecase";
+import { DeleteChatMessageUseCase } from "../../application/usecase/messages/delete_message_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -419,6 +421,9 @@ export class UseCaseRegistry {
     })
     container.register<IGetTurfRatingsUseCase>("IGetTurfRatingsUseCase",{
       useClass:GetTurfRatingUseCase
+    })
+    container.register<IDeleteChatMessageUseCase>("IDeleteChatMessageUseCase",{
+      useClass:DeleteChatMessageUseCase
     })
   }
 }

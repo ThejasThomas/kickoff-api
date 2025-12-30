@@ -6,6 +6,12 @@ export interface IChatMessageModel {
   groupId: Types.ObjectId; 
   senderId: string;
   text: string;
+  isDeleted?:boolean;
+  replyTo?:{
+    messageId?:Types.ObjectId;
+    senderId?:string;
+    text?:string
+  };
   createdAt?: Date;
 }
 
@@ -26,6 +32,22 @@ export const ChatMessageSchema =new Schema<IChatMessageModel>(
             type:String,
             required:true,
             trim:true
+        },
+        isDeleted:{
+            type:Boolean,
+            default:false
+        },
+        replyTo:{
+            messageId:{
+                type:Schema.Types.ObjectId,
+                ref:"ChatMessage"
+            },
+            senderId:{
+                type:String
+            },
+            text:{
+                type:String
+            }
         }
     },
     {

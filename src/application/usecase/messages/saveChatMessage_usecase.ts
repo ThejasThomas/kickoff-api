@@ -12,8 +12,8 @@ export class SaveChatMessageUseCase implements ISaveChatMessageUseCase{
         @inject("IChatMessageRepository")
         private _chatMessageRepository:IChatMessageRepository
     ){}
-    async execute(data: { groupId: string; senderId: string; text: string; }): Promise<IChatMessageEntity> {
-        const {groupId,senderId,text}=data;
+    async execute(data: { groupId: string; senderId: string; text: string;replyTo?:{messageId:string;senderId:string;text:string} }): Promise<IChatMessageEntity> {
+        const {groupId,senderId,text,replyTo}=data;
         console.log('grouppppIDDD',groupId)
 
         if(!groupId || !senderId || !text.trim()){
@@ -26,7 +26,8 @@ export class SaveChatMessageUseCase implements ISaveChatMessageUseCase{
         return await this._chatMessageRepository.createMessage({
             groupId,
             senderId,
-            text
+            text,
+            replyTo
         })
     }
 }
