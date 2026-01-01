@@ -3,4 +3,5 @@ import { IBaseRepository } from "../base-repository.interface";
 
 export interface ISlotRepository extends IBaseRepository<ISlotEntity>{
     updateSlotBookedStatus(turfId:string,date:string,startTime:string):Promise<void>
+    
 }

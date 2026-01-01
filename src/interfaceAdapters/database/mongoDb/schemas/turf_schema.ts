@@ -41,7 +41,7 @@ export const TurfSchema =new Schema<ITurf>(
           default: "Point",
         },
         coordinates: {
-          type: [Number], // [longitude, latitude]
+          type: [Number],
           required: true,
         },
       },

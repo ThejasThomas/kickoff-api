@@ -92,9 +92,6 @@ export class GenerateSlotUseCase implements IGenerateSlotUseCase {
     } else {
       generateSlotsForDate(date);
     }
-    // for (const slot of generatedSlots) {
-    //   const exists = await this._slotService;
-    // }
 
     try {
       const createdSlots = await this._slotService.createSlots(generatedSlots);

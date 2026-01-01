@@ -11,7 +11,6 @@ export type statusTypes = "active" | "pending" | "blocked" | "approved";
 export type TRole = "client" | "admin" | "turfOwner";
 
 export const HTTP_STATUS = {
-  // ✅ Success responses
   OK: 200, // Request was successful (e.g., fetching data, updating without response body)
   CREATED: 201, // Resource successfully created (e.g., user registration, new booking)
   ACCEPTED: 202, // Request accepted for processing but not completed yet (e.g., background job)
@@ -44,11 +43,16 @@ export const SUCCESS_MESSAGES = {
   BOOKINGS_FETCHED_SUCCESSFULLY: "Bookings fetched successfully",
   LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
   LOGOUT_SUCCESS: "Logged out",
+  HOSTED_GAME_FETCHED_SUCCESSFULLY:"Hosted upcoming games fetched successfully",
+  OWNER_DASHBOARD_DATA_FETCHED:"Owner dashboard data fetched successfully",
   TURF_DETAILS_FETCHED_SUCCESSFULLY:"Turf details fetched successfully",
   VERIFICATION_SUCCESS: "Verification done",
   OPERATION_SUCCESS: "Action completed",
   PASSWORD_RESET_SUCCESS: "Password reset",
+  HOSTES_GAME_CANCELLATION_REQUESTED:"Hosted game cancellation requested",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
+  ADMIN_WALLET_FETCHED_SCCESSFULLY:"Admin wallet fetched successfully",
+  WALLET_TRANSACTION_FETCHED:"Owner wallet transactions fetched successfully",
   APPROVAL_REQUEST_SENT: "Approval request send to the admin",
   TURF_BOOKED_SUCCESSFULLY: "Your turf slot  Booked successfully",
 
@@ -66,12 +70,38 @@ export const ERROR_MESSAGES = {
   EMAIL_NOT_FOUND: "Email not found",
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
+  MESSAGE_NOT_FOUND:"Message not found",
   SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR: "Database Error",
+  CANCELLATION_REASON_REQUIRED:"Cancellation reason required",
+  FAILED_TO_FETCH_HOSTED_GAMES:"Failed to fetch hosted games",
+  SLOT_LOCK_EXPIRE_OR_INVALID:"Slot lock expired or invalid",
+  TRANSACTION_NOT_FOUND:"Transaction not found",
+  GROUP_ID_REQUIRED:"Group id is required",
+  SLOT_ALREADY_BOOKED:"Slot already booked",
+  SLOT_ALREADY_SELECTED:"Slot already selected by another user",
+  CHAT_GROUP_NOT_FOUND:"Chat group not found",
+  WALLET_TRANSACTION_FAILED : "Wallet transaction failed",
+  WALLET_TRANSACTION_FETCH_FAILED:"Failed to fetch wallet transactions",
+  REVIEW_ONLY_COMPLETED_BOOKINGS:"You can review only completed bookings",
+  REVIEW_ALREADY_SUBMITTED:"Review already submitted for this booking",
   OWNER_PERMISSION_DENIED:
     "Access denied. Your account is not approved to add services.",
+    INVALID_TEXT_MESSAGE:"Invalid text message data",
   BOOKING_FAILED: "Slot booking failed",
+  INVALID_ID:"Invalid booking id",
+  ALREADY_JOINED:"You already joined the game",
+  INVALID_COURT_TYPE:"Invalid court type",
+  REQUEST_ID_REQUIRED:"Request id is required",
+  INVALID_ACTION:"Invalid action",
+  CANNOT_JOIN_OWN_GAME:"Cannot join own game",
+  NOT_GAME_FOUND:"No game found",
+  GAME_IS_FULL:"Game is full",
+  REQUEST_NOT_FOUND:"request not found",
+  REQUEST_ALREADY_SUBMITTED:"Cancellation request already submitted",
+  CANCELLATION_NOT_ALLOWED:"Cancellation allowed only 1 hour before start time",
+  BOOKING_NOT_FOUND:"Booking not found",
   INVALID_DAY_INDEX:"Invalid day index",
   SLOT_NOT_FOUND: "Slot not found",
   MISSING_REQUIRED_FIELDS: "Missing required field",
@@ -89,6 +119,7 @@ export const ERROR_MESSAGES = {
   OWNER_NOT_FOUND: "Owner not found",
   FAILED_TO_FETCH_TURF_DETAILS:"Failed to fetch turf details",
   TURF_CREATION_FAILED: "Failed to add turf. Please try again ",
+  AMOUNT_MUST_BE_POSITIVE:"Amount must be greater than 0",
   OWNER_NOT_ACTIVE:
     "Owner is not active now please update your profile and try again",
   PENDING_ADMIN_APPROVAL: "Your request is not approved by admin",

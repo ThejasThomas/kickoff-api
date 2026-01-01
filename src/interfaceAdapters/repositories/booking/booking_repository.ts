@@ -7,6 +7,11 @@ import {
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
+import { CancellationRequestModel } from "../../database/mongoDb/models/cancellationrequest_model";
+import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
+import { IBookingEntity } from "../../../domain/models/booking_entity";
+import { mapBookingDTO } from "../../../application/mappers/getBookingapper";
+import { Types } from "mongoose";
 
 @injectable()
 export class BookingRepository
@@ -37,7 +42,7 @@ export class BookingRepository
     skip: number,
     limit: number,
     search: string
-  ): Promise<{ bookings: IBookingModel[]; total: number }> {
+  ) {
     try {
       const now = new Date();
       const currentDateStr = now.toISOString().split("T")[0];
@@ -45,31 +50,37 @@ export class BookingRepository
         .getHours()
         .toString()
         .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
-      const filter: any = {
+
+      const normalizedSearch = (search || "").trim();
+
+      let filter: any = {
         userId,
         $or: [
           { date: { $gt: currentDateStr } },
           { date: currentDateStr, endTime: { $gt: currentTimeStr } },
         ],
       };
-      const total = await BookinModel.countDocuments(filter).exec();
 
-      if (search) {
-        filter.$and = [
-          { ...filter },
-          {
-            $or: [
-              { turfName: { $regex: search, $options: "i" } },
-              { location: { $regex: search, $options: "i" } },
-            ],
-          },
-        ];
+      if (normalizedSearch.length > 0) {
+        filter = {
+          $and: [
+            filter,
+            {
+              $or: [
+                { turfName: { $regex: normalizedSearch, $options: "i" } },
+                { location: { $regex: normalizedSearch, $options: "i" } },
+              ],
+            },
+          ],
+        };
       }
+
+      const total = await BookinModel.countDocuments(filter);
       const bookings = await BookinModel.find(filter)
         .sort({ date: 1, startTime: 1 })
         .skip(skip)
-        .limit(limit)
-        .exec();
+        .limit(limit);
+
       return { bookings, total };
     } catch (error) {
       console.error("Error fetching upcoming bookings by userId:", error);
@@ -79,6 +90,7 @@ export class BookingRepository
       );
     }
   }
+
   async findPastByUserId(userId: string): Promise<IBookingModel[]> {
     try {
       const now = new Date();
@@ -93,10 +105,80 @@ export class BookingRepository
       }).exec();
       return bookings;
     } catch (error) {
+      console.log(error)
       throw new CustomError(
         ERROR_MESSAGES.FAILED_TO_FETCH_BOOKINGS,
         HTTP_STATUS.INTERNAL_SERVER_ERROR
       );
     }
   }
+  async updateStatus(
+    id: string,
+    status: string
+  ): Promise<ICancellationRequestEntity | null> {
+    return await CancellationRequestModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+  }
+  async getOwnerRequests(
+    ownerId: string
+  ): Promise<ICancellationRequestEntity[]> {
+    return await CancellationRequestModel.find({ ownerId });
+  }
+  async updateStatusById(
+    bookingId: string,
+    status: string
+  ): Promise<IBookingModel | null> {
+    return BookinModel.findByIdAndUpdate(bookingId, { status }, { new: true });
+  }
+  
+  async findSlotBooking(
+    turfId: string,
+    date: string,
+    startTime: string,
+    endTime: string
+  ): Promise<IBookingEntity | null> {
+    const normalizedstartTime =normalizeTime(startTime)
+    const normalizedendtime=normalizeTime(endTime)
+    console.log(
+      "turfId",
+      turfId,
+      "date",
+      date,
+      "starttime",
+      startTime,
+      "endTime",
+      endTime
+    );
+
+    const booking = await BookinModel.findOne({
+      turfId:turfId,
+      date:date,
+      startTime:normalizedstartTime,
+      endTime:normalizedendtime,
+      status: { $ne: "cancelled" },
+    });
+
+    if (!booking) return null;
+    return mapBookingDTO(booking);
+  }
+  async updateStatusBookings(filter: { _id: string; }, update: Partial<IBookingEntity>): Promise<void> {
+    await this.model.updateOne(
+      {_id:new Types.ObjectId(filter._id)},
+      {$set:update}
+    )
+  }
 }
+
+const normalizeTime = (time: string): string => {
+  const [hourStr, period] = time.split(" ");
+  let hour = parseInt(hourStr, 10);
+
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
+
+  return hour.toString().padStart(2, "0") + ":00";
+};
+

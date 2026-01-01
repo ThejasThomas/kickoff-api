@@ -3,6 +3,7 @@ import { BookingDTO, PastBookingDTO } from "../dtos/get_booking_dto";
 
 export function mapBookingDTO(entity: IBookingModel): BookingDTO {
   return {
+    _id:entity._id.toString(),
     userId: entity.userId,
     turfId: entity.turfId,
     startTime: entity.startTime,
@@ -12,18 +13,22 @@ export function mapBookingDTO(entity: IBookingModel): BookingDTO {
     status: entity.status,
     paymentMethod: entity.paymentMethod,
     paymentStatus: entity.paymentStatus,
+    adminCommissionProcessed:entity.adminCommissionProcessed,
     createdAt: entity.createdAt,
   };
 }
 
 export function mapPastBookingDTO(entity: IBookingModel): PastBookingDTO {
   return {
+    _id:entity._id.toString(),
     date: entity.date,
     startTime: entity.startTime,
     endTime: entity.endTime,
+    turfId:entity.turfId,
     price: entity.price,
     status: entity.status,
     paymentStatus: entity.paymentStatus,
+    
   };
 }
 

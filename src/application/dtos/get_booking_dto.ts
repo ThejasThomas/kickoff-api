@@ -1,5 +1,6 @@
+
 export interface BookingDTO {
-     id?: string;
+  _id: string;
   userId: string;
   turfId: string;
   startTime: string;
@@ -9,14 +10,19 @@ export interface BookingDTO {
   status: string;
   paymentMethod: string;
   paymentStatus: string;
-  createdAt: string;
+  adminCommissionProcessed: boolean;
+  createdAt?: string;
 }
 
 export interface PastBookingDTO {
-    date:string,
-    startTime:string,
-    endTime:string,
-    price:number,
-    status:string,
-    paymentStatus:string
+  _id: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  turfId: string;
+  price: number;
+  status: string;
+  paymentStatus: string;
+  hasReviewed?: boolean;
+  hasRated?:boolean;
 }

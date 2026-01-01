@@ -7,5 +7,12 @@ export interface IUserController{
     getUserDetails(req:Request,res:Response):Promise<void>
     getBookedUserDetails(req:Request,res:Response):Promise<void>
     updateUserDetails(req:Request,res:Response):Promise<void>
+    stripePaymentSession(req:Request,res:Response):Promise<void>
+    verifyPaymentSession(req:Request,res:Response):Promise<void>
+    createWalletCheckoutSession(req:Request,res:Response):Promise<void>
+    createHostedGameCheckoutSession(req:Request,res:Response):Promise<void>
+    createJoinHostedGameCheckoutSession(req:Request,res:Response):Promise<void>
+    getMyChatGroup(req:Request,res:Response):Promise<void>
+    getMessages(req:Request,res:Response):Promise<void>
 }
 

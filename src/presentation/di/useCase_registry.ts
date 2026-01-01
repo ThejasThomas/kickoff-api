@@ -90,6 +90,78 @@ import { IGetUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/get
 import { GetUserDetailsUseCase } from "../../application/usecase/users/get_user_details_usecase";
 import { IUpdateUserDetailsUseCase } from "../../domain/useCaseInterfaces/users/update_userdetails_usecase_interface";
 import { UpdateUserDetailsUseCase } from "../../application/usecase/users/update_user_details_usecase";
+import { IAddMoneyUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_usecase_interface";
+import { AddMoneyUseCase } from "../../application/usecase/wallet/addmoney_usecase";
+import { GetWalletBalanceUseCase } from "../../application/usecase/wallet/getWalletBalanceUseCase";
+import { IGetWalletBalanceUseCase } from "../../domain/useCaseInterfaces/wallet/getWalletBalanceUseCase_interface";
+import { IGetWalletHistoryUseCase } from "../../domain/useCaseInterfaces/wallet/get_walletHistory_usecase";
+import { GetWalletHistoryUseCase } from "../../application/usecase/wallet/getWalletHistory_usecase";
+import { IRequestCancelBookingUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_booking_usecase";
+import { RequestCancelBookingUseCase } from "../../application/usecase/Bookings/requestCancelBookingUsecase";
+import { IHandlOwnerCancelRequestUseCase } from "../../domain/useCaseInterfaces/Bookings/handle_owner_cancel_request_usecase_interface";
+import { HandleOwnerCancelrequestUseCase } from "../../application/usecase/Bookings/handle_owner_cance_request_usecase";
+import { IGetCancelRequestsUseCase } from "../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
+import { GetCancelBookingRequestsUsecase } from "../../application/usecase/Bookings/get_cancel_booking_requests";
+import { ICreateHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/create_hosted_game_usecase_interface";
+import { createHostedGameUseCase } from "../../application/usecase/Bookings/create_host_games_usecase";
+import { IGetUpcomingHostedGamesUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hostedGame_useCase";
+import { GetUpcomingHostedGamesUseCase } from "../../application/usecase/Bookings/get_hostedGames_usecase";
+import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/join_hostedGame_usecase_interface";
+import { JoinHostedGameUseCase } from "../../application/usecase/Bookings/join_hosted_game_usecase";
+import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
+import { GetSingleHostedGameUseCase } from "../../application/usecase/Bookings/get_single_hosted_game_usecase";
+import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/checkslotIsBookedUseCase_interface";
+import { CheckSlotIsBooked } from "../../application/usecase/turfs/checkslotIsBookedUseCase_";
+import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
+import { CancelSlotUseCase } from "../../application/usecase/turfs/cance_slot_usecase";
+import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
+import { OfflineBookingUseCase } from "../../application/usecase/Bookings/offline_booking_usecase";
+import { ICreateChatGroupUseCase } from "../../domain/useCaseInterfaces/users/create_chat_group_usecase_interface";
+import { CreateChatGroupUseCase } from "../../application/usecase/users/create_chat_group_usecase";
+import { IGetUserChatGroupsUseCase } from "../../domain/useCaseInterfaces/users/get_user_caht_group_interface";
+import { GetUserChatGroupUseCase } from "../../application/usecase/users/get_user_chat_group_usecase";
+import { ISaveChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/saveChatMessage_usecase_interface";
+import { SaveChatMessageUseCase } from "../../application/usecase/messages/saveChatMessage_usecase";
+import { IGetChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/getChatMessageUsecase_interface";
+import { GetChatMessagesUseCase } from "../../application/usecase/messages/getChatMessage_usecase";
+import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages/getChatPageData_usecase";
+import { GetChatPageDataUseCase } from "../../application/usecase/messages/getChatPageData_usecase";
+import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
+import {  AddMoneyOwnerWalletUseCase } from "../../application/usecase/wallet/addMoney_owner_wallet_usecase";
+import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
+import { GetOwnerWalletTransactionUseCase } from "../../application/usecase/wallet/getowner_wallet_transaction";
+import { IGetOwnerDashboardUseCase } from "../../domain/useCaseInterfaces/ownerDashboard/owner_dashboard_usecase";
+import { GetOwnerDashboardUseCase } from "../../application/usecase/ownerDashboard/owner_dashboard_usecase";
+import { IAddReviewUseCase } from "../../domain/useCaseInterfaces/review/add_review_usecase_interface";
+import { AddReviewUseCase } from "../../application/usecase/review/add_review_usecase";
+import { IGetTurfReviewsUseCase } from "../../domain/useCaseInterfaces/review/get_turf_review_usecase_interface";
+import { GetTurfReviewsUseCase } from "../../application/usecase/review/getTurfReview_usecase";
+import { IDeleteReviewUseCase } from "../../domain/useCaseInterfaces/review/deleteReviewUseCase_interface";
+import { DeleteReviewUseCase } from "../../application/usecase/review/delete_review_usecase";
+import { IGetOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_usecase_interface";
+import { GetOwnerWalletUseCase } from "../../application/usecase/wallet/get_owner_wallet_usecase";
+import { IGetAdminWalletUseCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_usecase_interface";
+import { GetAdminWalletUseCase } from "../../application/usecase/wallet/get_admin_wallet_usecase";
+import { IAdminWalletTransactionUSeCase } from "../../domain/useCaseInterfaces/wallet/get_admin_wallet_transaction_usecase_interface";
+import { GetAdminWalletTransactionUseCase } from "../../application/usecase/wallet/get_admin_wallet_transaction_usecase";
+import { IGetAdminDashboardUseCase } from "../../domain/useCaseInterfaces/admindashboard/get_admin_dashboard_usecase_interface";
+import { GetAdminDashboardUseCase } from "../../application/usecase/admindashboard/get_admin_dashboard_usecase";
+import { IGetAllOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_all_owners_wallet_transaction_usecase_interface";
+import { GetAllOwnersWalletTransactionUseCase } from "../../application/usecase/wallet/ge_all_owners_wallet_transaction_usecase";
+import { IGetTransactionDetailsUseCse } from "../../domain/useCaseInterfaces/wallet/get_admin_transaction_details_usecase_interface";
+import { GetTrasactionDetailsUseCase } from "../../application/usecase/wallet/getAdminTransaction_details_usecase";
+import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
+import { HoldSlotUseCase } from "../../application/usecase/Bookings/hold_slot_usecase";
+import { AddRatingUseCase } from "../../application/usecase/rating/add_rating_usecase";
+import { IAddRatingUseCase } from "../../domain/useCaseInterfaces/ratings/add_rating_usecase_interface";
+import { IGetTurfRatingsUseCase } from "../../domain/useCaseInterfaces/ratings/get_turf_ratings_usecase_interface";
+import { GetTurfRatingUseCase } from "../../application/usecase/rating/get_turf_rating_usecase";
+import { IDeleteChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/delete_chat_message_usecase";
+import { DeleteChatMessageUseCase } from "../../application/usecase/messages/delete_message_usecase";
+import { IGetUpcomingHostedGamesByUserUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hosted_game_usecase_interface";
+import { GetUpcomingHostedGameByUserUseCase } from "../../application/usecase/Bookings/get_upcoming_hosted_games";
+import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
+import { RequestCancelHostedGameUseCase } from "../../application/usecase/Bookings/cancel_hosted_game_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -253,6 +325,115 @@ export class UseCaseRegistry {
     })
     container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase",{
       useClass:UpdateUserDetailsUseCase
+    })
+    container.register<IAddMoneyUseCase>("IAddMoneyUseCase",{
+      useClass:AddMoneyUseCase
+    })
+    container.register<IGetWalletBalanceUseCase>("IGetWalletBalanceUseCase",{
+      useClass:GetWalletBalanceUseCase
+    })
+    container.register<IGetWalletHistoryUseCase>("IGetWalletHistoryUseCase",{
+      useClass:GetWalletHistoryUseCase
+    })
+    container.register<IRequestCancelBookingUseCase>("IRequestCancelBookingUseCase",{
+      useClass:RequestCancelBookingUseCase
+    })
+    container.register<IHandlOwnerCancelRequestUseCase>("IHandlOwnerCancelRequestUseCase",{
+      useClass:HandleOwnerCancelrequestUseCase
+    })
+    container.register<IGetCancelRequestsUseCase>("IGetCancelRequestsUseCase",{
+      useClass:GetCancelBookingRequestsUsecase
+    })
+    container.register<ICreateHostedGameUseCase>("ICreateHostedGameUseCase",{
+      useClass:createHostedGameUseCase
+    })
+    container.register<IGetUpcomingHostedGamesUseCase>("IGetUpcomingHostedGamesUseCase",{
+      useClass:GetUpcomingHostedGamesUseCase
+    })
+    container.register<IJoinHostedGameUseCase>("IJoinHostedGameUseCase",{
+      useClass:JoinHostedGameUseCase
+    })
+    container.register<IGetSingleHostedGameUseCase>("IGetSingleHostedGameUseCase",{
+      useClass:GetSingleHostedGameUseCase
+    })
+    container.register<ICheckSlotIsBookedUseCase>("ICheckSlotIsBookedUseCase",{
+      useClass:CheckSlotIsBooked
+    })
+    container.register<ICancelSlotUseCase>("ICancelSlotUseCase",{
+      useClass:CancelSlotUseCase
+    })
+    container.register<IOfflineBookingsUseCase>("IOfflineBookingsUseCase",{
+      useClass:OfflineBookingUseCase
+    })
+    container.register<ICreateChatGroupUseCase>("ICreateChatGroupUseCase",{
+      useClass:CreateChatGroupUseCase
+    })
+    container.register<IGetUserChatGroupsUseCase>("IGetUserChatGroupsUseCase",{
+      useClass:GetUserChatGroupUseCase
+    })
+    container.register<ISaveChatMessageUseCase>(
+      "ISaveChatMessageUseCase",
+      {useClass:SaveChatMessageUseCase}
+    )
+    container.register<IGetChatMessageUseCase>("IGetChatMessageUseCase",{
+      useClass:GetChatMessagesUseCase
+    })
+    container.register<IGetChatPageDataUseCase>("IGetChatPageDataUseCase",{
+      useClass:GetChatPageDataUseCase
+    })
+    container.register<IAddMoneyOwnerWalletUseCase>("IAddMoneyOwnerWalletUseCase",{
+      useClass:AddMoneyOwnerWalletUseCase
+    })
+    container.register<IGetOwnerWalletTransactionsUseCase>("IGetOwnerWalletTransactionsUseCase",{
+      useClass:GetOwnerWalletTransactionUseCase
+    })
+    container.register<IGetOwnerDashboardUseCase>("IGetOwnerDashboardUseCase",{
+      useClass:GetOwnerDashboardUseCase
+    })
+    container.register<IAddReviewUseCase>("IAddReviewUseCase",{
+      useClass:AddReviewUseCase
+    })
+    container.register<IGetTurfReviewsUseCase>("IGetTurfReviewsUseCase",{
+      useClass:GetTurfReviewsUseCase
+    })
+    container.register<IDeleteReviewUseCase>("IDeleteReviewUseCase",{
+      useClass:DeleteReviewUseCase
+    })
+    container.register<IGetOwnerWalletUseCase>("IGetOwnerWalletUseCase",{
+      useClass:GetOwnerWalletUseCase
+    })
+    container.register<IGetAdminWalletUseCase>("IGetAdminWalletUseCase",{
+      useClass:GetAdminWalletUseCase
+    })
+    container.register<IAdminWalletTransactionUSeCase>("IAdminWalletTransactionUSeCase",{
+      useClass:GetAdminWalletTransactionUseCase
+    })
+    container.register<IGetAdminDashboardUseCase>("IGetAdminDashboardUseCase",{
+      useClass:GetAdminDashboardUseCase
+    })
+    container.register<IGetAllOwnerWalletTransactionsUseCase>("IGetAllOwnerWalletTransactionsUseCase",{
+      useClass:GetAllOwnersWalletTransactionUseCase
+    })
+    container.register<IGetTransactionDetailsUseCse>("IGetTransactionDetailsUseCse",{
+      useClass:GetTrasactionDetailsUseCase
+    })
+    container.register<IHoldSlotUseCase>("IHoldSlotUseCase",{
+      useClass:HoldSlotUseCase
+    })
+    container.register<IAddRatingUseCase>("IAddRatingUseCase",{
+      useClass:AddRatingUseCase
+    })
+    container.register<IGetTurfRatingsUseCase>("IGetTurfRatingsUseCase",{
+      useClass:GetTurfRatingUseCase
+    })
+    container.register<IDeleteChatMessageUseCase>("IDeleteChatMessageUseCase",{
+      useClass:DeleteChatMessageUseCase
+    })
+    container.register<IGetUpcomingHostedGamesByUserUseCase>("IGetUpcomingHostedGamesByUserUseCase",{
+      useClass:GetUpcomingHostedGameByUserUseCase
+    })
+    container.register<IRequestHostedGameCancelUseCase>("IRequestHostedGameCancelUseCase",{
+      useClass:RequestCancelHostedGameUseCase
     })
   }
 }
