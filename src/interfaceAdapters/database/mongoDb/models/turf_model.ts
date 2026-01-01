@@ -7,4 +7,3 @@ export interface ITurf extends ITurfEntity{
 }
 
 export const TurfModel=model<ITurf>('Turf',TurfSchema)
-

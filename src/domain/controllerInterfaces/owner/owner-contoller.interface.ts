@@ -6,5 +6,5 @@ export interface ITurfOwnerController {
     updateTurfOwnerProfile(req:Request,res:Response):Promise<void>
     retryAdminApproval(req:Request,res:Response):Promise<void>
     requestUpdateProfile(req:Request,res:Response):Promise<void>
-    
+    getDashboard(req:Request,res:Response):Promise<void>
 }

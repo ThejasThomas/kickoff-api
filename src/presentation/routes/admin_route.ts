@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BaseRoute } from "./base_route";
-import { authController, turfController, userController } from "../di/resolver";
+import { adminController, authController, turfController, userController, walletController } from "../di/resolver";
 import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
 
 export class AdminRoutes extends BaseRoute {
@@ -51,5 +51,54 @@ export class AdminRoutes extends BaseRoute {
         userController.refreshSession(req, res);
       }
     );
+    this.router.get(
+      "/admin/get-turf-reviews/:turfId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.getTurfReviewsForAdmin(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/wallet",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getAdminwallet(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/wallet-transaction",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getAdminWalletTransactions(req,res)
+      }
+    )
+    this.router.delete(
+      "/admin/delete-review/:reviewId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        turfController.deleteReviewAdmin(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/get-dashboard",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        adminController.adminDashboard(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/owners-transaction",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getAllOwnersTransactions(req,res)
+      }
+    )
+    this.router.get(
+      "/admin/transaction-details/:transactionId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        walletController.getTransactionDetails(req,res)
+      }
+    )
   }
 }

@@ -20,6 +20,16 @@ import { CustomError } from "../../domain/utils/custom.error";
 import { IGetNearByTurfUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_nearby_turf_usecase_interface";
 import { IAddRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/add_rules_useCase_interface";
 import { IGetRulesUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/get_rules_useCase_interface";
+import { ICheckSlotIsBookedUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/checkslotIsBookedUseCase_interface";
+import { ICancelSlotUseCase } from "../../domain/useCaseInterfaces/turfOwner/turfs/cancel_slot_usecase";
+import { IOfflineBookingsUseCase } from "../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
+import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
+import { IAddReviewUseCase } from "../../domain/useCaseInterfaces/review/add_review_usecase_interface";
+import { IGetTurfReviewsUseCase } from "../../domain/useCaseInterfaces/review/get_turf_review_usecase_interface";
+import { IDeleteReviewUseCase } from "../../domain/useCaseInterfaces/review/deleteReviewUseCase_interface";
+import { IAddRatingUseCase } from "../../domain/useCaseInterfaces/ratings/add_rating_usecase_interface";
+import { success } from "zod";
+import { IGetTurfRatingsUseCase } from "../../domain/useCaseInterfaces/ratings/get_turf_ratings_usecase_interface";
 
 @injectable()
 export class TurfController implements ITurfController {
@@ -43,17 +53,35 @@ export class TurfController implements ITurfController {
     @inject("IAddRulesUseCase")
     private _addRulesUseCase: IAddRulesUseCase,
     @inject("IGetRulesUseCase")
-    private _getRulesUseCase: IGetRulesUseCase
+    private _getRulesUseCase: IGetRulesUseCase,
+    @inject("ICheckSlotIsBookedUseCase")
+    private _checkSlotIsBookedUseCase: ICheckSlotIsBookedUseCase,
+    @inject("ICancelSlotUseCase")
+    private _cancelSlotUseCase: ICancelSlotUseCase,
+    @inject("IOfflineBookingsUseCase")
+    private _offlineBookingUseCase: IOfflineBookingsUseCase,
+    @inject("IAddMoneyOwnerWalletUseCase")
+    private _addMoneyOwnerWalletUsecase: IAddMoneyOwnerWalletUseCase,
+    @inject("IAddReviewUseCase")
+    private _addReviewUseCase: IAddReviewUseCase,
+    @inject("IGetTurfReviewsUseCase")
+    private _getTurfReviewsUsecase: IGetTurfReviewsUseCase,
+    @inject("IDeleteReviewUseCase")
+    private _deleteReviewUseCase: IDeleteReviewUseCase,
+    @inject("IAddRatingUseCase")
+    private _addRatingUseCase: IAddRatingUseCase,
+    @inject("IGetTurfRatingsUseCase")
+    private _getTurfRatingUseCase: IGetTurfRatingsUseCase
   ) {}
 
   async getAllTurfs(req: Request, res: Response): Promise<void> {
     try {
-      const { page = 1, limit = 10, search = "", status } = req.query;
+      const { page = 1, limit = 6, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
       const searchTerm = typeof search === "string" ? search : "";
-      console.log('paageeee',pageNumber,   'sixeee',  pageSize,     )
+      console.log("paageeee", pageNumber, "sixeee", pageSize);
 
       const { turfs, totalPages } = await this._getAllTurfUseCase.execute(
         pageNumber,
@@ -84,7 +112,7 @@ export class TurfController implements ITurfController {
         return;
       }
 
-      const { page = 1, limit = 8, search = "", status } = req.query;
+      const { page = 1, limit = 4, search = "", status } = req.query;
 
       const pageNumber = Math.max(Number(page), 1);
       const pageSize = Math.max(Number(limit), 1);
@@ -207,19 +235,25 @@ export class TurfController implements ITurfController {
     try {
       const turfId = req.params.id;
       const { date } = req.query;
-      console.log('turffIDDD',turfId)
+      console.log("turffIDDD", turfId);
 
-      if (!turfId || !date||typeof date !== "string") {
+      if (!turfId || !date || typeof date !== "string") {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           message: ERROR_MESSAGES.INVALID_CREDENTIALS,
         });
         return;
       }
-       const dateObj=new Date(date)
-            const dayIndex =dateObj.getDay()
 
-      const slots = await this._getSlotsUseCase.execute(turfId, date as string,dayIndex);
+      const dateObj = new Date(date);
+      const dayIndex = dateObj.getDay();
+
+      const slots = await this._getSlotsUseCase.execute(
+        turfId,
+        date as string,
+        dayIndex
+      );
+      console.log("Slotttsssss", slots);
       res.status(HTTP_STATUS.OK).json({
         success: true,
         slots,
@@ -276,7 +310,7 @@ export class TurfController implements ITurfController {
       const bookData = req.body;
       const userId = (req as CustomRequest).user?.userId;
       console.log("userrrrrrID", userId);
-      console.log('bookDAAtaaa',bookData)
+      console.log("bookDAAtaaa", bookData.ownerId);
 
       if (!userId) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({
@@ -287,6 +321,8 @@ export class TurfController implements ITurfController {
       }
       console.log("bookdataaaaas", bookData);
       const bookslot = await this._bookSlotUseCase.execute(bookData, userId);
+
+      await this._addMoneyOwnerWalletUsecase.execute(bookslot._id);
 
       res.status(HTTP_STATUS.CREATED).json({
         success: true,
@@ -301,6 +337,7 @@ export class TurfController implements ITurfController {
           success: false,
           message: error.message,
         });
+        return;
       } else {
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
           success: false,
@@ -324,7 +361,7 @@ export class TurfController implements ITurfController {
         return;
       }
       rules.ownerId = ownerId;
-      console.log('rrrrruulless',rules.turfId,rules.slotDuration)
+      console.log("rrrrruulless", rules.turfId, rules.slotDuration);
       if (
         !rules.turfId ||
         !rules.slotDuration ||
@@ -374,6 +411,199 @@ export class TurfController implements ITurfController {
       });
     } catch (error) {
       handleErrorResponse(req, res, error);
+    }
+  }
+  async checkIsSlotBooked(req: Request, res: Response): Promise<void> {
+    try {
+      const { turfId, date, startTime, endTime } = req.query;
+
+      const result = await this._checkSlotIsBookedUseCase.execute(
+        turfId as string,
+        date as string,
+        startTime as string,
+        endTime as string
+      );
+      console.log("result", result);
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: "Slot availability checked suuccessfully",
+        result,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+  async cancelSlot(req: Request, res: Response): Promise<void> {
+    try {
+      const { turfId, date, startTime, endTime } = req.body;
+
+      await this._cancelSlotUseCase.execute({
+        turfId,
+        date,
+        startTime,
+        endTime,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Slot cancelled successfully",
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+  async bookslotsoffline(req: Request, res: Response): Promise<void> {
+    try {
+      const bookData = req.body;
+      const userId = (req as CustomRequest).user?.userId;
+      console.log("userrrrrrID", userId);
+      console.log("bookDAAtaaa", bookData);
+
+      if (!userId) {
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success: false,
+          message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+        });
+        return;
+      }
+
+      if (bookData.isOffline === true) {
+        bookData.paymentStatus = "pending";
+        bookData.paymentMethod = "offline";
+      }
+      console.log("bookdataaaaas", bookData);
+      const bookslot = await this._offlineBookingUseCase.execute(
+        bookData,
+        userId
+      );
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        message: SUCCESS_MESSAGES.TURF_BOOKED_SUCCESSFULLY,
+        data: bookslot,
+      });
+    } catch (error) {
+      console.error("Error in addTurf controller", error);
+
+      if (error instanceof CustomError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: ERROR_MESSAGES.SERVER_ERROR,
+        });
+      }
+    }
+  }
+  async addReview(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      const { turfId, bookingId, comment } = req.body;
+
+      const review = await this._addReviewUseCase.execute({
+        userId,
+        turfId,
+        bookingId,
+        comment,
+      });
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        review,
+      });
+    } catch (error: any) {
+      res.status(error.statusCode || 500).json({
+        success: false,
+        message: error.message || "Failed to add review",
+      });
+    }
+  }
+  async getTurfReviews(req: Request, res: Response): Promise<void> {
+    const { turfId } = req.params;
+    const page = Number(req.query.page || 1);
+    const limit = Number(req.query.limit || 5);
+
+    const data = await this._getTurfReviewsUsecase.execute(turfId, page, limit);
+
+    res.status(200).json({
+      success: true,
+      ...data,
+    });
+  }
+  async getTurfReviewsForAdmin(req: Request, res: Response): Promise<void> {
+    const { turfId } = req.params;
+    const page = Number(req.query.page || 1);
+    const limit = Number(req.query.limit || 5);
+
+    const result = await this._getTurfReviewsUsecase.execute(
+      turfId,
+      page,
+      limit
+    );
+    res.status(200).json({
+      success: true,
+      ...result,
+    });
+  }
+  async deleteReviewAdmin(req: Request, res: Response): Promise<void> {
+    const { reviewId } = req.params;
+
+    await this._deleteReviewUseCase.execute(reviewId);
+
+    res.status(200).json({
+      success: true,
+      message: "Review deleted successfullt",
+    });
+  }
+  async addRating(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      const { turfId, bookingId, rating } = req.body;
+
+      const result = await this._addRatingUseCase.execute({
+        userId,
+        turfId,
+        bookingId,
+        rating,
+      });
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        rating: result,
+      });
+    } catch (error: any) {
+      res.status(error.statusCode || 500).json({
+        success: false,
+        message: error.message || "Failed to add rating",
+      });
+    }
+  }
+  async getTurfRatings(req: Request, res: Response): Promise<void> {
+    try {
+      const { turfId } = req.params;
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 5;
+      console.log('turffIddddddd',turfId)
+
+      const result = await this._getTurfRatingUseCase.execute(
+        turfId,
+        page,
+        limit
+      );
+
+      res.status(200).json({
+        success: true,
+        ...result,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch turf ratings",
+      });
     }
   }
 }

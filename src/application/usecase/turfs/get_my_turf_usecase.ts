@@ -43,7 +43,9 @@ export class GetMyTurfsUseCase implements IGetMyTurfsUseCase {
     console.log('itmes',items)
 
     const myturfs = items.map(mapGetTurfDTO);
-    console.log('myTurfs',myturfs[0]._id)
+    if (myturfs.length === 0 && total === 0) {
+      console.log('No turfs found for filter:', filter);
+    }
     return {
       turfs: myturfs,
       totalPages: Math.ceil(total / limit),
