@@ -3,7 +3,8 @@ import { ICancellationRequestEntity } from "../../../../domain/models/cancellati
 
 export const CancellationRequestSchema = new Schema<ICancellationRequestEntity>(
   {
-    bookingId: { type: String, required: true },
+    bookingId: { type: String},
+    hostedGameId:{type:String},
     userId: { type: String, required: true },
     ownerId: { type: String, required: true },
     reason: { type: String, required: true },

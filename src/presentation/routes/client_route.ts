@@ -98,10 +98,24 @@ export class ClientRoutes extends BaseRoute {
       }
     );
     this.router.get(
+      "/client/upcoming-hosted-gamesbyuser",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.getUpcomingHostedGamesByUser(req, res);
+      }
+    );
+    this.router.get(
       "/client/getbookingturf",
       verifyAuth,
       (req: Request, res: Response) => {
         bookingsController.getTurfdetails(req, res);
+      }
+    );
+    this.router.post(
+      "/client/cancel-hosted-game/:gameId",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.requestHostedGameCancellation(req, res);
       }
     );
 

@@ -1,5 +1,6 @@
 export interface ICancellationRequestEntity {
-  bookingId: string;
+  bookingId?: string;
+  hostedGameId?:string;
   userId: string;
   ownerId: string;
   reason: string;

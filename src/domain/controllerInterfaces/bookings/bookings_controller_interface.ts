@@ -13,4 +13,6 @@ export interface IBookingsController {
     joinHostedGame(req:Request,res:Response):Promise<void>
     getSingleHostedGame(req:Request,res:Response):Promise<void>
     holdSlot(req:Request,res:Response):Promise<void>
+    getUpcomingHostedGamesByUser(req:Request,res:Response):Promise<void>
+    requestHostedGameCancellation(req:Request,res:Response):Promise<void>
 }

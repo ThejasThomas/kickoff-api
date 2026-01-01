@@ -5,4 +5,5 @@ export interface ICancelRequestRepository extends IBaseRepository<ICancellationR
     findByBookingId(bookingId:string):Promise<ICancellationRequestEntity|null>
     createRequest(data:ICancellationRequestEntity):Promise<ICancellationRequestEntity>
     getCancelRequestByOwnerId(ownerId:string):Promise<ICancellationRequestEntity[]>
+    updateStatus(id:string,status:string):Promise<ICancellationRequestEntity | null>
 }

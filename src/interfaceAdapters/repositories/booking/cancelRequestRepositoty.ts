@@ -71,4 +71,11 @@ export class CancelrequestRepository
     console.log("resultttt", result);
     return result;
   }
+  async updateStatus(id: string, status: string): Promise<ICancellationRequestEntity | null> {
+    return await CancellationRequestModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+  }
 }

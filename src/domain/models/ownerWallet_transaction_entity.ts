@@ -15,7 +15,8 @@ export interface IOwnerWalletTransactionEntity{
     id?:string;
     ownerId:string;
     turfId:Types.ObjectId
-    bookingId:Types.ObjectId
+    bookingId?:Types.ObjectId
+    hostedGameId?:string;
 
     type:OwnerWalletTransactionType;
     amount:number;

@@ -9,6 +9,8 @@ import { ClientModel } from "../../database/mongoDb/models/client_model";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { GetUpcomingHostedGamesParams } from "../../../domain/models/GetUpcomingHostedGameParams";
+import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
+import { CancellationRequestModel } from "../../database/mongoDb/models/cancellationrequest_model";
 
 @injectable()
 export class HostGameRepository
@@ -297,6 +299,47 @@ export class HostGameRepository
     if (!hostedGame) return null;
 
     return hostedGame;
+  }
+  async findUpComingByUser(userId: string, skip: number, limit: number, search?: string): Promise<{ games: IHostedGameEntity[]; total: number; }> {
+    const now=new Date()
+    const filter:any ={
+      gameStartAt:{$gt:now},
+      $or:[
+        {hostUserId:userId},
+        {"players.userId":userId},
+      ]
+    }
+    if(search?.trim()){
+      filter.$and =[
+        {
+          $or:[
+            {courtType:{$regex:search,$options:"i"}},
+            {turfId:{$regex:search,$options:"i"}}
+          ]
+        }
+      ]
+    }
+
+    const total =await HostedGameModel.countDocuments(filter);
+
+    const games =await HostedGameModel.find(filter)
+    .sort({gameStartAt:1})
+    .skip(skip)
+    .limit(limit)
+
+    return {games,total}
+  }
+  async updateStatusById(hostedGameId: string, status: "open" | "full" | "pending_cancel" | "cancelled" | "completed"): Promise<void> {
+    await HostedGameModel.findByIdAndUpdate(hostedGameId,{
+      status
+    })
+  }
+  async updateStatus(hostedGameId: string, status: string): Promise<ICancellationRequestEntity | null> {
+    return await CancellationRequestModel.findByIdAndUpdate(
+          hostedGameId,
+          { status },
+          { new: true }
+        );
   }
 }
 const normalizeTime = (time: string): string => {

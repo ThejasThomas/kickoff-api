@@ -158,6 +158,10 @@ import { IGetTurfRatingsUseCase } from "../../domain/useCaseInterfaces/ratings/g
 import { GetTurfRatingUseCase } from "../../application/usecase/rating/get_turf_rating_usecase";
 import { IDeleteChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/delete_chat_message_usecase";
 import { DeleteChatMessageUseCase } from "../../application/usecase/messages/delete_message_usecase";
+import { IGetUpcomingHostedGamesByUserUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hosted_game_usecase_interface";
+import { GetUpcomingHostedGameByUserUseCase } from "../../application/usecase/Bookings/get_upcoming_hosted_games";
+import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
+import { RequestCancelHostedGameUseCase } from "../../application/usecase/Bookings/cancel_hosted_game_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -424,6 +428,12 @@ export class UseCaseRegistry {
     })
     container.register<IDeleteChatMessageUseCase>("IDeleteChatMessageUseCase",{
       useClass:DeleteChatMessageUseCase
+    })
+    container.register<IGetUpcomingHostedGamesByUserUseCase>("IGetUpcomingHostedGamesByUserUseCase",{
+      useClass:GetUpcomingHostedGameByUserUseCase
+    })
+    container.register<IRequestHostedGameCancelUseCase>("IRequestHostedGameCancelUseCase",{
+      useClass:RequestCancelHostedGameUseCase
     })
   }
 }

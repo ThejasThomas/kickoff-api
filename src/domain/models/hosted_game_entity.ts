@@ -12,7 +12,7 @@ export interface IHostedGameEntity{
     pricePerPlayer:number;
     capacity:number;
 
-    status:"open"|"full"|"cancelled"|"completed";
+    status:"open"|"full"|"cancelled"|"completed"
 
     players?:{
         userId:string;

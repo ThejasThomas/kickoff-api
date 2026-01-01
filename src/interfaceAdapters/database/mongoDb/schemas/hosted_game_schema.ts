@@ -58,7 +58,7 @@ export const HostedGameSchema = new Schema<IHostedGameEntity>({
 
   status:{
     type:String,
-    enum:["open","full","cancelled","completed"],
+    enum:["open","full","cancelled","completed","pending_cancel"],
     default:"open",
   }
 },

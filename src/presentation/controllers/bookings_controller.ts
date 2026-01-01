@@ -21,6 +21,9 @@ import { IGetUpcomingHostedGamesUseCase } from "../../domain/useCaseInterfaces/B
 import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/join_hostedGame_usecase_interface";
 import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
 import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
+import { IGetUpcomingHostedGamesByUserUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hosted_game_usecase_interface";
+import { handleErrorResponse } from "../../shared/utils/error_handler";
+import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -48,7 +51,11 @@ export class BookingsController implements IBookingsController {
     @inject("IGetSingleHostedGameUseCase")
     private _getSingleHostedGameUseCase: IGetSingleHostedGameUseCase,
     @inject("IHoldSlotUseCase")
-    private _holdSlotUseCase: IHoldSlotUseCase
+    private _holdSlotUseCase: IHoldSlotUseCase,
+    @inject("IGetUpcomingHostedGamesByUserUseCase")
+    private _getUpcomingHostedGamesByUser: IGetUpcomingHostedGamesByUserUseCase,
+    @inject("IRequestHostedGameCancelUseCase")
+    private _requesthostedGameCancellationUseCase: IRequestHostedGameCancelUseCase
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -312,7 +319,7 @@ export class BookingsController implements IBookingsController {
         data: requests,
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({
         success: false,
         message: "Failed to fetch cancellation requests",
@@ -374,7 +381,7 @@ export class BookingsController implements IBookingsController {
         games,
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({
         success: false,
         message: "Failed to fetch upcoming hosted games",
@@ -441,7 +448,6 @@ export class BookingsController implements IBookingsController {
         success: true,
         message: "Slot locked successfully",
       });
-
     } catch (error) {
       if (error instanceof CustomError) {
         res.status(error.statusCode).json({
@@ -455,6 +461,94 @@ export class BookingsController implements IBookingsController {
         success: false,
         message: ERROR_MESSAGES.SERVER_ERROR,
       });
+    }
+  }
+  async getUpcomingHostedGamesByUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      const { page = 1, limit = 10, search = "" } = req.query;
+
+      if (!userId) {
+        throw new CustomError(
+          ERROR_MESSAGES.USER_NOT_FOUND,
+          HTTP_STATUS.UNAUTHORIZED
+        );
+      }
+      const result = await this._getUpcomingHostedGamesByUser.execute(
+        userId,
+        Number(page),
+        Number(limit),
+        String(search)
+      );
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.HOSTED_GAME_FETCHED_SUCCESSFULLY,
+        ...result,
+        currentPage: Number(page),
+      });
+    } catch (error) {
+      res
+        .status(
+          error instanceof CustomError
+            ? error.statusCode
+            : HTTP_STATUS.INTERNAL_SERVER_ERROR
+        )
+        .json({
+          success: false,
+          message:
+            error instanceof CustomError ? error.message : ERROR_MESSAGES,
+          games: [],
+        });
+    }
+  }
+  async requestHostedGameCancellation(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      const hostedGameId = req.params.gameId;
+      const { reason } = req.body;
+      console.log('reason',reason)
+
+      if (!userId) {
+        res
+          .status(401)
+          .json({
+            success: false,
+            message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+          });
+        return;
+      }
+      if (!reason) {
+        res.status(400).json({
+          success: false,
+          message: ERROR_MESSAGES.CANCELLATION_REASON_REQUIRED,
+        });
+        return;
+      }
+      const result = await this._requesthostedGameCancellationUseCase.execute(
+        userId,
+        hostedGameId,
+        reason
+      );
+
+      res.status(200).json({
+        success: true,
+        message: SUCCESS_MESSAGES.HOSTES_GAME_CANCELLATION_REQUESTED,
+        data: result,
+      });
+    } catch (err) {
+      if (err instanceof CustomError) {
+        res.status(err.statusCode).json({
+          success: false,
+          message: err.message,
+        });
+      }
     }
   }
 }
