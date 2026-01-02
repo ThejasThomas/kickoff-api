@@ -28,14 +28,26 @@ export class CancelrequestRepository
     return await CancellationRequestModel.create(data);
   }
   async getCancelRequestByOwnerId(
-    ownerId: string
-  ): Promise<ICancellationRequestEntity[]> {
-    const request = await CancellationRequestModel.find({ ownerId }).sort({
-      createdAt: -1,
-    });
+    ownerId: string,
+    page:number,
+    limit:number
+  ): Promise<{requests:ICancellationRequestEntity[];total:number}> {
+    const skip=(page-1)*limit;
+
+    const [requests,total] = await Promise.all([
+          CancellationRequestModel.find({ownerId})
+          .sort({createdAt:-1})
+          .skip(skip)
+          .limit(limit)
+          .lean(),
+
+          CancellationRequestModel.countDocuments({ownerId})
+    ])
+    
+    
     const result = [];
 
-    for (const req of request) {
+    for (const req of requests) {
       const booking = await BookinModel.findById(req.bookingId).lean();
       const user = await ClientModel.findOne({ userId: req.userId }).lean();
 
@@ -69,7 +81,7 @@ export class CancelrequestRepository
       });
     }
     console.log("resultttt", result);
-    return result;
+    return {requests:result,total};
   }
   async updateStatus(id: string, status: string): Promise<ICancellationRequestEntity | null> {
     return await CancellationRequestModel.findByIdAndUpdate(

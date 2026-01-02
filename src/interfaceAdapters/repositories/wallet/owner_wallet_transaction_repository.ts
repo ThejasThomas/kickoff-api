@@ -29,6 +29,9 @@ export class OwnerWalletTransactionRepository
     const [transactions, totalResult] = await Promise.all([
       OwnerWalletTransactionModel.aggregate([
         { $match: { ownerId } },
+        {$sort:{transactionDate:-1}},
+        {$skip:skip},
+        {$limit:limit},
 
         {
           $lookup: {

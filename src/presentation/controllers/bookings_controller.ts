@@ -147,18 +147,22 @@ export class BookingsController implements IBookingsController {
     try {
       const userId = (req as CustomRequest).user?.userId;
 
+      const page =Number(req.query.page)|| 1;
+      const limit =Number(req.query.limit) || 4;
+
+
       if (!userId) {
         throw new CustomError(
           ERROR_MESSAGES.USER_NOT_FOUND,
           HTTP_STATUS.UNAUTHORIZED
         );
       }
-      const bookings = await this._getPastBookingsUseCase.execute(userId);
+      const bookings = await this._getPastBookingsUseCase.execute(userId,page,limit);
 
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.BOOKINGS_FETCHED_SUCCESSFULLY,
-        bookings,
+        ...bookings,
       });
     } catch (error) {
       if (error instanceof CustomError) {
@@ -303,6 +307,9 @@ export class BookingsController implements IBookingsController {
   async getCancelRequestBookings(req: Request, res: Response): Promise<void> {
     try {
       const ownerId = (req as CustomRequest).user?.userId;
+      const page=Number(req.query.page)|| 1;
+      const limit=Number(req.query.limit) ||4;
+
       if (!ownerId) {
         throw new CustomError(
           ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
@@ -310,13 +317,13 @@ export class BookingsController implements IBookingsController {
         );
         return;
       }
-      const requests = await this._getCancellBookingsUseCase.execute(ownerId);
+      const requests = await this._getCancellBookingsUseCase.execute(ownerId,page,limit);
       console.log("requesttss", requests);
 
       res.status(200).json({
         success: true,
         message: "Cancellation requests fetched successfully",
-        data: requests,
+        ...requests,
       });
     } catch (err) {
       console.log(err);

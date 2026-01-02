@@ -10,8 +10,23 @@ export class GetCancelBookingRequestsUsecase implements IGetCancelRequestsUseCas
          @inject("ICancelRequestRepository")
         private _cancelRequestRepo:ICancelRequestRepository
     ){}   
-    async execute(ownerId: string): Promise<ICancellationRequestEntity[]> {
-        console.log('oenerrrrrBroooo',ownerId)
-        return await this._cancelRequestRepo.getCancelRequestByOwnerId(ownerId)
+    async execute(ownerId: string,page:number,limit:number): Promise<{requests:ICancellationRequestEntity[],total:number,page:number,limit:number,totalPages:number}> {
+        const currentPage=Math.max(page,1)
+        const currentLimit=Math.max(limit,1)
+
+        const {requests,total}=await this._cancelRequestRepo.getCancelRequestByOwnerId(
+            ownerId,
+            currentPage,
+            currentLimit
+        )
+        console.log("yayyyyyy",requests,total)
+
+        return {
+            requests,
+            total,
+            page:currentPage,
+            limit:currentLimit,
+            totalPages:Math.ceil(total/currentLimit)
+        }
     }
 }

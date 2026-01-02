@@ -4,6 +4,6 @@ import { IBaseRepository } from "../base-repository.interface";
 export interface ICancelRequestRepository extends IBaseRepository<ICancellationRequestEntity>{
     findByBookingId(bookingId:string):Promise<ICancellationRequestEntity|null>
     createRequest(data:ICancellationRequestEntity):Promise<ICancellationRequestEntity>
-    getCancelRequestByOwnerId(ownerId:string):Promise<ICancellationRequestEntity[]>
+    getCancelRequestByOwnerId(ownerId:string,page:number,limit:number):Promise<{requests:ICancellationRequestEntity[];total:number}>
     updateStatus(id:string,status:string):Promise<ICancellationRequestEntity | null>
 }

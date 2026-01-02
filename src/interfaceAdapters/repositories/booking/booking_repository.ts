@@ -91,19 +91,28 @@ export class BookingRepository
     }
   }
 
-  async findPastByUserId(userId: string): Promise<IBookingModel[]> {
+  async findPastByUserId(userId: string,skip:number,limit:number): Promise<{bookings:IBookingModel[];total:number}> {
     try {
       const now = new Date();
       const currentDateStr = now.toISOString().split("T")[0];
 
-      const bookings = await BookinModel.find({
+      const filter = {
         userId,
         $or: [
           { date: { $lt: currentDateStr } },
           { date: currentDateStr, endTime: { $lt: currentDateStr } },
         ],
-      }).exec();
-      return bookings;
+      }
+
+      const [bookings,total]=await Promise.all([
+        BookinModel.find(filter)
+        .sort({date:-1})
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+        BookinModel.countDocuments(filter)
+      ])
+      return {bookings,total}
     } catch (error) {
       console.log(error)
       throw new CustomError(

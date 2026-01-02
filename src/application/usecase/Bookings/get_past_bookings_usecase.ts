@@ -20,8 +20,10 @@ export class GetPastBookingsUseCase implements IGetPastBookingsUseCase {
     private _ratingRepository: IRatingRepository
   ) {}
 
-  async execute(userId: string): Promise<PastBookingDTO[]> {
-    const bookings = await this._bookingRepository.findPastByUserId(userId);
+  async execute(userId: string,page:number,limit:number): Promise<{bookings:PastBookingDTO[];total:number;page:number;limit:number;totalPages:number}> {
+    const skip=(page-1)*limit;
+
+    const {bookings,total} = await this._bookingRepository.findPastByUserId(userId,skip,limit);
 
     const bookingIds = bookings.map((b) => b._id.toString());
 
@@ -35,10 +37,16 @@ export class GetPastBookingsUseCase implements IGetPastBookingsUseCase {
     const reviewedSet = new Set(reviewsBookingIds);
     const ratedSet = new Set(ratedBookingIds);
 
-    return bookings.map((b) => ({
+    return{ 
+      bookings:bookings.map((b) => ({
       ...mapPastBookingDTO(b),
       hasReviewed: reviewedSet.has(b._id.toString()),
       hasRated: ratedSet.has(b._id.toString()),
-    }));
+    })),
+    total,
+    page,
+    limit,
+    totalPages:Math.ceil(total/limit)
+  }
   }
 }
