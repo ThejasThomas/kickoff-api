@@ -1,5 +1,5 @@
-import { IAdminWalletEntity } from "../../models/admin_wallet_entity";
+import { IAdminWalletDTO } from "../../../application/dtos/admin_wallet_dto";
 
 export interface IGetAdminWalletUseCase {
-    execute():Promise<IAdminWalletEntity>
+    execute():Promise<IAdminWalletDTO>
 }

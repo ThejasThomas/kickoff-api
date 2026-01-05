@@ -77,6 +77,7 @@ const initSocket = (server) => {
                 });
             }
             catch (err) {
+                console.log(err);
                 socket.emit("deleteError", {
                     message: "Cannot delete message",
                 });

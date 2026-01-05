@@ -9,12 +9,11 @@ export default defineConfig([
     languageOptions: {
       globals: globals.node,
     },
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+
       "no-console": "off",
     },
   },

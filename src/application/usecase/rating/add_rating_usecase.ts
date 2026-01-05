@@ -2,9 +2,9 @@ import { inject, injectable } from "tsyringe";
 import { IAddRatingUseCase } from "../../../domain/useCaseInterfaces/ratings/add_rating_usecase_interface";
 import { IRatingRepository } from "../../../domain/repositoryInterface/Turf/rating_repository_interface";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
-import { IRatingEntity } from "../../../domain/models/rating_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { IRatingDTO } from "../../dtos/rating_dto";
 
 @injectable()
 export class AddRatingUseCase implements IAddRatingUseCase {
@@ -20,7 +20,7 @@ export class AddRatingUseCase implements IAddRatingUseCase {
     turfId: string;
     bookingId: string;
     rating: number;
-  }): Promise<IRatingEntity> {
+  }): Promise<IRatingDTO> {
     const { userId, turfId, bookingId, rating } = data;
 
     const booking = await this._bookingRepo.findById(bookingId);

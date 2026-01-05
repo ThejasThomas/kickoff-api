@@ -85,6 +85,7 @@ export const initSocket = (server: http.Server) => {
             messageId: data.messageId,
           });
         } catch (err) {
+          console.log(err)
           socket.emit("deleteError", {
             message: "Cannot delete message",
           });

@@ -15,6 +15,8 @@ import fs from "fs";
 import path from "path";
 import { PaymentRoutes } from "../routes/stripe_route";
 import { handleErrorResponse } from "../../shared/utils/error_handler";
+import { createStream } from "rotating-file-stream";
+
 
 
 export class ExpressServer {
@@ -51,16 +53,15 @@ export class ExpressServer {
             fs.mkdirSync(logsDir, { recursive: true });
         }
     
+    const accessLogStream = createStream("access.log", {
+  interval: "1d",     
+  path: logsDir,
+  maxFiles: 10,        
+  compress: "gzip",
+});
 
-
-    const logStream=fs.createWriteStream(
-   path.join(logsDir,"access.log"),
-   {flags:'a'}
-
-   
-  )
   this._app.use(morgan("dev"));
-  this._app.use(morgan("combined", { stream: logStream }));
+  this._app.use(morgan("combined", { stream: accessLogStream }));
   }
 
   private configureRoutes(): void {

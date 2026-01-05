@@ -1,6 +1,6 @@
+import { IBookingDTO } from "../../../application/dtos/booking_dto";
 import { OfflineBookingRequestDTO } from "../../../application/dtos/offlineBookingsDTO";
-import { IBookingEntity } from "../../models/booking_entity";
 
 export interface IOfflineBookingsUseCase{
-    execute(bookData:OfflineBookingRequestDTO,userId:string):Promise<IBookingEntity[]>
+    execute(bookData:OfflineBookingRequestDTO,userId:string):Promise<IBookingDTO[]>
 }

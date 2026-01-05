@@ -197,7 +197,7 @@ export class UserController implements IUserController {
         });
         return;
       }
-      let frontendUrl = process.env.FRONTEND_URL;
+      const frontendUrl = process.env.FRONTEND_URL;
       if (!frontendUrl) {
         console.error("Missing FRONTEND_URL env var");
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
@@ -364,7 +364,7 @@ async createHostedGameCheckoutSession(req: Request, res: Response): Promise<void
       pricePerPlayer: pricePerPlayer.toString()
     };
 
-    const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
+    // const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
 
     const successUrl = `${frontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${frontendUrl}/host-game-payment?status=cancelled`;

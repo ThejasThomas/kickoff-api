@@ -2,10 +2,10 @@ import { inject, injectable } from "tsyringe";
 import { IRequestHostedGameCancelUseCase } from "../../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { ICancelRequestRepository } from "../../../domain/repositoryInterface/booking/cancel_request_repository";
-import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { ITurfRepository } from "../../../domain/repositoryInterface/Turf/turf_repository_interface";
+import { CancellationRequestDTO } from "../../dtos/cancellation_request_dto";
 
 @injectable()
 
@@ -19,7 +19,7 @@ export class RequestCancelHostedGameUseCase implements IRequestHostedGameCancelU
         private _turfRepository:ITurfRepository
     ){}
 
-    async execute(userId: string, hostedGameId: string, reason: string): Promise<ICancellationRequestEntity> {
+    async execute(userId: string, hostedGameId: string, reason: string): Promise<CancellationRequestDTO> {
         const game = await this._hostedGameRepository.findById(hostedGameId)
 
         if(!game){
@@ -62,7 +62,7 @@ export class RequestCancelHostedGameUseCase implements IRequestHostedGameCancelU
     await this._hostedGameRepository.updateStatusById(hostedGameId,"pending_cancel")
     const ownerId=turf.ownerId
 
-   const request:ICancellationRequestEntity ={
+   const request:CancellationRequestDTO ={
     hostedGameId,
     userId,
     ownerId,

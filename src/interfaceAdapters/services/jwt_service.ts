@@ -10,9 +10,7 @@ import ms from "ms";
 //      role:string,
 // }
 
-export interface ResetTokenPayload extends JwtPayload {
-
-}
+export interface ResetTokenPayload extends JwtPayload {}
 
 @injectable()
 export class JWTService implements ITokenService {

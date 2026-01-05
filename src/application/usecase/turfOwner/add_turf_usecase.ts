@@ -5,6 +5,7 @@ import { IValidateOwnerService } from "../../../domain/serviceInterfaces/validat
 import { ITurfEntity } from "../../../domain/models/turf_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { ITurfResponseDTO } from "../../dtos/turf_dto_response";
 
 
 @injectable()
@@ -16,7 +17,7 @@ export class AddTurfUseCase implements IAddTurfUseCase {
     private _validateOwnerUsecase: IValidateOwnerService
   ) {}
 
-  async execute(turfData: ITurfEntity, ownerId: string): Promise<ITurfEntity> {
+  async execute(turfData: ITurfEntity, ownerId: string): Promise<ITurfResponseDTO> {
   
 
     try {

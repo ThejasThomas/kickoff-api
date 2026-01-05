@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IGetCancelRequestsUseCase } from "../../../domain/useCaseInterfaces/Bookings/get_cancel_booking_requests_interface";
 import { ICancelRequestRepository } from "../../../domain/repositoryInterface/booking/cancel_request_repository";
-import { ICancellationRequestEntity } from "../../../domain/models/cancellationRequest_entity";
+import { CancellationRequestDTO } from "../../dtos/cancellation_request_dto";
 
 @injectable()
 
@@ -10,7 +10,7 @@ export class GetCancelBookingRequestsUsecase implements IGetCancelRequestsUseCas
          @inject("ICancelRequestRepository")
         private _cancelRequestRepo:ICancelRequestRepository
     ){}   
-    async execute(ownerId: string,page:number,limit:number): Promise<{requests:ICancellationRequestEntity[],total:number,page:number,limit:number,totalPages:number}> {
+    async execute(ownerId: string,page:number,limit:number): Promise<{requests:CancellationRequestDTO[],total:number,page:number,limit:number,totalPages:number}> {
         const currentPage=Math.max(page,1)
         const currentLimit=Math.max(limit,1)
 

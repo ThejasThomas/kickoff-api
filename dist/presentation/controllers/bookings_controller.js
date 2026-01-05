@@ -26,7 +26,7 @@ const tsyringe_1 = require("tsyringe");
 const custom_error_1 = require("../../domain/utils/custom.error");
 const constants_1 = require("../../shared/constants");
 let BookingsController = class BookingsController {
-    constructor(_getBookingsUseCase, _getUpcomingBookingsUseCase, _getBookedTurfUseCase, _getPastBookingsUseCase, _requestCancelBookingUseCase, _handleOwnerCancelUseCase, _getCancellBookingsUseCase, _createHostedGameUseCase, _getUpcomingHostedGamesUseCase, _joinHostedGameUsecase, _getSingleHostedGameUseCase, _holdSlotUseCase, _getUpcomingHostedGamesByUser, _requesthostedGameCancellationUseCase) {
+    constructor(_getBookingsUseCase, _getUpcomingBookingsUseCase, _getBookedTurfUseCase, _getPastBookingsUseCase, _requestCancelBookingUseCase, _handleOwnerCancelUseCase, _getCancellBookingsUseCase, _createHostedGameUseCase, _getUpcomingHostedGamesUseCase, _joinHostedGameUsecase, _getSingleHostedGameUseCase, _holdSlotUseCase, _getUpcomingHostedGamesByUser, _requesthostedGameCancellationUseCase, _releaseSlotUsecase) {
         this._getBookingsUseCase = _getBookingsUseCase;
         this._getUpcomingBookingsUseCase = _getUpcomingBookingsUseCase;
         this._getBookedTurfUseCase = _getBookedTurfUseCase;
@@ -41,6 +41,7 @@ let BookingsController = class BookingsController {
         this._holdSlotUseCase = _holdSlotUseCase;
         this._getUpcomingHostedGamesByUser = _getUpcomingHostedGamesByUser;
         this._requesthostedGameCancellationUseCase = _requesthostedGameCancellationUseCase;
+        this._releaseSlotUsecase = _releaseSlotUsecase;
     }
     getAllbookings(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -483,6 +484,21 @@ let BookingsController = class BookingsController {
             }
         });
     }
+    releaseSlot(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const { turfId, date, startTime, endTime } = req.body;
+                const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.userId;
+                yield this._releaseSlotUsecase.execute(turfId, date, startTime, endTime, userId);
+                res.status(200).json({ success: true });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ success: true });
+            }
+        });
+    }
 };
 exports.BookingsController = BookingsController;
 exports.BookingsController = BookingsController = __decorate([
@@ -501,5 +517,6 @@ exports.BookingsController = BookingsController = __decorate([
     __param(11, (0, tsyringe_1.inject)("IHoldSlotUseCase")),
     __param(12, (0, tsyringe_1.inject)("IGetUpcomingHostedGamesByUserUseCase")),
     __param(13, (0, tsyringe_1.inject)("IRequestHostedGameCancelUseCase")),
-    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object])
+    __param(14, (0, tsyringe_1.inject)("IReleaseSlotUsecase")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object])
 ], BookingsController);

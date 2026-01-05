@@ -6,15 +6,15 @@ import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { BookingDTO } from "../../dtos/get_booking_dto";
 import { mapBookingDTO } from "../../mappers/getBookingapper";
-import { IRedisTokenRepository } from "../../../domain/repositoryInterface/redis/redis_token_repository_interface";
+import { ISlotLockRepository } from "../../../domain/repositoryInterface/slotLock/slot_lock_repository_interface";
 
 @injectable()
 export class BookSlotUseCase implements IBookSlotUseCase {
   constructor(
     @inject("IBookingRepository")
     private _bookingRepository: IBookingRepository,
-    @inject("IRedisTokenRepository")
-    private _redisRepository: IRedisTokenRepository
+    @inject("ISlotLockRepository")
+    private _redisRepository: ISlotLockRepository
   ) {}
 
   async execute(bookData: IBookingEntity, userId: string): Promise<BookingDTO> {

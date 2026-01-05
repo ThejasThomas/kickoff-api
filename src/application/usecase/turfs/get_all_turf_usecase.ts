@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { IGetAllTurfsUseCase } from "../../../domain/useCaseInterfaces/turfOwner/turfs/get_all_turfs_usecase_interface";
 import { ITurfRepository } from "../../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ITurfEntity } from "../../../domain/models/turf_entity";
+import { ITurfResponseDTO } from "../../dtos/turf_dto_response";
 @injectable()
 export class GetAllTurfsUsecase implements IGetAllTurfsUseCase {
   constructor(
@@ -14,7 +15,7 @@ export class GetAllTurfsUsecase implements IGetAllTurfsUseCase {
     limit: number,
     search: string,
     status: string,
-  ): Promise<{ turfs: Omit<ITurfEntity, "ownerId">[]; totalPages: number }> {
+  ): Promise<{ turfs: Omit<ITurfResponseDTO, "ownerId">[]; totalPages: number }> {
     console.log('page','limit','search',page,limit,search)
     const skip = (page - 1) * limit;
     const filter: any = {};

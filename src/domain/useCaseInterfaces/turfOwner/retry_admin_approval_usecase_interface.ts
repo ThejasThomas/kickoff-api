@@ -1,5 +1,5 @@
-import { ITurfOwnerEntity } from "../../models/turfOwner_entity"
+import { ITurfOwnerDTO } from "../../../application/dtos/turfowner_dto";
 
 export interface IRetryAdminApprovalUseCase {
-    execute(ownerId:string):Promise<ITurfOwnerEntity>;
+    execute(ownerId:string):Promise<ITurfOwnerDTO>;
 }

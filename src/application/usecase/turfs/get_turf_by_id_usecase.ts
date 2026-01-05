@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { IGetTurfByIdUseCase } from "../../../domain/useCaseInterfaces/turfOwner/turfs/get_turf_by_id_usecase_interface";
 import { ITurfRepository } from "../../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ITurfEntity } from "../../../domain/models/turf_entity";
+import { ITurfResponseDTO } from "../../dtos/turf_dto_response";
 
 @injectable()
 export class GetTurfByIdUseCase implements IGetTurfByIdUseCase {
@@ -10,7 +11,7 @@ export class GetTurfByIdUseCase implements IGetTurfByIdUseCase {
         private _turfRepository:ITurfRepository
     ){}
 
-    async execute(turfId: string): Promise<ITurfEntity> {
+    async execute(turfId: string): Promise<ITurfResponseDTO> {
         const filter = {_id:turfId};
 
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IChatGroupRepository } from "../../../domain/repositoryInterface/chatgroup/chat_group_repository_interface";
 import { IGetUserChatGroupsUseCase } from "../../../domain/useCaseInterfaces/users/get_user_caht_group_interface";
-import { IChatGroupMembersEntity } from "../../../domain/models/chat_group_members_entity";
+import { IChatGroupMembersDTO } from "../../dtos/chat_members_dto";
 
 @injectable()
 export class GetUserChatGroupUseCase implements IGetUserChatGroupsUseCase{
@@ -9,7 +9,7 @@ export class GetUserChatGroupUseCase implements IGetUserChatGroupsUseCase{
         @inject("IChatGroupRepository")
         private _chatGroupRepo:IChatGroupRepository
     ){}
-    async execute(userId: string): Promise<IChatGroupMembersEntity[]> {
+    async execute(userId: string): Promise<IChatGroupMembersDTO[]> {
         return this._chatGroupRepo.findGroupsByUserId(userId)
     }
     

@@ -46,17 +46,22 @@ let createHostedGameUseCase = class createHostedGameUseCase {
                 throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.INVALID_COURT_TYPE, constants_1.HTTP_STATUS.BAD_REQUEST);
             }
             const capacity = capacityMap[data.courtType];
-            const gameStartAt = moment_timezone_1.default.tz(`${data.slotDate} ${data.startTime}`, "YYYY-MM-DD HH:mm", "Asia/Kolkata").utc().toDate();
-            const gameData = Object.assign(Object.assign({}, data), { capacity, status: "open", gameStartAt, players: [{
+            const gameStartAt = moment_timezone_1.default
+                .tz(`${data.slotDate} ${data.startTime}`, "YYYY-MM-DD HH:mm", "Asia/Kolkata")
+                .utc()
+                .toDate();
+            const gameData = Object.assign(Object.assign({}, data), { capacity, status: "open", gameStartAt, players: [
+                    {
                         userId: data.hostUserId,
                         status: "paid",
                         paymentId: "stripe",
                         joinedAt: new Date().toISOString(),
-                    }] });
+                    },
+                ] });
             const game = yield this._hostedGameRepo.createGame(gameData);
             yield this._createChatGroupUseCase.execute({
                 hostedGameId: game._id.toString(),
-                hostUserId: data.hostUserId
+                hostUserId: data.hostUserId,
             });
             return game;
         });

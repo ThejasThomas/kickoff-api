@@ -77,6 +77,6 @@ exports.ForgotPasswordUseCase = ForgotPasswordUseCase = __decorate([
     __param(2, (0, tsyringe_1.inject)('IAdminRepository')),
     __param(3, (0, tsyringe_1.inject)('IEmailService')),
     __param(4, (0, tsyringe_1.inject)('ITokenService')),
-    __param(5, (0, tsyringe_1.inject)('IRedisTokenRepository')),
+    __param(5, (0, tsyringe_1.inject)('IPasswordResetTokenRepository')),
     __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object])
 ], ForgotPasswordUseCase);

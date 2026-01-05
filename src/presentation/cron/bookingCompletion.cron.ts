@@ -13,9 +13,10 @@ import {
   OwnerWalletTransactionType,
 } from "../../domain/models/ownerWallet_transaction_entity";
 import { Types } from "mongoose";
+const CRON_SCHEDULE = process.env.BOOKING_CRON_SCHEDULE || "* * * * *";
 
 export const startBookingCompletionCron = () => {
-  cron.schedule("* * * * *", async () => {
+  cron.schedule(CRON_SCHEDULE, async () => {
     try {
       const now = new Date();
 

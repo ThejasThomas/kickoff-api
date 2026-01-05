@@ -84,6 +84,7 @@ const get_turf_rating_usecase_1 = require("../../application/usecase/rating/get_
 const delete_message_usecase_1 = require("../../application/usecase/messages/delete_message_usecase");
 const get_upcoming_hosted_games_1 = require("../../application/usecase/Bookings/get_upcoming_hosted_games");
 const cancel_hosted_game_usecase_1 = require("../../application/usecase/Bookings/cancel_hosted_game_usecase");
+const release_slot_usecase_1 = require("../../application/usecase/Bookings/release_slot_usecase");
 class UseCaseRegistry {
     static registerUseCases() {
         tsyringe_1.container.register("IOtpService", {
@@ -329,6 +330,9 @@ class UseCaseRegistry {
         });
         tsyringe_1.container.register("IRequestHostedGameCancelUseCase", {
             useClass: cancel_hosted_game_usecase_1.RequestCancelHostedGameUseCase
+        });
+        tsyringe_1.container.register("IReleaseSlotUsecase", {
+            useClass: release_slot_usecase_1.ReleaseSlotUseCase
         });
     }
 }

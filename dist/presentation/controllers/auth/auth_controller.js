@@ -115,6 +115,7 @@ let AuthController = class AuthController {
                 const refreshTokenName = `${user.role}_refresh_token`;
                 (0, cookie_helper_1.setAuthCookies)(res, tokens.accessToken, tokens.refreshToken, accessTokenName, refreshTokenName);
                 const { password } = user, userWithoutPassword = __rest(user, ["password"]);
+                console.log(password);
                 if (userWithoutPassword.status === "pending" &&
                     userWithoutPassword.role === "turfOwner") {
                     res.status(constants_1.HTTP_STATUS.OK).json({

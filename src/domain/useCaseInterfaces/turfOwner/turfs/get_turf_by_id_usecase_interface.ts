@@ -1,5 +1,5 @@
-import { ITurfEntity } from "../../../models/turf_entity";
+import { ITurfResponseDTO } from "../../../../application/dtos/turf_dto_response";
 
 export interface IGetTurfByIdUseCase{
-    execute(turfId:string):Promise<ITurfEntity>;
+    execute(turfId:string):Promise<ITurfResponseDTO>;
 }

@@ -2,9 +2,9 @@ import { inject, injectable } from "tsyringe";
 import { IRetryAdminApprovalUseCase } from "../../../domain/useCaseInterfaces/turfOwner/retry_admin_approval_usecase_interface";
 import { ITurfOwnerRepository } from "../../../domain/repositoryInterface/users/turf_owner-repository.interface";
 import { IValidateOwnerService } from "../../../domain/serviceInterfaces/validate_owner_service_interface";
-import { ITurfOwnerEntity } from "../../../domain/models/turfOwner_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { ITurfOwnerDTO } from "../../dtos/turfowner_dto";
 
 @injectable()
 export class RetryAdminApprovalUseCase implements IRetryAdminApprovalUseCase {
@@ -15,7 +15,7 @@ export class RetryAdminApprovalUseCase implements IRetryAdminApprovalUseCase {
         private _validateOwnerService:IValidateOwnerService
     ) {}
 
-    async execute(userId: string): Promise<ITurfOwnerEntity> {
+    async execute(userId: string): Promise<ITurfOwnerDTO> {
         try {
             const owner = await this._validateOwnerService.findOwner(userId)
             if (!owner) {

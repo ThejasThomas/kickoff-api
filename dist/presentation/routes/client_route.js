@@ -30,6 +30,9 @@ class ClientRoutes extends base_route_1.BaseRoute {
         this.router.post("/client/hold-slot", auth_middleware_1.verifyAuth, (req, res) => {
             resolver_1.bookingsController.holdSlot(req, res);
         });
+        this.router.post("/client/release-slot", auth_middleware_1.verifyAuth, (req, res) => {
+            resolver_1.bookingsController.releaseSlot(req, res);
+        });
         this.router.post("/client/bookslots", auth_middleware_1.verifyAuth, (req, res) => {
             resolver_1.turfController.bookslots(req, res);
         });

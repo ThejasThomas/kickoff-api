@@ -1,11 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import { IGetBookingsUseCase } from "../../../domain/useCaseInterfaces/Bookings/get_bookings_useCase_interface";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
-import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { mapBookingDTOList } from "../../mappers/getBookingapper";
-import { BookingDTO } from "../../dtos/get_booking_dto";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { OwnerBookingDTO } from "../../dtos/Owner_booking_dto";
 import { ITurfOwnerRepository } from "../../../domain/repositoryInterface/users/turf_owner-repository.interface";

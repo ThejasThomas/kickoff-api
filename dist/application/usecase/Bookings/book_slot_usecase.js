@@ -76,6 +76,6 @@ exports.BookSlotUseCase = BookSlotUseCase;
 exports.BookSlotUseCase = BookSlotUseCase = __decorate([
     (0, tsyringe_1.injectable)(),
     __param(0, (0, tsyringe_1.inject)("IBookingRepository")),
-    __param(1, (0, tsyringe_1.inject)("IRedisTokenRepository")),
+    __param(1, (0, tsyringe_1.inject)("ISlotLockRepository")),
     __metadata("design:paramtypes", [Object, Object])
 ], BookSlotUseCase);

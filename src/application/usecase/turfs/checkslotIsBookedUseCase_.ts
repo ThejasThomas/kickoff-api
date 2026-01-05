@@ -3,9 +3,9 @@ import { ICheckSlotIsBookedUseCase } from "../../../domain/useCaseInterfaces/tur
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { IBlockedSlotRepository } from "../../../domain/repositoryInterface/Turf/blocked_slot_repository_interface";
-import { ISlotAvailabilityResultEntity } from "../../dtos/slot_availability_result_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { ISlotAvailabilityResultDTO } from "../../dtos/slot_availabilty_dto";
 
 @injectable()
 export class CheckSlotIsBooked implements ICheckSlotIsBookedUseCase {
@@ -23,7 +23,7 @@ export class CheckSlotIsBooked implements ICheckSlotIsBookedUseCase {
     date: string,
     startTime: string,
     endTime: string
-  ): Promise<ISlotAvailabilityResultEntity> {
+  ): Promise<ISlotAvailabilityResultDTO> {
     if (!turfId || !date || !startTime || !endTime) {
       throw new CustomError(
         ERROR_MESSAGES.INVALID_CREDENTIALS,

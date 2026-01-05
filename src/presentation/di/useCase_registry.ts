@@ -162,6 +162,8 @@ import { IGetUpcomingHostedGamesByUserUseCase } from "../../domain/useCaseInterf
 import { GetUpcomingHostedGameByUserUseCase } from "../../application/usecase/Bookings/get_upcoming_hosted_games";
 import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
 import { RequestCancelHostedGameUseCase } from "../../application/usecase/Bookings/cancel_hosted_game_usecase";
+import { IReleaseSlotUsecase } from "../../domain/useCaseInterfaces/Bookings/release_slot_usecase_interface";
+import { ReleaseSlotUseCase } from "../../application/usecase/Bookings/release_slot_usecase";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -434,6 +436,9 @@ export class UseCaseRegistry {
     })
     container.register<IRequestHostedGameCancelUseCase>("IRequestHostedGameCancelUseCase",{
       useClass:RequestCancelHostedGameUseCase
+    })
+    container.register<IReleaseSlotUsecase>("IReleaseSlotUsecase",{
+      useClass:ReleaseSlotUseCase
     })
   }
 }

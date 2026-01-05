@@ -42,6 +42,6 @@ let HoldSlotUseCase = class HoldSlotUseCase {
 exports.HoldSlotUseCase = HoldSlotUseCase;
 exports.HoldSlotUseCase = HoldSlotUseCase = __decorate([
     (0, tsyringe_1.injectable)(),
-    __param(0, (0, tsyringe_1.inject)("IRedisTokenRepository")),
+    __param(0, (0, tsyringe_1.inject)("ISlotLockRepository")),
     __metadata("design:paramtypes", [Object])
 ], HoldSlotUseCase);

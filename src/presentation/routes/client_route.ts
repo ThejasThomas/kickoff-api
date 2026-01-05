@@ -61,6 +61,13 @@ export class ClientRoutes extends BaseRoute {
       }
     );
     this.router.post(
+      "/client/release-slot",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        bookingsController.releaseSlot(req,res)
+      }
+    )
+    this.router.post(
       "/client/bookslots",
       verifyAuth,
       (req: Request, res: Response) => {

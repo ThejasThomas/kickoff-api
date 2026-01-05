@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
 import { IOfflineBookingsUseCase } from "../../../domain/useCaseInterfaces/Bookings/offline_booking_usecase_interface";
 import { IBookingEntity } from "../../../domain/models/booking_entity";
-import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { BookingDTO } from "../../dtos/get_booking_dto";
 import { OfflineBookingRequestDTO } from "../../dtos/offlineBookingsDTO";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { mapBookingDTO } from "../../mappers/getBookingapper";
+import { IBookingDTO } from "../../dtos/booking_dto";
 
 @injectable()
 export class OfflineBookingUseCase implements IOfflineBookingsUseCase{
@@ -16,7 +16,7 @@ export class OfflineBookingUseCase implements IOfflineBookingsUseCase{
         private _bookingRepository:IBookingRepository
     ){}
 
-    async execute(bookData: OfflineBookingRequestDTO, userId: string): Promise<IBookingEntity[]> {
+    async execute(bookData: OfflineBookingRequestDTO, userId: string): Promise<IBookingDTO[]> {
         try{
             const normalizedDate = this.formatToISODate(bookData.date);
             if (!bookData.slots || !bookData.slots.length) {

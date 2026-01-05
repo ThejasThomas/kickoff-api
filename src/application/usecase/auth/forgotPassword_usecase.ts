@@ -8,7 +8,7 @@ import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { config } from "../../../shared/config";
 import { ITokenService } from "../../../domain/serviceInterfaces/token_service_interface";
-import { IRedisTokenRepository } from "../../../domain/repositoryInterface/redis/redis_token_repository_interface";
+import { IPasswordResetTokenRepository } from "../../../domain/repositoryInterface/passwordResetToken/password_reset_token_repository";
 
 
 @injectable()
@@ -24,8 +24,8 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
         private _emailService:IEmailService,
         @inject('ITokenService') 
         private _tokenService:ITokenService,
-        @inject('IRedisTokenRepository')
-        private _redisTokenRepository:IRedisTokenRepository,
+        @inject('IPasswordResetTokenRepository')
+        private _redisTokenRepository:IPasswordResetTokenRepository,
     ){}
 
     async execute({ email, role }: { email: string; role: string; }): Promise<void> {

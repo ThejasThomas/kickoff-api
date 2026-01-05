@@ -8,7 +8,6 @@ import { ISendEmailUseCase } from "../../../domain/useCaseInterfaces/common/send
 import { IClientRepository } from "../../../domain/repositoryInterface/users/client-repository.interface";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
-import { handleErrorResponse } from "../../../shared/utils/error_handler";
 
 @injectable()
 export class CancelSlotUseCase implements ICancelSlotUseCase {

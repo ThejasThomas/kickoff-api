@@ -4,7 +4,6 @@ import { IBookingRepository } from "../../../domain/repositoryInterface/booking/
 import { PastBookingDTO } from "../../dtos/get_booking_dto";
 import {
   mapPastBookingDTO,
-  mapPastBookingList,
 } from "../../mappers/getBookingapper";
 import { IReviewRepository } from "../../../domain/repositoryInterface/Turf/review_repository_interface";
 import { IRatingRepository } from "../../../domain/repositoryInterface/Turf/rating_repository_interface";

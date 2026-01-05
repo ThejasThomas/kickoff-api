@@ -1,7 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IGetUpcomingBookingUseCase } from "../../../domain/useCaseInterfaces/Bookings/get_upcoming_bookings_usecase_interface";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
-import { IBookingModel } from "../../../interfaceAdapters/database/mongoDb/models/booking_model";
 import { mapBookingDTOList } from "../../mappers/getBookingapper";
 import { BookingDTO } from "../../dtos/get_booking_dto";
 

@@ -4,9 +4,10 @@ import { ISlotEntity } from "../../../domain/models/slot_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IRuleRepository } from "../../../domain/repositoryInterface/Turf/rule_repository_interface";
-import { IRules, ITimeRange } from "../../../domain/models/rule_entity";
+import {  ITimeRange } from "../../../domain/models/rule_entity";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
+import { ISlotDTO } from "../../dtos/slot_dto";
 
 @injectable()
 export class GetSlotsUseCase implements IGetSlotsUseCase {
@@ -20,7 +21,7 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
     turfId: string,
     date: string,
     dayIndex: number
-  ): Promise<ISlotEntity[]> {
+  ): Promise<ISlotDTO[]> {
     try {
       const rules = await this._ruleRepository.findOne({ turfId });
       if (!rules) return [];

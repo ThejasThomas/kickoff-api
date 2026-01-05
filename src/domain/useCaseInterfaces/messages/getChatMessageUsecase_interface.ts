@@ -1,5 +1,5 @@
-import { IChatMessageEntity } from "../../models/chat_message_entity";
+import { IChatMessageDTO } from "../../../application/dtos/chat_message_dto";
 
 export interface IGetChatMessageUseCase{
-    execute(groupId:string):Promise<IChatMessageEntity[]>
+    execute(groupId:string):Promise<IChatMessageDTO[]>
 }

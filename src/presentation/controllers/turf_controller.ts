@@ -28,7 +28,6 @@ import { IAddReviewUseCase } from "../../domain/useCaseInterfaces/review/add_rev
 import { IGetTurfReviewsUseCase } from "../../domain/useCaseInterfaces/review/get_turf_review_usecase_interface";
 import { IDeleteReviewUseCase } from "../../domain/useCaseInterfaces/review/deleteReviewUseCase_interface";
 import { IAddRatingUseCase } from "../../domain/useCaseInterfaces/ratings/add_rating_usecase_interface";
-import { success } from "zod";
 import { IGetTurfRatingsUseCase } from "../../domain/useCaseInterfaces/ratings/get_turf_ratings_usecase_interface";
 
 @injectable()
@@ -600,6 +599,7 @@ export class TurfController implements ITurfController {
         ...result,
       });
     } catch (error: any) {
+      console.log(error)
       res.status(500).json({
         success: false,
         message: "Failed to fetch turf ratings",

@@ -22,8 +22,8 @@ import { IJoinHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/
 import { IGetSingleHostedGameUseCase } from "../../domain/useCaseInterfaces/Bookings/getSingleHostedGameUseCase_interface";
 import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
 import { IGetUpcomingHostedGamesByUserUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hosted_game_usecase_interface";
-import { handleErrorResponse } from "../../shared/utils/error_handler";
 import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
+import { IReleaseSlotUsecase } from "../../domain/useCaseInterfaces/Bookings/release_slot_usecase_interface";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -55,7 +55,9 @@ export class BookingsController implements IBookingsController {
     @inject("IGetUpcomingHostedGamesByUserUseCase")
     private _getUpcomingHostedGamesByUser: IGetUpcomingHostedGamesByUserUseCase,
     @inject("IRequestHostedGameCancelUseCase")
-    private _requesthostedGameCancellationUseCase: IRequestHostedGameCancelUseCase
+    private _requesthostedGameCancellationUseCase: IRequestHostedGameCancelUseCase,
+    @inject("IReleaseSlotUsecase")
+    private _releaseSlotUsecase:IReleaseSlotUsecase
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -556,6 +558,26 @@ export class BookingsController implements IBookingsController {
           message: err.message,
         });
       }
+    }
+  }
+   async releaseSlot(req: Request, res: Response): Promise<void> {
+    try{
+      const {turfId,date,startTime,endTime}=req.body;
+      const userId =(req as CustomRequest).user?.userId;
+
+      await this._releaseSlotUsecase.execute(
+        turfId,
+        date,
+        startTime,
+        endTime,
+        userId
+      )
+
+      res.status(200).json({success:true})
+
+    }catch(error){
+      console.log(error)
+      res.status(500).json({success:true})
     }
   }
 }

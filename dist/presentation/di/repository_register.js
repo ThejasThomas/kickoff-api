@@ -7,7 +7,7 @@ const client_repository_1 = require("../../interfaceAdapters/repositories/users/
 const turfOwner_Repository_1 = require("../../interfaceAdapters/repositories/users/turfOwner_Repository");
 const admin_repository_1 = require("../../interfaceAdapters/repositories/users/admin_repository");
 const refresh_token_repositories_1 = require("../../interfaceAdapters/repositories/auth/refresh_token_repositories");
-const redis_token_repository_1 = require("../../interfaceAdapters/repositories/redis/redis_token_repository");
+const slot_lock_repository_1 = require("../../interfaceAdapters/repositories/slotLock/slot_lock_repository");
 const turf_repository_1 = require("../../interfaceAdapters/repositories/turf/turf_repository");
 const slot_repository_1 = require("../../interfaceAdapters/repositories/turf/slot_repository");
 const booking_repository_1 = require("../../interfaceAdapters/repositories/booking/booking_repository");
@@ -26,6 +26,7 @@ const admin_wallet_repository_1 = require("../../interfaceAdapters/repositories/
 const admin_wallet_transaction_repository_1 = require("../../interfaceAdapters/repositories/wallet/admin_wallet_transaction_repository");
 const admin_dashboard_repository_interface_1 = require("../../interfaceAdapters/repositories/admindashboard/admin_dashboard_repository_interface");
 const rating_repository_1 = require("../../interfaceAdapters/repositories/turf/rating_repository");
+const passwordResetTokenRepository_1 = require("../../interfaceAdapters/repositories/passwordResetToken/passwordResetTokenRepository");
 class RepositoryRegistry {
     static registerRepositories() {
         tsyringe_1.container.register("IOtpRepository", {
@@ -43,8 +44,11 @@ class RepositoryRegistry {
         tsyringe_1.container.register("IRefreshTokenRepository", {
             useClass: refresh_token_repositories_1.RefreshTokenRepository,
         });
-        tsyringe_1.container.register("IRedisTokenRepository", {
-            useClass: redis_token_repository_1.RedisTokenRepository,
+        tsyringe_1.container.register("ISlotLockRepository", {
+            useClass: slot_lock_repository_1.SlotLockRepository,
+        });
+        tsyringe_1.container.register("IPasswordResetTokenRepository", {
+            useClass: passwordResetTokenRepository_1.PasswordResetTokenRepository
         });
         tsyringe_1.container.register("ITurfRepository", {
             useClass: turf_repository_1.TurfRepository,

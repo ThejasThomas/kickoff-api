@@ -21,8 +21,9 @@ const tsyringe_1 = require("tsyringe");
 const turf_model_1 = require("../../interfaceAdapters/database/mongoDb/models/turf_model");
 const ownerWallet_transaction_entity_1 = require("../../domain/models/ownerWallet_transaction_entity");
 const mongoose_1 = require("mongoose");
+const CRON_SCHEDULE = process.env.BOOKING_CRON_SCHEDULE || "* * * * *";
 const startBookingCompletionCron = () => {
-    node_cron_1.default.schedule("* * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
+    node_cron_1.default.schedule(CRON_SCHEDULE, () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const now = new Date();
             const adminWalletRepo = tsyringe_1.container.resolve("IAdminWalletRepository");

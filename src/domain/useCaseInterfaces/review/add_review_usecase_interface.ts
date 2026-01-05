@@ -1,4 +1,4 @@
-import { IReviewEntity } from "../../models/review_entity";
+import { IReviewDTO } from "../../../application/dtos/review_dto";
 
 export interface IAddReviewUseCase {
     execute(data:{
@@ -6,5 +6,5 @@ export interface IAddReviewUseCase {
         turfId:string;
         bookingId:string;
         comment:string
-    }):Promise<IReviewEntity>
+    }):Promise<IReviewDTO>
 }

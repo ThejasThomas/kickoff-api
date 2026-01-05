@@ -1,5 +1,4 @@
 import { ITurfOwnerEntity } from "../../domain/models/turfOwner_entity";
-import { ITurfOwnerModel } from "../../interfaceAdapters/database/mongoDb/models/turfOwner_model";
 import { IOwnerDTO } from "../dtos/owner_dto";
 
 export function mapOwnerDetails(entity: ITurfOwnerEntity): IOwnerDTO {

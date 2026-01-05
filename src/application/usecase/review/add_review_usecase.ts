@@ -2,9 +2,9 @@ import { inject, injectable } from "tsyringe";
 import { IAddReviewUseCase } from "../../../domain/useCaseInterfaces/review/add_review_usecase_interface";
 import { IReviewRepository } from "../../../domain/repositoryInterface/Turf/review_repository_interface";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
-import { IReviewEntity } from "../../../domain/models/review_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { IReviewDTO } from "../../dtos/review_dto";
 
 @injectable()
 
@@ -16,7 +16,7 @@ export class AddReviewUseCase implements IAddReviewUseCase{
         private _bookingRepo:IBookingRepository
     ){}
 
-    async execute(data: { userId: string; turfId: string; bookingId: string; comment: string; }): Promise<IReviewEntity> {
+    async execute(data: { userId: string; turfId: string; bookingId: string; comment: string; }): Promise<IReviewDTO> {
         const {userId,turfId,bookingId,comment}=data;
 
         console.log('comment',comment)

@@ -6,8 +6,7 @@ import { IAdminRepository } from "../../domain/repositoryInterface/users/admin-r
 import { AdminRepository } from "../../interfaceAdapters/repositories/users/admin_repository";
 import { IRefreshTokenRepository } from "../../domain/repositoryInterface/auth/refresh-token-repository.interface";
 import { RefreshTokenRepository } from "../../interfaceAdapters/repositories/auth/refresh_token_repositories";
-import { IRedisTokenRepository } from "../../domain/repositoryInterface/redis/redis_token_repository_interface";
-import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis_token_repository";
+import {  SlotLockRepository } from "../../interfaceAdapters/repositories/slotLock/slot_lock_repository";
 import { ITurfRepository } from "../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { TurfRepository } from "../../interfaceAdapters/repositories/turf/turf_repository";
 import { ISlotRepository } from "../../domain/repositoryInterface/Turf/slot_repository_interface";
@@ -44,6 +43,9 @@ import { IAdminDashboardRepository } from "../../domain/repositoryInterface/admi
 import { AdminDashboardRepository } from "../../interfaceAdapters/repositories/admindashboard/admin_dashboard_repository_interface";
 import { IRatingRepository } from "../../domain/repositoryInterface/Turf/rating_repository_interface";
 import { RatingRepository } from "../../interfaceAdapters/repositories/turf/rating_repository";
+import { ISlotLockRepository } from "../../domain/repositoryInterface/slotLock/slot_lock_repository_interface";
+import { IPasswordResetTokenRepository } from "../../domain/repositoryInterface/passwordResetToken/password_reset_token_repository";
+import { PasswordResetTokenRepository } from "../../interfaceAdapters/repositories/passwordResetToken/passwordResetTokenRepository";
 export class RepositoryRegistry {
   static registerRepositories(): void {
     container.register("IOtpRepository", {
@@ -63,8 +65,11 @@ export class RepositoryRegistry {
     container.register<IRefreshTokenRepository>("IRefreshTokenRepository", {
       useClass: RefreshTokenRepository,
     });
-    container.register<IRedisTokenRepository>("IRedisTokenRepository", {
-      useClass: RedisTokenRepository,
+    container.register<ISlotLockRepository>("ISlotLockRepository", {
+      useClass: SlotLockRepository,
+    });
+    container.register<IPasswordResetTokenRepository>("IPasswordResetTokenRepository",{
+      useClass:PasswordResetTokenRepository
     });
     container.register<ITurfRepository>("ITurfRepository", {
       useClass: TurfRepository,

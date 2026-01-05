@@ -131,6 +131,7 @@ export class AuthController implements IAuthController {
       );
 
       const { password, ...userWithoutPassword } = user;
+      console.log(password)
 
       if (
 				userWithoutPassword.status === "pending" &&

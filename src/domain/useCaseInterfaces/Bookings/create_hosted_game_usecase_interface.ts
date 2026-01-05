@@ -1,4 +1,4 @@
-import { IHostedGameEntity } from "../../models/hosted_game_entity";
+import { IHostedGameDTO } from "../../../application/dtos/hosted_game_dto";
 
 export interface ICreateHostedGameUseCase {
   execute(data: {
@@ -9,5 +9,5 @@ export interface ICreateHostedGameUseCase {
     startTime: string;
     endTime: string;
     pricePerPlayer: number;
-  }): Promise<IHostedGameEntity>
+  }): Promise<IHostedGameDTO>
 }

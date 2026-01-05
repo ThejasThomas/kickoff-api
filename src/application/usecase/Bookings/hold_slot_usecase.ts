@@ -1,15 +1,15 @@
 import { inject, injectable } from "tsyringe";
 import { IHoldSlotUseCase } from "../../../domain/useCaseInterfaces/Bookings/hold_slot_usecase_interface";
-import { IRedisTokenRepository } from "../../../domain/repositoryInterface/redis/redis_token_repository_interface";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { ISlotLockRepository } from "../../../domain/repositoryInterface/slotLock/slot_lock_repository_interface";
 
 @injectable()
 
 export class HoldSlotUseCase implements IHoldSlotUseCase{
     constructor(
-        @inject("IRedisTokenRepository")
-        private _redisRepository:IRedisTokenRepository
+        @inject("ISlotLockRepository")
+        private _redisRepository:ISlotLockRepository
     ){}
 
     async execute(turfId: string, date: string, startTime: string, endTime: string, userId: string): Promise<{success:boolean}> {

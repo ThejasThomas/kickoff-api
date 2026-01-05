@@ -1,4 +1,4 @@
-import { ITurfEntity } from "../../../models/turf_entity";
+import { ITurfResponseDTO } from "../../../../application/dtos/turf_dto_response";
 
 export interface IGetAllTurfsUseCase {
   execute(
@@ -8,7 +8,7 @@ export interface IGetAllTurfsUseCase {
     status: string,
     // excludeStatus: string[]
   ): Promise<{
-    turfs: Omit<ITurfEntity, "ownerId">[];
+    turfs: Omit<ITurfResponseDTO, "ownerId">[];
     totalPages: number;
   }>;
 }

@@ -4,6 +4,7 @@ import { IValidateOwnerService } from "../../../domain/serviceInterfaces/validat
 import { ITurfOwnerEntity } from "../../../domain/models/turfOwner_entity";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { CustomError } from "../../../domain/utils/custom.error";
+import { ITurfOwnerDTO } from "../../dtos/turfowner_dto";
 
 
 @injectable()
@@ -14,7 +15,7 @@ export class RequestUpdateProfileUseCase implements IRequestUpdateProfileUseCase
         private _validateOwnerService:IValidateOwnerService
     ) {}
 
-    async execute(ownerId: string, profileData: Partial<ITurfOwnerEntity>): Promise<ITurfOwnerEntity> {
+    async execute(ownerId: string, profileData: Partial<ITurfOwnerEntity>): Promise<ITurfOwnerDTO> {
         const existingOwner = await this._validateOwnerService.findOwner(ownerId);
         if(!existingOwner){
             throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND,HTTP_STATUS.NOT_FOUND);

@@ -1,5 +1,5 @@
-import { ISlotEntity } from "../../../models/slot_entity";
+import { ISlotDTO } from "../../../../application/dtos/slot_dto";
 
 export interface IGetSlotsUseCase {
-    execute(turfId:string,date:string,dayIndex:number):Promise<ISlotEntity[]>
+    execute(turfId:string,date:string,dayIndex:number):Promise<ISlotDTO[]>
 }

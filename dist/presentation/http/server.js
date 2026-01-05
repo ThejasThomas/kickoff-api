@@ -20,6 +20,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const stripe_route_1 = require("../routes/stripe_route");
 const error_handler_1 = require("../../shared/utils/error_handler");
+const rotating_file_stream_1 = require("rotating-file-stream");
 class ExpressServer {
     constructor() {
         this._app = (0, express_1.default)();
@@ -44,9 +45,14 @@ class ExpressServer {
         if (!fs_1.default.existsSync(logsDir)) {
             fs_1.default.mkdirSync(logsDir, { recursive: true });
         }
-        const logStream = fs_1.default.createWriteStream(path_1.default.join(logsDir, "access.log"), { flags: 'a' });
+        const accessLogStream = (0, rotating_file_stream_1.createStream)("access.log", {
+            interval: "1d",
+            path: logsDir,
+            maxFiles: 10,
+            compress: "gzip",
+        });
         this._app.use((0, morgan_1.default)("dev"));
-        this._app.use((0, morgan_1.default)("combined", { stream: logStream }));
+        this._app.use((0, morgan_1.default)("combined", { stream: accessLogStream }));
     }
     configureRoutes() {
         this._app.use("/auth", new auth_route_1.AuthRoutes().router);

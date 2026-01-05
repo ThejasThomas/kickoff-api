@@ -4,6 +4,7 @@ import { ITurfEntity } from "../../../domain/models/turf_entity";
 import { ITurfService } from "../../../domain/serviceInterfaces/turfService_interface";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { ITurfResponseDTO } from "../../dtos/turf_dto_response";
 
 @injectable()
 
@@ -12,7 +13,7 @@ export class UpdateTurfUseCase implements IUpdateTurfUseCase {
       @inject('ITurfService')
       private _turfService:ITurfService
     ){}
-    async execute(turfId: string, TurfData: Partial<ITurfEntity>,isRetryUpdate:boolean =false,retryToken?:string): Promise<ITurfEntity> {
+    async execute(turfId: string, TurfData: Partial<ITurfEntity>,isRetryUpdate:boolean =false,retryToken?:string): Promise<ITurfResponseDTO> {
             const existingTurf = await this._turfService.findTurfById(turfId)
             if(!existingTurf) {
                 throw new CustomError(ERROR_MESSAGES.TURF_NOT_FOUND,HTTP_STATUS.NOT_FOUND)

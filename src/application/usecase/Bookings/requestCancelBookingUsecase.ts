@@ -6,6 +6,7 @@ import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { ITurfRepository } from "../../../domain/repositoryInterface/Turf/turf_repository_interface";
 import { ICancelRequestRepository } from "../../../domain/repositoryInterface/booking/cancel_request_repository";
+import { CancellationRequestDTO } from "../../dtos/cancellation_request_dto";
 
 @injectable()
 export class RequestCancelBookingUseCase implements IRequestCancelBookingUseCase {
@@ -18,7 +19,7 @@ export class RequestCancelBookingUseCase implements IRequestCancelBookingUseCase
         private _cancelrequestRepository:ICancelRequestRepository
     ){}
 
-    async execute(userId: string, bookingId: string, reason: string): Promise<ICancellationRequestEntity> {
+    async execute(userId: string, bookingId: string, reason: string): Promise<CancellationRequestDTO> {
         const booking =await this._bookingRepository.findById(bookingId);
         if(!booking){
             throw new CustomError(
