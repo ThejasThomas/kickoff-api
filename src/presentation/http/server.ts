@@ -17,8 +17,6 @@ import { PaymentRoutes } from "../routes/stripe_route";
 import { expressErrorHandler } from "../../shared/utils/error_handler";
 import { createStream } from "rotating-file-stream";
 
-
-
 export class ExpressServer {
   private _app: Application;
 
@@ -29,6 +27,7 @@ export class ExpressServer {
   }
 
   private configureMiddlewares(): void {
+    this._app.set("trust proxy", 1);
     this._app.use(helmet());
     this._app.use(
       rateLimit({
@@ -48,20 +47,20 @@ export class ExpressServer {
     this._app.use(express.urlencoded({ extended: true }));
     this._app.use(cookieParser());
 
-     const logsDir = path.join(__dirname, "../shared/utils/logs");
-        if (!fs.existsSync(logsDir)) {
-            fs.mkdirSync(logsDir, { recursive: true });
-        }
-    
-    const accessLogStream = createStream("access.log", {
-  interval: "1d",     
-  path: logsDir,
-  maxFiles: 10,        
-  compress: "gzip",
-});
+    const logsDir = path.join(__dirname, "../shared/utils/logs");
+    if (!fs.existsSync(logsDir)) {
+      fs.mkdirSync(logsDir, { recursive: true });
+    }
 
-  this._app.use(morgan("dev"));
-  this._app.use(morgan("combined", { stream: accessLogStream }));
+    const accessLogStream = createStream("access.log", {
+      interval: "1d",
+      path: logsDir,
+      maxFiles: 10,
+      compress: "gzip",
+    });
+
+    this._app.use(morgan("dev"));
+    this._app.use(morgan("combined", { stream: accessLogStream }));
   }
 
   private configureRoutes(): void {
@@ -70,13 +69,11 @@ export class ExpressServer {
     this._app.use("/_ow", new OwnerRoutes().router);
     this._app.use("/_cl", new ClientRoutes().router);
     this._app.use("/api/cloudinary", new CloudinaryRoutes().router);
-    this._app.use("/api/payment",new PaymentRoutes().router)
-    this._app.use(expressErrorHandler)
+    this._app.use("/api/payment", new PaymentRoutes().router);
+    this._app.use(expressErrorHandler);
   }
-
 
   public getApp(): Application {
     return this._app;
   }
-  
 }
