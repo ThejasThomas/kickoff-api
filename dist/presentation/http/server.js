@@ -61,7 +61,7 @@ class ExpressServer {
         this._app.use("/_cl", new client_route_1.ClientRoutes().router);
         this._app.use("/api/cloudinary", new cloudinary_route_1.CloudinaryRoutes().router);
         this._app.use("/api/payment", new stripe_route_1.PaymentRoutes().router);
-        this._app.use(error_handler_1.handleErrorResponse);
+        this._app.use(error_handler_1.expressErrorHandler);
     }
     getApp() {
         return this._app;
