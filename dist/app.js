@@ -30,7 +30,7 @@ function startApp() {
             (0, bookingCompletion_cron_1.startBookingCompletionCron)();
             const httpServer = (0, http_1.createServer)(expressServer.getApp());
             (0, socket_1.initSocket)(httpServer);
-            httpServer.listen(config_1.config.server.PORT, () => {
+            httpServer.listen(Number(config_1.config.server.PORT), "0.0.0.0", () => {
                 console.log(chalk_1.default.yellowBright.bold(`Server running at ${chalk_1.default.blueBright(`http://localhost:${config_1.config.server.PORT}`)}`));
                 console.log(chalk_1.default.greenBright("--------------------------------------------------\n"));
             });
