@@ -9,6 +9,8 @@ export const handleErrorResponse = (
   res: Response,
   error: unknown
 ) => {
+  console.error(error);
+  
   logger.error(`[${req.method}] ${req.url} - ${(error as Error).message}`, {
     ip: req.ip,
     userAgent: req.headers["user-agent"],
