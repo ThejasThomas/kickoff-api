@@ -3,4 +3,4 @@ node_modules
 *.log
 logs/
 src/presentation/shared/utils/logs/
-dist/ 
+dist/
