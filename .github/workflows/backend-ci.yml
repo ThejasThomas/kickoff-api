@@ -3,7 +3,7 @@ name: Backend CI/CD - EC2 Auto Deploy
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
