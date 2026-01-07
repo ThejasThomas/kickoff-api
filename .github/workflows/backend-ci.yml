@@ -19,17 +19,14 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-      - name: Debug EC2 Host
-        run: |
-          echo "EC2_HOST length: ${#EC2_HOST}"
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
 
       - name: Deploy backend to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@3.27.147.172 << 'EOF'
-            echo "CONNECTED SUCCESSFULLY"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
             cd /home/ubuntu/kickoff-api
-            pwd
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart app
           EOF
-
