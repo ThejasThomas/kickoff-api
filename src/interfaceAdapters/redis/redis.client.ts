@@ -19,7 +19,7 @@ redisClient.on("error", (err) => console.log("Redis Client Error", err));
 	console.log(
 		chalk.yellowBright.bold(
 			"\t         " +
-				chalk.blueBright.bold("📦 Redis connected successfully!") +
+				chalk.blueBright.bold(" Redis connected successfully!") +
 				"            "
 		)
 	);

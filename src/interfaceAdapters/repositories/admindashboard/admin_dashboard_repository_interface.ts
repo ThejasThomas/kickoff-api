@@ -56,13 +56,16 @@ export class AdminDashboardRepository implements IAdminDashboardRepository {
     total: number;
     completed: number;
     confirmed: number;
+    cancelled:number;
   }> {
-    const [total, completed, confirmed] = await Promise.all([
+    const [total, completed, confirmed,cancelled] = await Promise.all([
       BookinModel.countDocuments(),
       BookinModel.countDocuments({ status: "completed" }),
       BookinModel.countDocuments({ status: "confirmed" }),
+      BookinModel.countDocuments({ status: "cancelled" }),
+
     ]);
-    return { total, completed, confirmed };
+    return { total, completed, confirmed,cancelled };
   }
   async getRevenueAnalytics(
     period: RevenuePeriod

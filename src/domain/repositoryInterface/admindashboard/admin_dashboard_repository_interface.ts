@@ -25,6 +25,7 @@ export interface IAdminDashboardRepository {
         total:number;
         completed:number;
         confirmed:number;
+        cancelled:number;
     }>
     getRevenueAnalytics(period:RevenuePeriod):Promise<{
         totalBalance:number;

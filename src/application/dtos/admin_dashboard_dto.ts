@@ -26,6 +26,7 @@ export interface AdminDashboardResponseDTO {
     total: number;
     completed: number;
     confirmed: number;
+    cancelled:number;
   };
 
   revenue: {
