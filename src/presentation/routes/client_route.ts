@@ -7,7 +7,11 @@ import {
   walletController,
 } from "../di/resolver";
 import { BaseRoute } from "./base_route";
-import { decodeToken, verifyAuth } from "../middlewares/auth_middleware";
+import {
+  authorizeRole,
+  decodeToken,
+  verifyAuth,
+} from "../middlewares/auth_middleware";
 
 export class ClientRoutes extends BaseRoute {
   constructor() {
@@ -24,6 +28,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-turfdetails/:id",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.getTurfById(req, res);
       }
@@ -31,6 +36,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-user-profile",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         userController.getUserDetails(req, res);
       }
@@ -39,12 +45,14 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/getslots/:id",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.getSlots(req, res);
       }
     );
     this.router.post(
       "/client/refresh-token",
+      authorizeRole(["client"]),
       decodeToken,
       (req: Request, res: Response) => {
         authController.handleTokenRefresh(req, res);
@@ -56,6 +64,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/hold-slot",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.holdSlot(req, res);
       }
@@ -63,13 +72,15 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/release-slot",
       verifyAuth,
-      (req:Request,res:Response)=>{
-        bookingsController.releaseSlot(req,res)
+      authorizeRole(["client"]),
+      (req: Request, res: Response) => {
+        bookingsController.releaseSlot(req, res);
       }
-    )
+    );
     this.router.post(
       "/client/bookslots",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.bookslots(req, res);
       }
@@ -78,6 +89,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-user-profile",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         userController.getUserDetails(req, res);
       }
@@ -85,6 +97,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.patch(
       "/client/update-user-details",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         userController.updateUserDetails(req, res);
       }
@@ -93,6 +106,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/getnearbyturf",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.getnearbyturfs(req, res);
       }
@@ -100,6 +114,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-upcoming-bookings",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.getUpcomingbookings(req, res);
       }
@@ -107,6 +122,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/upcoming-hosted-gamesbyuser",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.getUpcomingHostedGamesByUser(req, res);
       }
@@ -114,6 +130,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/getbookingturf",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.getTurfdetails(req, res);
       }
@@ -121,6 +138,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/cancel-hosted-game/:gameId",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.requestHostedGameCancellation(req, res);
       }
@@ -129,6 +147,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-past-bookings",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.getPastbookings(req, res);
       }
@@ -137,6 +156,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/add-money",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         walletController.addMoney(req, res);
       }
@@ -144,6 +164,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/walletbalance",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         walletController.getWalletBalance(req, res);
       }
@@ -151,6 +172,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/transactionhistory",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         walletController.getWalletHistory(req, res);
       }
@@ -158,6 +180,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/cancel-request/:bookingId",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.requestCancellation(req, res);
       }
@@ -165,6 +188,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/host-game",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.createGame(req, res);
       }
@@ -172,6 +196,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-hosted-game",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.getUpcomingHostedGames(req, res);
       }
@@ -179,6 +204,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/join-hosted-game",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         bookingsController.joinHostedGame(req, res);
       }
@@ -186,6 +212,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/my-chat-groups",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         userController.getMyChatGroup(req, res);
       }
@@ -193,6 +220,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-single-hosted-game/:id",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         console.log("heyyyy brooohh");
         bookingsController.getSingleHostedGame(req, res);
@@ -201,6 +229,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-chats/:groupId",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         userController.getMessages(req, res);
       }
@@ -208,6 +237,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/add-review",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.addReview(req, res);
       }
@@ -215,6 +245,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/add-rating",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.addRating(req, res);
       }
@@ -222,6 +253,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-reviews/:turfId",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.getTurfReviews(req, res);
       }
@@ -229,6 +261,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.get(
       "/client/get-ratings/:turfId",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         turfController.getTurfRatings(req, res);
       }
@@ -237,6 +270,7 @@ export class ClientRoutes extends BaseRoute {
     this.router.post(
       "/client/logout",
       verifyAuth,
+      authorizeRole(["client"]),
       (req: Request, res: Response) => {
         authController.logout(req, res);
       }
