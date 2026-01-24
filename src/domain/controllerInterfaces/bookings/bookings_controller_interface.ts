@@ -9,6 +9,7 @@ export interface IBookingsController {
   handleOwnerCancelRequest(req: Request, res: Response): Promise<void>;
   getCancelRequestBookings(req: Request, res: Response): Promise<void>;
   createGame(req: Request, res: Response): Promise<void>;
+  verifyGamePayment(req:Request,res:Response):Promise<void>
   getUpcomingHostedGames(req: Request, res: Response): Promise<void>;
   joinHostedGame(req: Request, res: Response): Promise<void>;
   getSingleHostedGame(req: Request, res: Response): Promise<void>;
@@ -16,4 +17,6 @@ export interface IBookingsController {
   getUpcomingHostedGamesByUser(req: Request, res: Response): Promise<void>;
   requestHostedGameCancellation(req: Request, res: Response): Promise<void>;
   releaseSlot(req: Request, res: Response): Promise<void>;
+  createGamePaymentSession(req:Request,res:Response):Promise<void>
+  createTurfPaymentSession(req:Request,res:Response):Promise<void>
 }

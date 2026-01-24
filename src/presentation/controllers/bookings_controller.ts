@@ -24,6 +24,9 @@ import { IHoldSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/hold_s
 import { IGetUpcomingHostedGamesByUserUseCase } from "../../domain/useCaseInterfaces/Bookings/get_upcoming_hosted_game_usecase_interface";
 import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/Bookings/cancel_hosted_game_usecase_interface";
 import { IReleaseSlotUsecase } from "../../domain/useCaseInterfaces/Bookings/release_slot_usecase_interface";
+import { IHostedGameRepository } from "../../domain/repositoryInterface/booking/hosted_game_repository_interface";
+import { handleErrorResponse } from "../../shared/utils/error_handler";
+import Stripe from "stripe";
 
 @injectable()
 export class BookingsController implements IBookingsController {
@@ -57,7 +60,11 @@ export class BookingsController implements IBookingsController {
     @inject("IRequestHostedGameCancelUseCase")
     private _requesthostedGameCancellationUseCase: IRequestHostedGameCancelUseCase,
     @inject("IReleaseSlotUsecase")
-    private _releaseSlotUsecase:IReleaseSlotUsecase
+    private _releaseSlotUsecase:IReleaseSlotUsecase,
+    @inject("IHostedGameRepository")
+    private _hostedGameRepo:IHostedGameRepository,
+    @inject("Stripe")
+    private stripe:Stripe
   ) {}
   async getAllbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -144,6 +151,7 @@ export class BookingsController implements IBookingsController {
       }
     }
   }
+
 
   async getPastbookings(req: Request, res: Response): Promise<void> {
     try {
@@ -335,6 +343,7 @@ export class BookingsController implements IBookingsController {
       });
     }
   }
+
   async createGame(req: Request, res: Response): Promise<void> {
     try {
       const userId = (req as CustomRequest).user?.userId;
@@ -346,6 +355,10 @@ export class BookingsController implements IBookingsController {
         endTime,
         pricePerPlayer,
       } = req.body;
+      if (!turfId || !courtType || !slotDate || !startTime || !endTime || pricePerPlayer <= 0) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: "Invalid game data" });
+      return;
+    }
 
       const result = await this._createHostedGameUseCase.execute({
         hostUserId: userId,
@@ -362,12 +375,207 @@ export class BookingsController implements IBookingsController {
         game: result,
       });
     } catch (err: any) {
-      res.status(500).json({
+      if (err instanceof CustomError) {
+      res.status(err.statusCode).json({ success: false, message: err.message });
+    } else {
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: err.message || "Failed to Host game",
       });
     }
+    }
   }
+ async verifyGamePayment(req: Request, res: Response): Promise<void> {
+  try {
+    const { id: sessionId } = req.params;
+    if (!sessionId) {
+      res.status(400).json({ success: false, message: "Missing session ID" });
+      return;
+    }
+
+    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status !== "paid") {
+      res.status(400).json({ success: false, message: "Payment not paid" });
+      return;
+    }
+
+    const metadata = session.metadata || {};
+    if (typeof metadata !== 'object') {
+      res.status(400).json({ success: false, message: "Invalid session metadata" });
+      return;
+    }
+
+    const { turfId, slotDate, startTime, endTime, courtType, pricePerPlayer, hostUserId, slotId } = metadata as Record<string, string>;
+    if (!turfId || !hostUserId || !slotDate) {
+      res.status(400).json({ success: false, message: "Invalid session metadata" });
+      return;
+    }
+
+    const game = await this._createHostedGameUseCase.execute({
+      hostUserId,
+      turfId,
+      courtType,
+      slotDate,
+      startTime,
+      endTime,
+      pricePerPlayer: parseFloat(pricePerPlayer || "0"),
+      sessionId,
+    });
+
+    await this._hostedGameRepo.updatePlayerStatus(game._id!.toString(), hostUserId, {
+      status: "paid",
+      paymentId: sessionId,
+    });
+
+    res.status(200).json({ success: true, gameId: game._id });
+  } catch (error) {
+    console.error("Game payment verification error:", error);
+    handleErrorResponse(req, res, error);
+  }
+}
+  async createGamePaymentSession(req: Request, res: Response): Promise<void> {
+    try {
+      const { amount, gameData } = req.body;
+
+      if (!amount || amount <= 0) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.INVALID_CREDENTIALS,
+        });
+        return;
+      }
+
+      const frontendUrl = process.env.FRONTEND_URL;
+      if (!frontendUrl) {
+        console.error("Missing FRONTEND_URL env var");
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: "Server config error: Missing frontend URL",
+        });
+        return;
+      }
+
+      let fullFrontendUrl = frontendUrl;
+      if (!fullFrontendUrl.startsWith("http://") && !fullFrontendUrl.startsWith("https://")) {
+        fullFrontendUrl = `http://${fullFrontendUrl}`;
+      }
+
+      const encodedGameData = encodeURIComponent(JSON.stringify(gameData));
+
+      const essentialMetadata = {
+        turfId: gameData.turfId,
+        slotDate: gameData.slotDate,
+        startTime: gameData.startTime,
+        endTime: gameData.endTime,
+        courtType: gameData.courtType,
+        pricePerPlayer: gameData.pricePerPlayer.toString(),
+        hostUserId: (req as CustomRequest).user?.userId,
+        slotId: gameData.slotId || "",
+      };
+
+      const successUrl = `${fullFrontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}&gameData=${encodedGameData}`;
+      const cancelUrl = `${fullFrontendUrl}/host-game-payment?status=cancelled`;
+
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: `Host Game - ${gameData.courtType} at ${gameData.turfId}`,
+              },
+              unit_amount: Math.round(amount * 100),
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        mode: "payment",
+        metadata: essentialMetadata,
+      });
+
+      console.log("Game SESSION URL=", session.url);
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        url: session.url,
+      });
+    } catch (error) {
+      console.error("Game Stripe session creation error", error);
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+ async createTurfPaymentSession(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { turfId, date, slotDetails, totalAmount } = req.body;
+
+    if (!turfId || !date || !slotDetails?.length || !totalAmount) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid booking data",
+      });
+      return;
+    }
+
+    let frontendUrl = process.env.FRONTEND_URL!;
+    if (!frontendUrl.startsWith("http")) {
+      frontendUrl = `http://${frontendUrl}`;
+    }
+
+    const userId = (req as CustomRequest).user.userId;
+
+    const encodedBookingData = encodeURIComponent(
+      JSON.stringify({ turfId, date, slotDetails, totalAmount })
+    );
+
+    console.log("🔧 Creating Turf Payment Session");
+    console.log("  Frontend URL:", frontendUrl);
+
+    const session = await this.stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: "Turf Booking",
+            },
+            unit_amount: Math.round(totalAmount * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        turfId,
+        date,
+        slotDetails: JSON.stringify(slotDetails),
+        userId,
+      },
+      success_url: `${frontendUrl}/paymentpage?status=success&session_id={CHECKOUT_SESSION_ID}&bookingData=${encodedBookingData}`,
+      cancel_url: `${frontendUrl}/paymentpage?status=cancelled`,
+    });
+
+    console.log("✅ Session created:", session.id);
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      url: session.url,
+    });
+  } catch (error) {
+    console.error("❌ Stripe session error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create payment session",
+    });
+  }
+}
   async getUpcomingHostedGames(req: Request, res: Response): Promise<void> {
     try {
       const {
@@ -514,6 +722,7 @@ export class BookingsController implements IBookingsController {
         });
     }
   }
+
   async requestHostedGameCancellation(
     req: Request,
     res: Response

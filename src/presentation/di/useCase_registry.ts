@@ -127,7 +127,7 @@ import { GetChatMessagesUseCase } from "../../application/usecase/messages/getCh
 import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages/getChatPageData_usecase";
 import { GetChatPageDataUseCase } from "../../application/usecase/messages/getChatPageData_usecase";
 import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
-import {  AddMoneyOwnerWalletUseCase } from "../../application/usecase/wallet/addMoney_owner_wallet_usecase";
+import { AddMoneyOwnerWalletUseCase } from "../../application/usecase/wallet/addMoney_owner_wallet_usecase";
 import { IGetOwnerWalletTransactionsUseCase } from "../../domain/useCaseInterfaces/wallet/get_owner_wallet_transaction_history";
 import { GetOwnerWalletTransactionUseCase } from "../../application/usecase/wallet/getowner_wallet_transaction";
 import { IGetOwnerDashboardUseCase } from "../../domain/useCaseInterfaces/ownerDashboard/owner_dashboard_usecase";
@@ -164,6 +164,10 @@ import { IRequestHostedGameCancelUseCase } from "../../domain/useCaseInterfaces/
 import { RequestCancelHostedGameUseCase } from "../../application/usecase/Bookings/cancel_hosted_game_usecase";
 import { IReleaseSlotUsecase } from "../../domain/useCaseInterfaces/Bookings/release_slot_usecase_interface";
 import { ReleaseSlotUseCase } from "../../application/usecase/Bookings/release_slot_usecase";
+import { IPhoneNumberExistenceService } from "../../domain/serviceInterfaces/phonenumber_existense_service_interface";
+import { PhoneNumberExistenceService } from "../../interfaceAdapters/services/phonenumber_existence_service";
+import Stripe from "stripe";
+const StripeToken = "StripeInstance";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -192,7 +196,12 @@ export class UseCaseRegistry {
     container.register<IVerifyOtpUseCase>("IVerifyOtpUseCase", {
       useClass: VerifyOtpUseCase,
     });
-
+    container.register<IPhoneNumberExistenceService>(
+      "IPhoneNumberExistenceService",
+      {
+        useClass: PhoneNumberExistenceService,
+      },
+    );
     container.register<IRegisterUserUseCase>("IRegisterUserUseCase", {
       useClass: RegisterUserUseCase,
     });
@@ -227,7 +236,7 @@ export class UseCaseRegistry {
       "IUpdateEntityStatusUseCase",
       {
         useClass: UpdateEntityStatusUseCase,
-      }
+      },
     );
     container.register<IAddTurfUseCase>("IAddTurfUseCase", {
       useClass: AddTurfUseCase,
@@ -239,7 +248,7 @@ export class UseCaseRegistry {
       "ICloudinarySignatureService",
       {
         useClass: CloudinarySignatureService,
-      }
+      },
     );
     container.register<IGetAllTurfsUseCase>("IGetAllTurfsUseCase", {
       useClass: GetAllTurfsUsecase,
@@ -251,13 +260,13 @@ export class UseCaseRegistry {
       "IUpdateTurfOwnerProfileUseCase",
       {
         useClass: UpdateTurfOwnerProfileUseCase,
-      }
+      },
     );
     container.register<IRetryAdminApprovalUseCase>(
       "IRetryAdminApprovalUseCase",
       {
         useClass: RetryAdminApprovalUseCase,
-      }
+      },
     );
     container.register<IGetMyTurfsUseCase>("IGetMyTurfsUseCase", {
       useClass: GetMyTurfsUseCase,
@@ -278,7 +287,7 @@ export class UseCaseRegistry {
       "IRequestUpdateProfileUseCase",
       {
         useClass: RequestUpdateProfileUseCase,
-      }
+      },
     );
     container.register<IGenerateSlotUseCase>("IGenerateSlotUseCase", {
       useClass: GenerateSlotUseCase,
@@ -302,7 +311,7 @@ export class UseCaseRegistry {
       "IGetUpcomingBookingUseCase",
       {
         useClass: GetUpcomingBookingsUseCase,
-      }
+      },
     );
     container.register<IGetBookedTurfUseCase>("IGetBookedTurfUseCase", {
       useClass: GetBookedTurfDetails,
@@ -323,122 +332,158 @@ export class UseCaseRegistry {
       useClass: GetBookedUsersDetails,
     });
     container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase", {
-      useClass:GetUserDetailsUseCase
-    })
-    container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase",{
-      useClass:UpdateUserDetailsUseCase
-    })
-    container.register<IAddMoneyUseCase>("IAddMoneyUseCase",{
-      useClass:AddMoneyUseCase
-    })
-    container.register<IGetWalletBalanceUseCase>("IGetWalletBalanceUseCase",{
-      useClass:GetWalletBalanceUseCase
-    })
-    container.register<IGetWalletHistoryUseCase>("IGetWalletHistoryUseCase",{
-      useClass:GetWalletHistoryUseCase
-    })
-    container.register<IRequestCancelBookingUseCase>("IRequestCancelBookingUseCase",{
-      useClass:RequestCancelBookingUseCase
-    })
-    container.register<IHandlOwnerCancelRequestUseCase>("IHandlOwnerCancelRequestUseCase",{
-      useClass:HandleOwnerCancelrequestUseCase
-    })
-    container.register<IGetCancelRequestsUseCase>("IGetCancelRequestsUseCase",{
-      useClass:GetCancelBookingRequestsUsecase
-    })
-    container.register<ICreateHostedGameUseCase>("ICreateHostedGameUseCase",{
-      useClass:createHostedGameUseCase
-    })
-    container.register<IGetUpcomingHostedGamesUseCase>("IGetUpcomingHostedGamesUseCase",{
-      useClass:GetUpcomingHostedGamesUseCase
-    })
-    container.register<IJoinHostedGameUseCase>("IJoinHostedGameUseCase",{
-      useClass:JoinHostedGameUseCase
-    })
-    container.register<IGetSingleHostedGameUseCase>("IGetSingleHostedGameUseCase",{
-      useClass:GetSingleHostedGameUseCase
-    })
-    container.register<ICheckSlotIsBookedUseCase>("ICheckSlotIsBookedUseCase",{
-      useClass:CheckSlotIsBooked
-    })
-    container.register<ICancelSlotUseCase>("ICancelSlotUseCase",{
-      useClass:CancelSlotUseCase
-    })
-    container.register<IOfflineBookingsUseCase>("IOfflineBookingsUseCase",{
-      useClass:OfflineBookingUseCase
-    })
-    container.register<ICreateChatGroupUseCase>("ICreateChatGroupUseCase",{
-      useClass:CreateChatGroupUseCase
-    })
-    container.register<IGetUserChatGroupsUseCase>("IGetUserChatGroupsUseCase",{
-      useClass:GetUserChatGroupUseCase
-    })
-    container.register<ISaveChatMessageUseCase>(
-      "ISaveChatMessageUseCase",
-      {useClass:SaveChatMessageUseCase}
-    )
-    container.register<IGetChatMessageUseCase>("IGetChatMessageUseCase",{
-      useClass:GetChatMessagesUseCase
-    })
-    container.register<IGetChatPageDataUseCase>("IGetChatPageDataUseCase",{
-      useClass:GetChatPageDataUseCase
-    })
-    container.register<IAddMoneyOwnerWalletUseCase>("IAddMoneyOwnerWalletUseCase",{
-      useClass:AddMoneyOwnerWalletUseCase
-    })
-    container.register<IGetOwnerWalletTransactionsUseCase>("IGetOwnerWalletTransactionsUseCase",{
-      useClass:GetOwnerWalletTransactionUseCase
-    })
-    container.register<IGetOwnerDashboardUseCase>("IGetOwnerDashboardUseCase",{
-      useClass:GetOwnerDashboardUseCase
-    })
-    container.register<IAddReviewUseCase>("IAddReviewUseCase",{
-      useClass:AddReviewUseCase
-    })
-    container.register<IGetTurfReviewsUseCase>("IGetTurfReviewsUseCase",{
-      useClass:GetTurfReviewsUseCase
-    })
-    container.register<IDeleteReviewUseCase>("IDeleteReviewUseCase",{
-      useClass:DeleteReviewUseCase
-    })
-    container.register<IGetOwnerWalletUseCase>("IGetOwnerWalletUseCase",{
-      useClass:GetOwnerWalletUseCase
-    })
-    container.register<IGetAdminWalletUseCase>("IGetAdminWalletUseCase",{
-      useClass:GetAdminWalletUseCase
-    })
-    container.register<IAdminWalletTransactionUSeCase>("IAdminWalletTransactionUSeCase",{
-      useClass:GetAdminWalletTransactionUseCase
-    })
-    container.register<IGetAdminDashboardUseCase>("IGetAdminDashboardUseCase",{
-      useClass:GetAdminDashboardUseCase
-    })
-    container.register<IGetAllOwnerWalletTransactionsUseCase>("IGetAllOwnerWalletTransactionsUseCase",{
-      useClass:GetAllOwnersWalletTransactionUseCase
-    })
-    container.register<IGetTransactionDetailsUseCse>("IGetTransactionDetailsUseCse",{
-      useClass:GetTrasactionDetailsUseCase
-    })
-    container.register<IHoldSlotUseCase>("IHoldSlotUseCase",{
-      useClass:HoldSlotUseCase
-    })
-    container.register<IAddRatingUseCase>("IAddRatingUseCase",{
-      useClass:AddRatingUseCase
-    })
-    container.register<IGetTurfRatingsUseCase>("IGetTurfRatingsUseCase",{
-      useClass:GetTurfRatingUseCase
-    })
-    container.register<IDeleteChatMessageUseCase>("IDeleteChatMessageUseCase",{
-      useClass:DeleteChatMessageUseCase
-    })
-    container.register<IGetUpcomingHostedGamesByUserUseCase>("IGetUpcomingHostedGamesByUserUseCase",{
-      useClass:GetUpcomingHostedGameByUserUseCase
-    })
-    container.register<IRequestHostedGameCancelUseCase>("IRequestHostedGameCancelUseCase",{
-      useClass:RequestCancelHostedGameUseCase
-    })
-    container.register<IReleaseSlotUsecase>("IReleaseSlotUsecase",{
-      useClass:ReleaseSlotUseCase
-    })
+      useClass: GetUserDetailsUseCase,
+    });
+    container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase", {
+      useClass: UpdateUserDetailsUseCase,
+    });
+    container.register<IAddMoneyUseCase>("IAddMoneyUseCase", {
+      useClass: AddMoneyUseCase,
+    });
+    container.register<IGetWalletBalanceUseCase>("IGetWalletBalanceUseCase", {
+      useClass: GetWalletBalanceUseCase,
+    });
+    container.register<IGetWalletHistoryUseCase>("IGetWalletHistoryUseCase", {
+      useClass: GetWalletHistoryUseCase,
+    });
+    container.register<IRequestCancelBookingUseCase>(
+      "IRequestCancelBookingUseCase",
+      {
+        useClass: RequestCancelBookingUseCase,
+      },
+    );
+    container.register<IHandlOwnerCancelRequestUseCase>(
+      "IHandlOwnerCancelRequestUseCase",
+      {
+        useClass: HandleOwnerCancelrequestUseCase,
+      },
+    );
+    container.register<IGetCancelRequestsUseCase>("IGetCancelRequestsUseCase", {
+      useClass: GetCancelBookingRequestsUsecase,
+    });
+    container.register<ICreateHostedGameUseCase>("ICreateHostedGameUseCase", {
+      useClass: createHostedGameUseCase,
+    });
+    container.register<IGetUpcomingHostedGamesUseCase>(
+      "IGetUpcomingHostedGamesUseCase",
+      {
+        useClass: GetUpcomingHostedGamesUseCase,
+      },
+    );
+    container.register<IJoinHostedGameUseCase>("IJoinHostedGameUseCase", {
+      useClass: JoinHostedGameUseCase,
+    });
+    container.register<IGetSingleHostedGameUseCase>(
+      "IGetSingleHostedGameUseCase",
+      {
+        useClass: GetSingleHostedGameUseCase,
+      },
+    );
+    container.register<ICheckSlotIsBookedUseCase>("ICheckSlotIsBookedUseCase", {
+      useClass: CheckSlotIsBooked,
+    });
+    container.register<ICancelSlotUseCase>("ICancelSlotUseCase", {
+      useClass: CancelSlotUseCase,
+    });
+    container.register<IOfflineBookingsUseCase>("IOfflineBookingsUseCase", {
+      useClass: OfflineBookingUseCase,
+    });
+    container.register<ICreateChatGroupUseCase>("ICreateChatGroupUseCase", {
+      useClass: CreateChatGroupUseCase,
+    });
+    container.register<IGetUserChatGroupsUseCase>("IGetUserChatGroupsUseCase", {
+      useClass: GetUserChatGroupUseCase,
+    });
+    container.register<ISaveChatMessageUseCase>("ISaveChatMessageUseCase", {
+      useClass: SaveChatMessageUseCase,
+    });
+    container.register<IGetChatMessageUseCase>("IGetChatMessageUseCase", {
+      useClass: GetChatMessagesUseCase,
+    });
+    container.register<IGetChatPageDataUseCase>("IGetChatPageDataUseCase", {
+      useClass: GetChatPageDataUseCase,
+    });
+    container.register<IAddMoneyOwnerWalletUseCase>(
+      "IAddMoneyOwnerWalletUseCase",
+      {
+        useClass: AddMoneyOwnerWalletUseCase,
+      },
+    );
+    container.register<IGetOwnerWalletTransactionsUseCase>(
+      "IGetOwnerWalletTransactionsUseCase",
+      {
+        useClass: GetOwnerWalletTransactionUseCase,
+      },
+    );
+    container.register<IGetOwnerDashboardUseCase>("IGetOwnerDashboardUseCase", {
+      useClass: GetOwnerDashboardUseCase,
+    });
+    container.register<IAddReviewUseCase>("IAddReviewUseCase", {
+      useClass: AddReviewUseCase,
+    });
+    container.register<IGetTurfReviewsUseCase>("IGetTurfReviewsUseCase", {
+      useClass: GetTurfReviewsUseCase,
+    });
+    container.register<IDeleteReviewUseCase>("IDeleteReviewUseCase", {
+      useClass: DeleteReviewUseCase,
+    });
+    container.register<IGetOwnerWalletUseCase>("IGetOwnerWalletUseCase", {
+      useClass: GetOwnerWalletUseCase,
+    });
+    container.register<IGetAdminWalletUseCase>("IGetAdminWalletUseCase", {
+      useClass: GetAdminWalletUseCase,
+    });
+    container.register<IAdminWalletTransactionUSeCase>(
+      "IAdminWalletTransactionUSeCase",
+      {
+        useClass: GetAdminWalletTransactionUseCase,
+      },
+    );
+    container.register<IGetAdminDashboardUseCase>("IGetAdminDashboardUseCase", {
+      useClass: GetAdminDashboardUseCase,
+    });
+    container.register<IGetAllOwnerWalletTransactionsUseCase>(
+      "IGetAllOwnerWalletTransactionsUseCase",
+      {
+        useClass: GetAllOwnersWalletTransactionUseCase,
+      },
+    );
+    container.register<IGetTransactionDetailsUseCse>(
+      "IGetTransactionDetailsUseCse",
+      {
+        useClass: GetTrasactionDetailsUseCase,
+      },
+    );
+    container.register<IHoldSlotUseCase>("IHoldSlotUseCase", {
+      useClass: HoldSlotUseCase,
+    });
+    container.register<IAddRatingUseCase>("IAddRatingUseCase", {
+      useClass: AddRatingUseCase,
+    });
+    container.register<IGetTurfRatingsUseCase>("IGetTurfRatingsUseCase", {
+      useClass: GetTurfRatingUseCase,
+    });
+    container.register<IDeleteChatMessageUseCase>("IDeleteChatMessageUseCase", {
+      useClass: DeleteChatMessageUseCase,
+    });
+    container.register<IGetUpcomingHostedGamesByUserUseCase>(
+      "IGetUpcomingHostedGamesByUserUseCase",
+      {
+        useClass: GetUpcomingHostedGameByUserUseCase,
+      },
+    );
+container.register<Stripe>("Stripe", {
+  useValue: new Stripe(process.env.STRIPE_SECRET_KEY || ""),
+});
+
+    container.register<IRequestHostedGameCancelUseCase>(
+      "IRequestHostedGameCancelUseCase",
+      {
+        useClass: RequestCancelHostedGameUseCase,
+      },
+    );
+    container.register<IReleaseSlotUsecase>("IReleaseSlotUsecase", {
+      useClass: ReleaseSlotUseCase,
+    });
   }
 }

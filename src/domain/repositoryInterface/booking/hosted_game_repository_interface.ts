@@ -27,6 +27,7 @@ export interface IHostedGameRepository
     startTime: string,
     endTime: string
   ): Promise<IHostedGameEntity | null>;
+  
   findUpComingByUser(
     userId: string,
     skip: number,
@@ -41,4 +42,5 @@ export interface IHostedGameRepository
     hostedGameId: string,
     status: string
   ): Promise<ICancellationRequestEntity | null>;
+  updatePlayerStatus(gameId:string,userId:string,update:{status:string;paymentId:string}):Promise<void>
 }

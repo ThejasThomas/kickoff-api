@@ -25,6 +25,14 @@ export class ClientRoutes extends BaseRoute {
         userController.refreshSession(req, res);
       }
     );
+    this.router.post(
+      "/client/create-game-session",
+      verifyAuth,
+      authorizeRole(["client"]),
+      (req: Request, res: Response) => {
+        bookingsController.createGamePaymentSession(req, res);
+      },
+    );
     this.router.get(
       "/client/get-turfdetails/:id",
       verifyAuth,
@@ -33,6 +41,27 @@ export class ClientRoutes extends BaseRoute {
         turfController.getTurfById(req, res);
       }
     );
+     this.router.get(
+      "/client/verify-game/:id",
+      verifyAuth,
+      (req: Request, res: Response) => {
+        bookingsController.verifyGamePayment(req, res);
+      },
+    );
+    this.router.post(
+      "/client/create-turf-session",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        bookingsController.createTurfPaymentSession(req,res)
+      }
+    )
+    this.router.get(
+      "/client/verify-turf-payment/:sessionId",
+      verifyAuth,
+      (req:Request,res:Response)=>{
+        userController.verifyBookingPayment(req,res)
+      }
+    )
     this.router.get(
       "/client/get-user-profile",
       verifyAuth,
@@ -185,6 +214,8 @@ export class ClientRoutes extends BaseRoute {
         bookingsController.requestCancellation(req, res);
       }
     );
+    
+
     this.router.post(
       "/client/host-game",
       verifyAuth,

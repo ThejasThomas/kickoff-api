@@ -13,6 +13,7 @@ export interface IBookingEntity{
     adminCommissionProcessed:boolean;
     paymentStatus:string;
     createdAt?:string;
+    paymentId?:string;
 } 
 
 export interface PaginatedBookings {

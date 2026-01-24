@@ -1,3 +1,4 @@
+// Updated BookSlotUseCase - Use CreateBookingInput and inject userId
 import { inject, injectable } from "tsyringe";
 import { IBookSlotUseCase } from "../../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
@@ -8,6 +9,8 @@ import { BookingDTO } from "../../dtos/get_booking_dto";
 import { mapBookingDTO } from "../../mappers/getBookingapper";
 import { ISlotLockRepository } from "../../../domain/repositoryInterface/slotLock/slot_lock_repository_interface";
 
+export type CreateBookingInput = Omit<IBookingEntity, '_id' | 'userId'>;
+
 @injectable()
 export class BookSlotUseCase implements IBookSlotUseCase {
   constructor(
@@ -17,7 +20,7 @@ export class BookSlotUseCase implements IBookSlotUseCase {
     private _redisRepository: ISlotLockRepository
   ) {}
 
-  async execute(bookData: IBookingEntity, userId: string): Promise<BookingDTO> {
+  async execute(bookData: CreateBookingInput, userId: string): Promise<BookingDTO> {
     try {
       console.log("dataas", bookData, userId);
       const normalizedDate = this.formatToISODate(bookData.date);
@@ -50,15 +53,16 @@ export class BookSlotUseCase implements IBookSlotUseCase {
           HTTP_STATUS.CONFLICT
         );
       }
-
-      const newBooking: IBookingEntity = {
+      const completeBooking: Omit<IBookingEntity, '_id'> = {
         ...bookData,
         date: normalizedDate,
-        userId,
+        userId, 
       };
+      console.log('complete',completeBooking)
+
       console.log("bookDaaaaataaaaaaaaaaaa", normalizedDate);
 
-      const bookSlot = await this._bookingRepository.save(newBooking);
+      const bookSlot = await this._bookingRepository.save(completeBooking);
 
       await this._redisRepository.releaseLock(
         bookData.turfId,
@@ -68,11 +72,6 @@ export class BookSlotUseCase implements IBookSlotUseCase {
         userId
       );
 
-      // await this._slotRepository.updateSlotBookedStatus(
-      //     bookData.turfId,
-      //     bookData.date,
-      //     bookData.startTime
-      // )
       return mapBookingDTO(bookSlot);
     } catch (error) {
       console.error("Error in book slot use case ");
@@ -86,6 +85,7 @@ export class BookSlotUseCase implements IBookSlotUseCase {
       );
     }
   }
+
   private formatToISODate(dateStr: string): string {
     const date = new Date(dateStr);
     const year = date.getFullYear();

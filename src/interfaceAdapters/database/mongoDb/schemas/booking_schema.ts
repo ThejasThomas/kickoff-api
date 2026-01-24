@@ -31,9 +31,18 @@ export const BookingSchema = new Schema<IBookingModel>({
     type: String,
     required: true,
   },
+  paymentMethod: { 
+    type: String,
+    required: true,
+    default: "none",
+  },
   paymentStatus: {
     type: String,
     required: true,
+  },
+  paymentId: { // Add this for Stripe session ID
+    type: String,
+    required: false,
   },
   adminCommissionProcessed:{
     type:Boolean,

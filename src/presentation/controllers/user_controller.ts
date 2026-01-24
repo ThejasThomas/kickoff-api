@@ -19,6 +19,9 @@ import { HostedGameModel } from "../../interfaceAdapters/database/mongoDb/schema
 import { IGetUserChatGroupsUseCase } from "../../domain/useCaseInterfaces/users/get_user_caht_group_interface";
 import { IGetChatMessageUseCase } from "../../domain/useCaseInterfaces/messages/getChatMessageUsecase_interface";
 import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages/getChatPageData_usecase";
+import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
+import { IBookingEntity } from "../../domain/models/booking_entity";
+import { CreateBookingInput } from "../../application/usecase/Bookings/book_slot_usecase";
 
 @injectable()
 export class UserController implements IUserController {
@@ -36,11 +39,13 @@ export class UserController implements IUserController {
     @inject("IUpdateUserDetailsUseCase")
     private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase,
     @inject("IGetUserChatGroupsUseCase")
-    private _getUserChatGroupsUseCase:IGetUserChatGroupsUseCase,
+    private _getUserChatGroupsUseCase: IGetUserChatGroupsUseCase,
     @inject("IGetChatMessageUseCase")
-    private _getChatMessageUseCase:IGetChatMessageUseCase,
+    private _getChatMessageUseCase: IGetChatMessageUseCase,
     @inject("IGetChatPageDataUseCase")
-    private _getChatPageDataUseCase:IGetChatPageDataUseCase
+    private _getChatPageDataUseCase: IGetChatPageDataUseCase,
+    @inject("IBookSlotUseCase")
+    private _bookSlotUseCase: IBookSlotUseCase,
   ) {
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY environment variable is not set");
@@ -50,8 +55,8 @@ export class UserController implements IUserController {
 
   async refreshSession(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, role } = (req as CustomRequest).user;
-      if (!userId || !role) {
+      const user = (req as CustomRequest).user;
+      if (!user?.userId) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({
           success: false,
           message: ERROR_MESSAGES.INVALID_TOKEN,
@@ -60,6 +65,7 @@ export class UserController implements IUserController {
       }
       res.status(HTTP_STATUS.OK).json({
         success: true,
+        user,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);
@@ -91,7 +97,7 @@ export class UserController implements IUserController {
         pageSize,
         searchTerm,
         status as string,
-        excludeStatusArr
+        excludeStatusArr,
       );
 
       res.status(HTTP_STATUS.OK).json({
@@ -128,7 +134,7 @@ export class UserController implements IUserController {
       }
       const updatedProfile = await this._updateUserDetailsUseCase.execute(
         userId,
-        profileDate
+        profileDate,
       );
 
       res.status(HTTP_STATUS.OK).json({
@@ -158,7 +164,7 @@ export class UserController implements IUserController {
         status,
         reason,
         email,
-        ownerId
+        ownerId,
       );
 
       res.status(HTTP_STATUS.OK).json({
@@ -178,9 +184,8 @@ export class UserController implements IUserController {
           message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
         });
       }
-      const userDetails = await this._getBookedUserDetailsUseCase.execute(
-        userId
-      );
+      const userDetails =
+        await this._getBookedUserDetailsUseCase.execute(userId);
       res.status(HTTP_STATUS.OK).json(userDetails);
     } catch (error) {
       handleErrorResponse(req, res, error);
@@ -206,24 +211,25 @@ export class UserController implements IUserController {
         });
         return;
       }
-     let fullFrontendUrl = frontendUrl;
-    if (!fullFrontendUrl.startsWith("http://") && !fullFrontendUrl.startsWith("https://")) {
-      fullFrontendUrl = `http://${fullFrontendUrl}`;
-    }
+      let fullFrontendUrl = frontendUrl;
+      if (
+        !fullFrontendUrl.startsWith("http://") &&
+        !fullFrontendUrl.startsWith("https://")
+      ) {
+        fullFrontendUrl = `http://${fullFrontendUrl}`;
+      }
       const essentialMetadata = {
         turfId: bookingData.turfId,
         date: bookingData.date,
         totalAmount: amount.toString(),
       };
       const encodedBookingData = encodeURIComponent(
-        JSON.stringify(bookingData)
+        JSON.stringify(bookingData),
       );
       const successUrl = `${fullFrontendUrl}/paymentpage?status=success&session_id={CHECKOUT_SESSION_ID}&bookingData=${encodedBookingData}`;
       const cancelUrl = `${fullFrontendUrl}/paymentpage?status=cancelled`;
 
-
       const session = await this.stripe.checkout.sessions.create({
-        
         payment_method_types: ["card"],
         line_items: [
           {
@@ -255,8 +261,8 @@ export class UserController implements IUserController {
   }
   async verifyPaymentSession(req: Request, res: Response): Promise<void> {
     try {
-      console.log('broo heyloooo are u finee??')
-      const { id:sessionId } = req.params;
+      console.log("broo heyloooo are u finee??");
+      const { id: sessionId } = req.params;
       if (!sessionId) {
         res.status(400).json({ success: false, message: "Missing session ID" });
         return;
@@ -266,250 +272,331 @@ export class UserController implements IUserController {
         res.status(400).json({ success: false, message: "Payment not paid" });
         return;
       }
+
       res.status(200).json({ success: true });
     } catch (error) {
       handleErrorResponse(req, res, error);
     }
   }
-  async createWalletCheckoutSession(req: Request, res: Response): Promise<void> {
-  try {
-    const { amount } = req.body;
+  async createWalletCheckoutSession(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    try {
+      const { amount } = req.body;
 
-    if (!amount || amount <= 0) {
-       res.status(400).json({
-        success: false,
-        message: "Invalid wallet top-up amount",
-      });
-    }
+      if (!amount || amount <= 0) {
+        res.status(400).json({
+          success: false,
+          message: "Invalid wallet top-up amount",
+        });
+      }
 
-    let frontendUrl = process.env.FRONTEND_URL!;
-    if (!frontendUrl.startsWith("http")) {
-      frontendUrl = `http://${frontendUrl}`;
-    }
+      let frontendUrl = process.env.FRONTEND_URL!;
+      if (!frontendUrl.startsWith("http")) {
+        frontendUrl = `http://${frontendUrl}`;
+      }
 
-    const metadata = {
-      purpose: "wallet_topup",
-      amount: amount.toString(),
-    };
+      const metadata = {
+        purpose: "wallet_topup",
+        amount: amount.toString(),
+      };
 
-    const successUrl = `${frontendUrl}/wallet?success=true&amount=${amount}`;
+      const successUrl = `${frontendUrl}/wallet?success=true&amount=${amount}`;
 
-    const cancelUrl = `${frontendUrl}/wallet?success=false`;
+      const cancelUrl = `${frontendUrl}/wallet?success=false`;
 
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: { name: "Wallet Top-Up" },
-            unit_amount: amount * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata,
-    });
-
-     res.status(200).json({
-      success: true,
-      url: session.url,
-    });
-
-  } catch (err) {
-    console.error("Wallet checkout session error:", err);
-     res.status(500).json({
-      success: false,
-      message: "Failed to start wallet payment"
-    });
-  }
-}
-async createHostedGameCheckoutSession(req: Request, res: Response): Promise<void> {
-  try {
-    const {
-      turfId,
-      slotId,
-      slotDate,
-      startTime,
-      endTime,
-      courtType,
-      pricePerPlayer
-    } = req.body;
-    console.log('heyyyyyy broohh')
-
-    if (!turfId || !slotId || !slotDate || !startTime || !endTime || !courtType || !pricePerPlayer) {
-      res.status(400).json({
-        success: false,
-        message: "Missing required game hosting details",
-      });
-      return;
-    }
-
-    let frontendUrl = process.env.FRONTEND_URL!;
-    if (!frontendUrl.startsWith("http")) {
-      frontendUrl = `http://${frontendUrl}`;
-    }
-
-    const metadata = {
-      purpose: "host_game",
-      turfId,
-      slotId,
-      slotDate,
-      startTime,
-      endTime,
-      courtType,
-      pricePerPlayer: pricePerPlayer.toString()
-    };
-
-    // const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
-
-    const successUrl = `${frontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${frontendUrl}/host-game-payment?status=cancelled`;
-
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      metadata,
-      line_items: [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: { name: `Host Game (${courtType})` },
-            unit_amount: pricePerPlayer * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: successUrl.replace("{CHECKOUT_SESSION_ID}", "{CHECKOUT_SESSION_ID}"),
-      cancel_url: cancelUrl,
-    });
-
-    res.status(200).json({
-      success: true,
-      url: session.url,
-    });
-
-  } catch (err) {
-    console.error("Hosted game checkout session error:", err);
-    res.status(500).json({
-      success: false,
-      message: "Failed to start hosted game payment"
-    });
-  }
-}
-async createJoinHostedGameCheckoutSession(req: Request, res: Response): Promise<void> {
-  try {
-    const { gameId } = req.body;
-
-    if (!gameId) {
-      res.status(400).json({
-        success: false,
-        message: "Game ID is required",
-      });
-      return;
-    }
-
-    const game = await HostedGameModel.findById(gameId);
-
-    if (!game) {
-      res.status(404).json({
-        success: false,
-        message: "Hosted game not found",
-      });
-      return;
-    }
-
-    let frontendUrl = process.env.FRONTEND_URL!;
-    if (!frontendUrl.startsWith("http")) {
-      frontendUrl = `http://${frontendUrl}`;
-    }
-
-    const metadata = {
-      purpose: "join_game",
-      gameId: game._id.toString(),
-      turfId: game.turfId,
-      slotDate: game.slotDate,
-      startTime: game.startTime,
-      endTime: game.endTime,
-      pricePerPlayer: game.pricePerPlayer.toString(),
-    };
-
-    const successUrl = `${frontendUrl}/hosted-games/join-hosted-game/${game._id}?status=success&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${frontendUrl}/hosted-games/join-hosted-game/${game._id}?status=cancelled`;
-
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      metadata,
-
-      line_items: [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: `Join Game (${game.courtType})`,
-              description: `${game.slotDate} | ${game.startTime} - ${game.endTime}`,
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: { name: "Wallet Top-Up" },
+              unit_amount: amount * 100,
             },
-            unit_amount: Math.round(game.pricePerPlayer * 100),
+            quantity: 1,
           },
-          quantity: 1,
-        },
-      ],
+        ],
+        mode: "payment",
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        metadata,
+      });
 
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-    });
-
-    res.status(200).json({
-      success: true,
-      url: session.url,
-    });
-  } catch (err) {
-    console.error("Join hosted game checkout error:", err);
-    res.status(500).json({
-      success: false,
-      message: "Failed to start join game payment",
-    });
-  }
-}
-
-async getMyChatGroup(req: Request, res: Response): Promise<void> {
-  try{
-    const userId=(req as CustomRequest).user?.userId;
-    console.log('userrIDDD',userId)
-
-    if(!userId){
-       res.status(401).json({success:false})
-       return;
+      res.status(200).json({
+        success: true,
+        url: session.url,
+      });
+    } catch (err) {
+      console.error("Wallet checkout session error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Failed to start wallet payment",
+      });
     }
-    const groups=await this._getUserChatGroupsUseCase.execute(userId);
-
-    console.log('groupsss',groups)
-
-    res.status(200).json({
-      success:true,
-      groups,
-    })
-  }catch(error){
-    handleErrorResponse(req,res,error)
   }
-}
-async getMessages(req: Request, res: Response): Promise<void> {
-  try{
-    const{groupId}=req.params;
+  async createHostedGameCheckoutSession(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    try {
+      const {
+        turfId,
+        slotId,
+        slotDate,
+        startTime,
+        endTime,
+        courtType,
+        pricePerPlayer,
+      } = req.body;
+      console.log("heyyyyyy broohh");
 
-    const data=await this._getChatPageDataUseCase.execute(groupId)
+      if (
+        !turfId ||
+        !slotId ||
+        !slotDate ||
+        !startTime ||
+        !endTime ||
+        !courtType ||
+        !pricePerPlayer
+      ) {
+        res.status(400).json({
+          success: false,
+          message: "Missing required game hosting details",
+        });
+        return;
+      }
 
-    res.status(HTTP_STATUS.OK).json({
-      success:true,
-      group:data.group,
-      messages:data.messages
-    })
-  }catch(error){
-    handleErrorResponse(req,res,error)
+      let frontendUrl = process.env.FRONTEND_URL!;
+      if (!frontendUrl.startsWith("http")) {
+        frontendUrl = `http://${frontendUrl}`;
+      }
+
+      const metadata = {
+        purpose: "host_game",
+        turfId,
+        slotId,
+        slotDate,
+        startTime,
+        endTime,
+        courtType,
+        pricePerPlayer: pricePerPlayer.toString(),
+      };
+
+      // const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
+
+      const successUrl = `${frontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl = `${frontendUrl}/host-game-payment?status=cancelled`;
+
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        metadata,
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: { name: `Host Game (${courtType})` },
+              unit_amount: pricePerPlayer * 100,
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: successUrl.replace(
+          "{CHECKOUT_SESSION_ID}",
+          "{CHECKOUT_SESSION_ID}",
+        ),
+        cancel_url: cancelUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        url: session.url,
+      });
+    } catch (err) {
+      console.error("Hosted game checkout session error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Failed to start hosted game payment",
+      });
+    }
   }
-}
+async verifyBookingPayment(req: Request, res: Response): Promise<void> {
+    try {
+      const sessionId = req.params.sessionId;
+
+      const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.payment_status !== "paid") {
+        res.status(400).json({ success: false, message: "Payment not paid" });
+        return;
+      }
+
+      const metadata = session.metadata as any;
+      const { turfId, date, slotDetails, userId } = metadata;
+
+      if (!turfId || !date || !slotDetails || !userId) {
+        res.status(400).json({ success: false, message: "Invalid metadata" });
+        return;
+      }
+
+      let parsedSlots: Array<{
+        startTime: string;
+        endTime: string;
+        price: string;
+      }>;
+      try {
+        parsedSlots = JSON.parse(slotDetails);
+      } catch (err) {
+        res.status(400).json({
+          success: false,
+          message: "Invalid slot details format",
+        });
+        return;
+      }
+
+      for (const slot of parsedSlots) {
+        const bookingData: CreateBookingInput = {
+          turfId,
+          date,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+          price: parseFloat(slot.price),
+          status: "confirmed",
+          paymentMethod: "stripe",
+          paymentStatus: "completed",
+          paymentId: sessionId,
+          adminCommissionProcessed: false,
+        };
+
+        await this._bookSlotUseCase.execute(bookingData, userId);
+      }
+
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error verifying Stripe booking payment:", error);
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+
+
+
+
+  async createJoinHostedGameCheckoutSession(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    try {
+      const { gameId } = req.body;
+
+      if (!gameId) {
+        res.status(400).json({
+          success: false,
+          message: "Game ID is required",
+        });
+        return;
+      }
+
+      const game = await HostedGameModel.findById(gameId);
+
+      if (!game) {
+        res.status(404).json({
+          success: false,
+          message: "Hosted game not found",
+        });
+        return;
+      }
+
+      let frontendUrl = process.env.FRONTEND_URL!;
+      if (!frontendUrl.startsWith("http")) {
+        frontendUrl = `http://${frontendUrl}`;
+      }
+
+      const metadata = {
+        purpose: "join_game",
+        gameId: game._id.toString(),
+        turfId: game.turfId,
+        slotDate: game.slotDate,
+        startTime: game.startTime,
+        endTime: game.endTime,
+        pricePerPlayer: game.pricePerPlayer.toString(),
+      };
+
+      const successUrl = `${frontendUrl}/hosted-games/join-hosted-game/${game._id}?status=success&session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl = `${frontendUrl}/hosted-games/join-hosted-game/${game._id}?status=cancelled`;
+
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        metadata,
+
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: `Join Game (${game.courtType})`,
+                description: `${game.slotDate} | ${game.startTime} - ${game.endTime}`,
+              },
+              unit_amount: Math.round(game.pricePerPlayer * 100),
+            },
+            quantity: 1,
+          },
+        ],
+
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        url: session.url,
+      });
+    } catch (err) {
+      console.error("Join hosted game checkout error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Failed to start join game payment",
+      });
+    }
+  }
+
+  async getMyChatGroup(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as CustomRequest).user?.userId;
+      console.log("userrIDDD", userId);
+
+      if (!userId) {
+        res.status(401).json({ success: false });
+        return;
+      }
+      const groups = await this._getUserChatGroupsUseCase.execute(userId);
+
+      console.log("groupsss", groups);
+
+      res.status(200).json({
+        success: true,
+        groups,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+  async getMessages(req: Request, res: Response): Promise<void> {
+    try {
+      const { groupId } = req.params;
+
+      const data = await this._getChatPageDataUseCase.execute(groupId);
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        group: data.group,
+        messages: data.messages,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 }

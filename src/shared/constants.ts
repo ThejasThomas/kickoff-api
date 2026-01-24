@@ -74,6 +74,7 @@ export const ERROR_MESSAGES = {
   SLOT_ALREADY_EXISTS: "Slots all ready exists please check",
   INVALID_ROLE: "Access denied",
   DATABASE_ERROR: "Database Error",
+  PHONE_NUMBER_EXISTS:"Phone number exists",
   CANCELLATION_REASON_REQUIRED:"Cancellation reason required",
   FAILED_TO_FETCH_HOSTED_GAMES:"Failed to fetch hosted games",
   SLOT_LOCK_EXPIRE_OR_INVALID:"Slot lock expired or invalid",

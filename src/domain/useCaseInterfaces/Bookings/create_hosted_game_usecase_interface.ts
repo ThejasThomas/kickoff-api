@@ -9,5 +9,6 @@ export interface ICreateHostedGameUseCase {
     startTime: string;
     endTime: string;
     pricePerPlayer: number;
+    sessionId?:string
   }): Promise<IHostedGameDTO>
 }

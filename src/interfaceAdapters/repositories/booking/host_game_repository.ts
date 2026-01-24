@@ -36,6 +36,21 @@ export class HostGameRepository
       status: { $in: ["open", "full"] },
     });
   }
+
+  async updatePlayerStatus(gameId: string, userId: string, update: { status: string; paymentId: string; }): Promise<void> {
+    const result =await this.model.updateOne(
+      {_id:gameId,"players.userId":userId},
+      {
+        $set:{
+          "players.$.status":update.status,
+          "players.$.paymentId":update.paymentId
+        }
+      }
+    )
+    if(result.matchedCount===0){
+      throw new Error(`Player ${userId} not found in game ${gameId}`)
+    }
+  }
   async getUpComingGames(
     params: GetUpcomingHostedGamesParams
   ): Promise<IHostedGameItem[]> {

@@ -157,8 +157,10 @@ export class AuthController implements IAuthController {
   // 🛠️ Send OTP Email
   async sendOtpEmail(req: Request, res: Response): Promise<void> {
     try {
-      const { email } = req.body;
-      await this._sendOtpEmailUseCase.execute(email);
+      const { email,phoneNumber } = req.body;
+            console.log('email',email,'phnn',phoneNumber)
+
+      await this._sendOtpEmailUseCase.execute(email,phoneNumber);
       res.status(HTTP_STATUS.OK).json({
         message: SUCCESS_MESSAGES.OTP_SEND_SUCCESS,
         success: true,

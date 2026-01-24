@@ -32,11 +32,28 @@ export class createHostedGameUseCase implements ICreateHostedGameUseCase {
     startTime: string;
     endTime: string;
     pricePerPlayer: number;
+    sessionId?:string;
   }): Promise<IHostedGameDTO> {
     if (!data.courtType || !capacityMap[data.courtType]) {
       throw new CustomError(
         ERROR_MESSAGES.INVALID_COURT_TYPE,
         HTTP_STATUS.BAD_REQUEST
+      );
+    }
+    let turfId= data.turfId
+    let  slotDate= data.slotDate
+     let  startTime= data.startTime
+     let  endTime= data.endTime
+    const existingGame = await this._hostedGameRepo.findBySlot(
+      turfId,
+      slotDate,
+      startTime,
+      endTime
+    );
+    if (existingGame) {
+      throw new CustomError(
+        "Slot already hosted for this turf and time. Choose another slot.",
+        HTTP_STATUS.CONFLICT 
       );
     }
     const capacity = capacityMap[data.courtType];
@@ -58,7 +75,7 @@ export class createHostedGameUseCase implements ICreateHostedGameUseCase {
         {
           userId: data.hostUserId,
           status: "paid",
-          paymentId: "stripe",
+          paymentId: data.sessionId ??undefined,
           joinedAt: new Date().toISOString(),
         },
       ],
