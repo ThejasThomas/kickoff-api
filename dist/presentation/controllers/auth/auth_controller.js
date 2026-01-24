@@ -140,8 +140,9 @@ let AuthController = class AuthController {
     sendOtpEmail(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { email } = req.body;
-                yield this._sendOtpEmailUseCase.execute(email);
+                const { email, phoneNumber } = req.body;
+                console.log('email', email, 'phnn', phoneNumber);
+                yield this._sendOtpEmailUseCase.execute(email, phoneNumber);
                 res.status(constants_1.HTTP_STATUS.OK).json({
                     message: constants_1.SUCCESS_MESSAGES.OTP_SEND_SUCCESS,
                     success: true,

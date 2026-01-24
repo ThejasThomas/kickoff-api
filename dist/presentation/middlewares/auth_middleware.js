@@ -25,6 +25,7 @@ const verifyAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             return;
         }
         const user = tokenService.verifyAccessToken(token.access_token);
+        console.log('userrBroooo', user);
         if (!user || !user.userId) {
             res.status(constants_1.HTTP_STATUS.UNAUTHORIZED).json({
                 message: constants_1.ERROR_MESSAGES.TOKEN_EXPIRED,
@@ -64,6 +65,7 @@ const extractToken = (req) => {
 const authorizeRole = (allowedRoles) => {
     return (req, res, next) => {
         const user = req.user;
+        console.log('itssssssss user', user);
         if (!user || !allowedRoles.includes(user.role)) {
             res.status(constants_1.HTTP_STATUS.FORBIDDEN).json({
                 success: false,

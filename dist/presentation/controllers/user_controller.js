@@ -32,7 +32,7 @@ const custom_error_1 = require("../../domain/utils/custom.error");
 const stripe_1 = __importDefault(require("stripe"));
 const hosted_game_schema_1 = require("../../interfaceAdapters/database/mongoDb/schemas/hosted_game_schema");
 let UserController = class UserController {
-    constructor(_getAllUsersUseCase, __updateEntityStatusUseCase, _getBookedUserDetailsUseCase, _getUserDetailsUseCase, _updateUserDetailsUseCase, _getUserChatGroupsUseCase, _getChatMessageUseCase, _getChatPageDataUseCase) {
+    constructor(_getAllUsersUseCase, __updateEntityStatusUseCase, _getBookedUserDetailsUseCase, _getUserDetailsUseCase, _updateUserDetailsUseCase, _getUserChatGroupsUseCase, _getChatMessageUseCase, _getChatPageDataUseCase, _bookSlotUseCase) {
         this._getAllUsersUseCase = _getAllUsersUseCase;
         this.__updateEntityStatusUseCase = __updateEntityStatusUseCase;
         this._getBookedUserDetailsUseCase = _getBookedUserDetailsUseCase;
@@ -41,6 +41,7 @@ let UserController = class UserController {
         this._getUserChatGroupsUseCase = _getUserChatGroupsUseCase;
         this._getChatMessageUseCase = _getChatMessageUseCase;
         this._getChatPageDataUseCase = _getChatPageDataUseCase;
+        this._bookSlotUseCase = _bookSlotUseCase;
         if (!process.env.STRIPE_SECRET_KEY) {
             throw new Error("STRIPE_SECRET_KEY environment variable is not set");
         }
@@ -49,8 +50,8 @@ let UserController = class UserController {
     refreshSession(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { userId, role } = req.user;
-                if (!userId || !role) {
+                const user = req.user;
+                if (!(user === null || user === void 0 ? void 0 : user.userId)) {
                     res.status(constants_1.HTTP_STATUS.UNAUTHORIZED).json({
                         success: false,
                         message: constants_1.ERROR_MESSAGES.INVALID_TOKEN,
@@ -59,6 +60,7 @@ let UserController = class UserController {
                 }
                 res.status(constants_1.HTTP_STATUS.OK).json({
                     success: true,
+                    user,
                 });
             }
             catch (error) {
@@ -196,7 +198,8 @@ let UserController = class UserController {
                     return;
                 }
                 let fullFrontendUrl = frontendUrl;
-                if (!fullFrontendUrl.startsWith("http://") && !fullFrontendUrl.startsWith("https://")) {
+                if (!fullFrontendUrl.startsWith("http://") &&
+                    !fullFrontendUrl.startsWith("https://")) {
                     fullFrontendUrl = `http://${fullFrontendUrl}`;
                 }
                 const essentialMetadata = {
@@ -241,7 +244,7 @@ let UserController = class UserController {
     verifyPaymentSession(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log('broo heyloooo are u finee??');
+                console.log("broo heyloooo are u finee??");
                 const { id: sessionId } = req.params;
                 if (!sessionId) {
                     res.status(400).json({ success: false, message: "Missing session ID" });
@@ -305,7 +308,7 @@ let UserController = class UserController {
                 console.error("Wallet checkout session error:", err);
                 res.status(500).json({
                     success: false,
-                    message: "Failed to start wallet payment"
+                    message: "Failed to start wallet payment",
                 });
             }
         });
@@ -313,9 +316,15 @@ let UserController = class UserController {
     createHostedGameCheckoutSession(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { turfId, slotId, slotDate, startTime, endTime, courtType, pricePerPlayer } = req.body;
-                console.log('heyyyyyy broohh');
-                if (!turfId || !slotId || !slotDate || !startTime || !endTime || !courtType || !pricePerPlayer) {
+                const { turfId, slotId, slotDate, startTime, endTime, courtType, pricePerPlayer, } = req.body;
+                console.log("heyyyyyy broohh");
+                if (!turfId ||
+                    !slotId ||
+                    !slotDate ||
+                    !startTime ||
+                    !endTime ||
+                    !courtType ||
+                    !pricePerPlayer) {
                     res.status(400).json({
                         success: false,
                         message: "Missing required game hosting details",
@@ -334,7 +343,7 @@ let UserController = class UserController {
                     startTime,
                     endTime,
                     courtType,
-                    pricePerPlayer: pricePerPlayer.toString()
+                    pricePerPlayer: pricePerPlayer.toString(),
                 };
                 // const encodedGameData = encodeURIComponent(JSON.stringify(metadata));
                 const successUrl = `${frontendUrl}/host-game-payment?status=success&session_id={CHECKOUT_SESSION_ID}`;
@@ -365,8 +374,57 @@ let UserController = class UserController {
                 console.error("Hosted game checkout session error:", err);
                 res.status(500).json({
                     success: false,
-                    message: "Failed to start hosted game payment"
+                    message: "Failed to start hosted game payment",
                 });
+            }
+        });
+    }
+    verifyBookingPayment(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sessionId = req.params.sessionId;
+                const session = yield this.stripe.checkout.sessions.retrieve(sessionId);
+                if (session.payment_status !== "paid") {
+                    res.status(400).json({ success: false, message: "Payment not paid" });
+                    return;
+                }
+                const metadata = session.metadata;
+                const { turfId, date, slotDetails, userId } = metadata;
+                if (!turfId || !date || !slotDetails || !userId) {
+                    res.status(400).json({ success: false, message: "Invalid metadata" });
+                    return;
+                }
+                let parsedSlots;
+                try {
+                    parsedSlots = JSON.parse(slotDetails);
+                }
+                catch (err) {
+                    res.status(400).json({
+                        success: false,
+                        message: "Invalid slot details format",
+                    });
+                    return;
+                }
+                for (const slot of parsedSlots) {
+                    const bookingData = {
+                        turfId,
+                        date,
+                        startTime: slot.startTime,
+                        endTime: slot.endTime,
+                        price: parseFloat(slot.price),
+                        status: "confirmed",
+                        paymentMethod: "stripe",
+                        paymentStatus: "completed",
+                        paymentId: sessionId,
+                        adminCommissionProcessed: false,
+                    };
+                    yield this._bookSlotUseCase.execute(bookingData, userId);
+                }
+                res.status(200).json({ success: true });
+            }
+            catch (error) {
+                console.error("Error verifying Stripe booking payment:", error);
+                (0, error_handler_1.handleErrorResponse)(req, res, error);
             }
         });
     }
@@ -443,13 +501,13 @@ let UserController = class UserController {
             var _a;
             try {
                 const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.userId;
-                console.log('userrIDDD', userId);
+                console.log("userrIDDD", userId);
                 if (!userId) {
                     res.status(401).json({ success: false });
                     return;
                 }
                 const groups = yield this._getUserChatGroupsUseCase.execute(userId);
-                console.log('groupsss', groups);
+                console.log("groupsss", groups);
                 res.status(200).json({
                     success: true,
                     groups,
@@ -468,7 +526,7 @@ let UserController = class UserController {
                 res.status(constants_1.HTTP_STATUS.OK).json({
                     success: true,
                     group: data.group,
-                    messages: data.messages
+                    messages: data.messages,
                 });
             }
             catch (error) {
@@ -488,5 +546,6 @@ exports.UserController = UserController = __decorate([
     __param(5, (0, tsyringe_1.inject)("IGetUserChatGroupsUseCase")),
     __param(6, (0, tsyringe_1.inject)("IGetChatMessageUseCase")),
     __param(7, (0, tsyringe_1.inject)("IGetChatPageDataUseCase")),
-    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object, Object, Object])
+    __param(8, (0, tsyringe_1.inject)("IBookSlotUseCase")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object, Object, Object, Object])
 ], UserController);

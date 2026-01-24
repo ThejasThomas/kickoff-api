@@ -42,8 +42,17 @@ let createHostedGameUseCase = class createHostedGameUseCase {
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             if (!data.courtType || !capacityMap[data.courtType]) {
                 throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.INVALID_COURT_TYPE, constants_1.HTTP_STATUS.BAD_REQUEST);
+            }
+            let turfId = data.turfId;
+            let slotDate = data.slotDate;
+            let startTime = data.startTime;
+            let endTime = data.endTime;
+            const existingGame = yield this._hostedGameRepo.findBySlot(turfId, slotDate, startTime, endTime);
+            if (existingGame) {
+                throw new custom_error_1.CustomError("Slot already hosted for this turf and time. Choose another slot.", constants_1.HTTP_STATUS.CONFLICT);
             }
             const capacity = capacityMap[data.courtType];
             const gameStartAt = moment_timezone_1.default
@@ -54,7 +63,7 @@ let createHostedGameUseCase = class createHostedGameUseCase {
                     {
                         userId: data.hostUserId,
                         status: "paid",
-                        paymentId: "stripe",
+                        paymentId: (_a = data.sessionId) !== null && _a !== void 0 ? _a : undefined,
                         joinedAt: new Date().toISOString(),
                     },
                 ] });

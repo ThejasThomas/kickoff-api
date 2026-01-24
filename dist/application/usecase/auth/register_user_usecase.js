@@ -27,11 +27,12 @@ const custom_error_1 = require("../../../domain/utils/custom.error");
 const constants_1 = require("../../../shared/constants");
 const unique_uuid_helper_1 = require("../../../shared/utils/unique_uuid.helper");
 let RegisterUserUseCase = class RegisterUserUseCase {
-    constructor(_clientRepository, _turfOwnerRepository, _userExistenceService, _passwordBcrypt) {
+    constructor(_clientRepository, _turfOwnerRepository, _userExistenceService, _passwordBcrypt, _phoneNumberExistenceService) {
         this._clientRepository = _clientRepository;
         this._turfOwnerRepository = _turfOwnerRepository;
         this._userExistenceService = _userExistenceService;
         this._passwordBcrypt = _passwordBcrypt;
+        this._phoneNumberExistenceService = _phoneNumberExistenceService;
     }
     execute(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,13 +41,24 @@ let RegisterUserUseCase = class RegisterUserUseCase {
             if (isEmailExisting) {
                 throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.EMAIL_EXISTS, constants_1.HTTP_STATUS.CONFLICT);
             }
-            const hashedPassword = password ? yield this._passwordBcrypt.hash(password) : null;
+            if (role === "client" || role === "turfOwner") {
+                const phoneNumber = user.phoneNumber;
+                if (phoneNumber) {
+                    const isPhoneExisting = yield this._phoneNumberExistenceService.phoneNumberExists(phoneNumber);
+                    if (isPhoneExisting) {
+                        throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.PHONE_NUMBER_EXISTS, constants_1.HTTP_STATUS.CONFLICT);
+                    }
+                }
+            }
+            const hashedPassword = password
+                ? yield this._passwordBcrypt.hash(password)
+                : null;
             const userId = (0, unique_uuid_helper_1.generateUniqueId)();
             let repository;
-            if (role === 'client') {
+            if (role === "client") {
                 repository = this._clientRepository;
             }
-            else if (role === 'turfOwner') {
+            else if (role === "turfOwner") {
                 repository = this._turfOwnerRepository;
             }
             else {
@@ -59,9 +71,10 @@ let RegisterUserUseCase = class RegisterUserUseCase {
 exports.RegisterUserUseCase = RegisterUserUseCase;
 exports.RegisterUserUseCase = RegisterUserUseCase = __decorate([
     (0, tsyringe_1.injectable)(),
-    __param(0, (0, tsyringe_1.inject)('IClientRepository')),
-    __param(1, (0, tsyringe_1.inject)('ITurfOwnerRepository')),
-    __param(2, (0, tsyringe_1.inject)('IUserExistenceService')),
-    __param(3, (0, tsyringe_1.inject)('IPasswordBcrypt')),
-    __metadata("design:paramtypes", [Object, Object, Object, Object])
+    __param(0, (0, tsyringe_1.inject)("IClientRepository")),
+    __param(1, (0, tsyringe_1.inject)("ITurfOwnerRepository")),
+    __param(2, (0, tsyringe_1.inject)("IUserExistenceService")),
+    __param(3, (0, tsyringe_1.inject)("IPasswordBcrypt")),
+    __param(4, (0, tsyringe_1.inject)("IPhoneNumberExistenceService")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object])
 ], RegisterUserUseCase);

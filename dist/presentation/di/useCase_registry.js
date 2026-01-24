@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UseCaseRegistry = void 0;
 // src/frameworks/di/useCaseRegistry.ts
@@ -85,6 +88,9 @@ const delete_message_usecase_1 = require("../../application/usecase/messages/del
 const get_upcoming_hosted_games_1 = require("../../application/usecase/Bookings/get_upcoming_hosted_games");
 const cancel_hosted_game_usecase_1 = require("../../application/usecase/Bookings/cancel_hosted_game_usecase");
 const release_slot_usecase_1 = require("../../application/usecase/Bookings/release_slot_usecase");
+const phonenumber_existence_service_1 = require("../../interfaceAdapters/services/phonenumber_existence_service");
+const stripe_1 = __importDefault(require("stripe"));
+const StripeToken = "StripeInstance";
 class UseCaseRegistry {
     static registerUseCases() {
         tsyringe_1.container.register("IOtpService", {
@@ -107,6 +113,9 @@ class UseCaseRegistry {
         });
         tsyringe_1.container.register("IVerifyOtpUseCase", {
             useClass: verify_otp_usecase_1.VerifyOtpUseCase,
+        });
+        tsyringe_1.container.register("IPhoneNumberExistenceService", {
+            useClass: phonenumber_existence_service_1.PhoneNumberExistenceService,
         });
         tsyringe_1.container.register("IRegisterUserUseCase", {
             useClass: register_user_usecase_1.RegisterUserUseCase,
@@ -220,119 +229,124 @@ class UseCaseRegistry {
             useClass: get_bookedUsersDetails_1.GetBookedUsersDetails,
         });
         tsyringe_1.container.register("IGetUserDetailsUseCase", {
-            useClass: get_user_details_usecase_1.GetUserDetailsUseCase
+            useClass: get_user_details_usecase_1.GetUserDetailsUseCase,
         });
         tsyringe_1.container.register("IUpdateUserDetailsUseCase", {
-            useClass: update_user_details_usecase_1.UpdateUserDetailsUseCase
+            useClass: update_user_details_usecase_1.UpdateUserDetailsUseCase,
         });
         tsyringe_1.container.register("IAddMoneyUseCase", {
-            useClass: addmoney_usecase_1.AddMoneyUseCase
+            useClass: addmoney_usecase_1.AddMoneyUseCase,
         });
         tsyringe_1.container.register("IGetWalletBalanceUseCase", {
-            useClass: getWalletBalanceUseCase_1.GetWalletBalanceUseCase
+            useClass: getWalletBalanceUseCase_1.GetWalletBalanceUseCase,
         });
         tsyringe_1.container.register("IGetWalletHistoryUseCase", {
-            useClass: getWalletHistory_usecase_1.GetWalletHistoryUseCase
+            useClass: getWalletHistory_usecase_1.GetWalletHistoryUseCase,
         });
         tsyringe_1.container.register("IRequestCancelBookingUseCase", {
-            useClass: requestCancelBookingUsecase_1.RequestCancelBookingUseCase
+            useClass: requestCancelBookingUsecase_1.RequestCancelBookingUseCase,
         });
         tsyringe_1.container.register("IHandlOwnerCancelRequestUseCase", {
-            useClass: handle_owner_cance_request_usecase_1.HandleOwnerCancelrequestUseCase
+            useClass: handle_owner_cance_request_usecase_1.HandleOwnerCancelrequestUseCase,
         });
         tsyringe_1.container.register("IGetCancelRequestsUseCase", {
-            useClass: get_cancel_booking_requests_1.GetCancelBookingRequestsUsecase
+            useClass: get_cancel_booking_requests_1.GetCancelBookingRequestsUsecase,
         });
         tsyringe_1.container.register("ICreateHostedGameUseCase", {
-            useClass: create_host_games_usecase_1.createHostedGameUseCase
+            useClass: create_host_games_usecase_1.createHostedGameUseCase,
         });
         tsyringe_1.container.register("IGetUpcomingHostedGamesUseCase", {
-            useClass: get_hostedGames_usecase_1.GetUpcomingHostedGamesUseCase
+            useClass: get_hostedGames_usecase_1.GetUpcomingHostedGamesUseCase,
         });
         tsyringe_1.container.register("IJoinHostedGameUseCase", {
-            useClass: join_hosted_game_usecase_1.JoinHostedGameUseCase
+            useClass: join_hosted_game_usecase_1.JoinHostedGameUseCase,
         });
         tsyringe_1.container.register("IGetSingleHostedGameUseCase", {
-            useClass: get_single_hosted_game_usecase_1.GetSingleHostedGameUseCase
+            useClass: get_single_hosted_game_usecase_1.GetSingleHostedGameUseCase,
         });
         tsyringe_1.container.register("ICheckSlotIsBookedUseCase", {
-            useClass: checkslotIsBookedUseCase_1.CheckSlotIsBooked
+            useClass: checkslotIsBookedUseCase_1.CheckSlotIsBooked,
         });
         tsyringe_1.container.register("ICancelSlotUseCase", {
-            useClass: cance_slot_usecase_1.CancelSlotUseCase
+            useClass: cance_slot_usecase_1.CancelSlotUseCase,
         });
         tsyringe_1.container.register("IOfflineBookingsUseCase", {
-            useClass: offline_booking_usecase_1.OfflineBookingUseCase
+            useClass: offline_booking_usecase_1.OfflineBookingUseCase,
         });
         tsyringe_1.container.register("ICreateChatGroupUseCase", {
-            useClass: create_chat_group_usecase_1.CreateChatGroupUseCase
+            useClass: create_chat_group_usecase_1.CreateChatGroupUseCase,
         });
         tsyringe_1.container.register("IGetUserChatGroupsUseCase", {
-            useClass: get_user_chat_group_usecase_1.GetUserChatGroupUseCase
+            useClass: get_user_chat_group_usecase_1.GetUserChatGroupUseCase,
         });
-        tsyringe_1.container.register("ISaveChatMessageUseCase", { useClass: saveChatMessage_usecase_1.SaveChatMessageUseCase });
+        tsyringe_1.container.register("ISaveChatMessageUseCase", {
+            useClass: saveChatMessage_usecase_1.SaveChatMessageUseCase,
+        });
         tsyringe_1.container.register("IGetChatMessageUseCase", {
-            useClass: getChatMessage_usecase_1.GetChatMessagesUseCase
+            useClass: getChatMessage_usecase_1.GetChatMessagesUseCase,
         });
         tsyringe_1.container.register("IGetChatPageDataUseCase", {
-            useClass: getChatPageData_usecase_1.GetChatPageDataUseCase
+            useClass: getChatPageData_usecase_1.GetChatPageDataUseCase,
         });
         tsyringe_1.container.register("IAddMoneyOwnerWalletUseCase", {
-            useClass: addMoney_owner_wallet_usecase_1.AddMoneyOwnerWalletUseCase
+            useClass: addMoney_owner_wallet_usecase_1.AddMoneyOwnerWalletUseCase,
         });
         tsyringe_1.container.register("IGetOwnerWalletTransactionsUseCase", {
-            useClass: getowner_wallet_transaction_1.GetOwnerWalletTransactionUseCase
+            useClass: getowner_wallet_transaction_1.GetOwnerWalletTransactionUseCase,
         });
         tsyringe_1.container.register("IGetOwnerDashboardUseCase", {
-            useClass: owner_dashboard_usecase_1.GetOwnerDashboardUseCase
+            useClass: owner_dashboard_usecase_1.GetOwnerDashboardUseCase,
         });
         tsyringe_1.container.register("IAddReviewUseCase", {
-            useClass: add_review_usecase_1.AddReviewUseCase
+            useClass: add_review_usecase_1.AddReviewUseCase,
         });
         tsyringe_1.container.register("IGetTurfReviewsUseCase", {
-            useClass: getTurfReview_usecase_1.GetTurfReviewsUseCase
+            useClass: getTurfReview_usecase_1.GetTurfReviewsUseCase,
         });
         tsyringe_1.container.register("IDeleteReviewUseCase", {
-            useClass: delete_review_usecase_1.DeleteReviewUseCase
+            useClass: delete_review_usecase_1.DeleteReviewUseCase,
         });
         tsyringe_1.container.register("IGetOwnerWalletUseCase", {
-            useClass: get_owner_wallet_usecase_1.GetOwnerWalletUseCase
+            useClass: get_owner_wallet_usecase_1.GetOwnerWalletUseCase,
         });
         tsyringe_1.container.register("IGetAdminWalletUseCase", {
-            useClass: get_admin_wallet_usecase_1.GetAdminWalletUseCase
+            useClass: get_admin_wallet_usecase_1.GetAdminWalletUseCase,
         });
         tsyringe_1.container.register("IAdminWalletTransactionUSeCase", {
-            useClass: get_admin_wallet_transaction_usecase_1.GetAdminWalletTransactionUseCase
+            useClass: get_admin_wallet_transaction_usecase_1.GetAdminWalletTransactionUseCase,
         });
         tsyringe_1.container.register("IGetAdminDashboardUseCase", {
-            useClass: get_admin_dashboard_usecase_1.GetAdminDashboardUseCase
+            useClass: get_admin_dashboard_usecase_1.GetAdminDashboardUseCase,
         });
         tsyringe_1.container.register("IGetAllOwnerWalletTransactionsUseCase", {
-            useClass: ge_all_owners_wallet_transaction_usecase_1.GetAllOwnersWalletTransactionUseCase
+            useClass: ge_all_owners_wallet_transaction_usecase_1.GetAllOwnersWalletTransactionUseCase,
         });
         tsyringe_1.container.register("IGetTransactionDetailsUseCse", {
-            useClass: getAdminTransaction_details_usecase_1.GetTrasactionDetailsUseCase
+            useClass: getAdminTransaction_details_usecase_1.GetTrasactionDetailsUseCase,
         });
         tsyringe_1.container.register("IHoldSlotUseCase", {
-            useClass: hold_slot_usecase_1.HoldSlotUseCase
+            useClass: hold_slot_usecase_1.HoldSlotUseCase,
         });
         tsyringe_1.container.register("IAddRatingUseCase", {
-            useClass: add_rating_usecase_1.AddRatingUseCase
+            useClass: add_rating_usecase_1.AddRatingUseCase,
         });
         tsyringe_1.container.register("IGetTurfRatingsUseCase", {
-            useClass: get_turf_rating_usecase_1.GetTurfRatingUseCase
+            useClass: get_turf_rating_usecase_1.GetTurfRatingUseCase,
         });
         tsyringe_1.container.register("IDeleteChatMessageUseCase", {
-            useClass: delete_message_usecase_1.DeleteChatMessageUseCase
+            useClass: delete_message_usecase_1.DeleteChatMessageUseCase,
         });
         tsyringe_1.container.register("IGetUpcomingHostedGamesByUserUseCase", {
-            useClass: get_upcoming_hosted_games_1.GetUpcomingHostedGameByUserUseCase
+            useClass: get_upcoming_hosted_games_1.GetUpcomingHostedGameByUserUseCase,
+        });
+        tsyringe_1.container.register("Stripe", {
+            useValue: new stripe_1.default(process.env.STRIPE_SECRET_KEY || ""),
         });
         tsyringe_1.container.register("IRequestHostedGameCancelUseCase", {
-            useClass: cancel_hosted_game_usecase_1.RequestCancelHostedGameUseCase
+            useClass: cancel_hosted_game_usecase_1.RequestCancelHostedGameUseCase,
         });
         tsyringe_1.container.register("IReleaseSlotUsecase", {
-            useClass: release_slot_usecase_1.ReleaseSlotUseCase
+            useClass: release_slot_usecase_1.ReleaseSlotUseCase,
         });
     }
 }

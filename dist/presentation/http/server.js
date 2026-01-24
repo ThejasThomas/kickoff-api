@@ -28,6 +28,7 @@ class ExpressServer {
         this.configureRoutes();
     }
     configureMiddlewares() {
+        this._app.set("trust proxy", 1);
         this._app.use((0, helmet_1.default)());
         this._app.use((0, express_rate_limit_1.default)({
             windowMs: 15 * 60 * 1000,

@@ -30,32 +30,40 @@ const constants_1 = require("../../../shared/constants");
 const tsyringe_1 = require("tsyringe");
 const chalk_1 = __importDefault(require("chalk"));
 let sendOtpEmailUseCase = class sendOtpEmailUseCase {
-    constructor(__otpService, _userExistenceService, _otpBcrypt, _emailService) {
+    constructor(__otpService, _userExistenceService, _otpBcrypt, _emailService, _phoneNumberExistenceService) {
         this.__otpService = __otpService;
         this._userExistenceService = _userExistenceService;
         this._otpBcrypt = _otpBcrypt;
         this._emailService = _emailService;
+        this._phoneNumberExistenceService = _phoneNumberExistenceService;
     }
-    execute(email) {
+    execute(email, phoneNumber) {
         return __awaiter(this, void 0, void 0, function* () {
             const emailExists = yield this._userExistenceService.emailExists(email);
             if (emailExists) {
                 throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.EMAIL_EXISTS, constants_1.HTTP_STATUS.CONFLICT);
             }
+            if (phoneNumber) {
+                const phoneExists = yield this._phoneNumberExistenceService.phoneNumberExists(phoneNumber);
+                if (phoneExists) {
+                    throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.PHONE_NUMBER_EXISTS, constants_1.HTTP_STATUS.CONFLICT);
+                }
+            }
             const otp = this.__otpService.generateOtp();
             console.log(chalk_1.default.yellowBright.bold(`OTP:`), chalk_1.default.greenBright.bold(otp));
             const hashedOtp = yield this._otpBcrypt.hash(otp);
             yield this.__otpService.storeOtp(email, hashedOtp);
-            yield this._emailService.sendOtpEmail(email, 'KickOff - verify your Email', otp);
+            yield this._emailService.sendOtpEmail(email, "KickOff - verify your Email", otp);
         });
     }
 };
 exports.sendOtpEmailUseCase = sendOtpEmailUseCase;
 exports.sendOtpEmailUseCase = sendOtpEmailUseCase = __decorate([
     (0, tsyringe_1.injectable)(),
-    __param(0, (0, tsyringe_1.inject)('IOtpService')),
+    __param(0, (0, tsyringe_1.inject)("IOtpService")),
     __param(1, (0, tsyringe_1.inject)("IUserExistenceService")),
     __param(2, (0, tsyringe_1.inject)("IOtpBcrypt")),
-    __param(3, (0, tsyringe_1.inject)('IEmailService')),
-    __metadata("design:paramtypes", [Object, Object, Object, Object])
+    __param(3, (0, tsyringe_1.inject)("IEmailService")),
+    __param(4, (0, tsyringe_1.inject)("IPhoneNumberExistenceService")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object])
 ], sendOtpEmailUseCase);

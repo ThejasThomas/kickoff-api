@@ -9,16 +9,16 @@ class AdminRoutes extends base_route_1.BaseRoute {
         super();
     }
     initializeRoutes() {
-        this.router.get("/admin/users", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.get("/admin/users", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.userController.getAllUsers(req, res);
         });
-        this.router.patch("/admin/status", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.patch("/admin/status", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.userController.updateEntityStatus(req, res);
         });
-        this.router.post("/admin/logout", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.post("/admin/logout", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.authController.logout(req, res);
         });
-        this.router.get("/admin/turfs", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.get("/admin/turfs", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.turfController.getAllTurfs(req, res);
         });
         this.router.post("/admin/refresh-token", auth_middleware_1.decodeToken, (req, res) => {
@@ -30,22 +30,22 @@ class AdminRoutes extends base_route_1.BaseRoute {
         this.router.get("/admin/get-turf-reviews/:turfId", auth_middleware_1.verifyAuth, (req, res) => {
             resolver_1.turfController.getTurfReviewsForAdmin(req, res);
         });
-        this.router.get("/admin/wallet", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.get("/admin/wallet", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.walletController.getAdminwallet(req, res);
         });
-        this.router.get("/admin/wallet-transaction", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.get("/admin/wallet-transaction", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.walletController.getAdminWalletTransactions(req, res);
         });
-        this.router.delete("/admin/delete-review/:reviewId", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.delete("/admin/delete-review/:reviewId", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.turfController.deleteReviewAdmin(req, res);
         });
-        this.router.get("/admin/get-dashboard", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.get("/admin/get-dashboard", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.adminController.adminDashboard(req, res);
         });
         this.router.get("/admin/owners-transaction", auth_middleware_1.verifyAuth, (req, res) => {
             resolver_1.walletController.getAllOwnersTransactions(req, res);
         });
-        this.router.get("/admin/transaction-details/:transactionId", auth_middleware_1.verifyAuth, (req, res) => {
+        this.router.get("/admin/transaction-details/:transactionId", auth_middleware_1.verifyAuth, (0, auth_middleware_1.authorizeRole)(["admin"]), (req, res) => {
             resolver_1.walletController.getTransactionDetails(req, res);
         });
     }

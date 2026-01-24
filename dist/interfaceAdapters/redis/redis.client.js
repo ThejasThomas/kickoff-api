@@ -28,6 +28,6 @@ exports.redisClient.on("error", (err) => console.log("Redis Client Error", err))
 (() => __awaiter(void 0, void 0, void 0, function* () {
     yield exports.redisClient.connect();
     console.log(chalk_1.default.yellowBright.bold("\t         " +
-        chalk_1.default.blueBright.bold("📦 Redis connected successfully!") +
+        chalk_1.default.blueBright.bold(" Redis connected successfully!") +
         "            "));
 }))();

@@ -52,12 +52,13 @@ class AdminDashboardRepository {
     }
     getBookingStats() {
         return __awaiter(this, void 0, void 0, function* () {
-            const [total, completed, confirmed] = yield Promise.all([
+            const [total, completed, confirmed, cancelled] = yield Promise.all([
                 booking_model_1.BookinModel.countDocuments(),
                 booking_model_1.BookinModel.countDocuments({ status: "completed" }),
                 booking_model_1.BookinModel.countDocuments({ status: "confirmed" }),
+                booking_model_1.BookinModel.countDocuments({ status: "cancelled" }),
             ]);
-            return { total, completed, confirmed };
+            return { total, completed, confirmed, cancelled };
         });
     }
     getRevenueAnalytics(period) {

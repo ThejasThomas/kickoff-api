@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookSlotUseCase = void 0;
+// Updated BookSlotUseCase - Use CreateBookingInput and inject userId
 const tsyringe_1 = require("tsyringe");
 const custom_error_1 = require("../../../domain/utils/custom.error");
 const constants_1 = require("../../../shared/constants");
@@ -44,15 +45,11 @@ let BookSlotUseCase = class BookSlotUseCase {
                 if (alreadyBooked) {
                     throw new custom_error_1.CustomError(constants_1.ERROR_MESSAGES.SLOT_ALREADY_BOOKED, constants_1.HTTP_STATUS.CONFLICT);
                 }
-                const newBooking = Object.assign(Object.assign({}, bookData), { date: normalizedDate, userId });
+                const completeBooking = Object.assign(Object.assign({}, bookData), { date: normalizedDate, userId });
+                console.log('complete', completeBooking);
                 console.log("bookDaaaaataaaaaaaaaaaa", normalizedDate);
-                const bookSlot = yield this._bookingRepository.save(newBooking);
+                const bookSlot = yield this._bookingRepository.save(completeBooking);
                 yield this._redisRepository.releaseLock(bookData.turfId, normalizedDate, bookData.startTime, bookData.endTime, userId);
-                // await this._slotRepository.updateSlotBookedStatus(
-                //     bookData.turfId,
-                //     bookData.date,
-                //     bookData.startTime
-                // )
                 return (0, getBookingapper_1.mapBookingDTO)(bookSlot);
             }
             catch (error) {

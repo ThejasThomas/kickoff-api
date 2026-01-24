@@ -50,6 +50,19 @@ let HostGameRepository = class HostGameRepository extends base_repository_1.Base
             });
         });
     }
+    updatePlayerStatus(gameId, userId, update) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this.model.updateOne({ _id: gameId, "players.userId": userId }, {
+                $set: {
+                    "players.$.status": update.status,
+                    "players.$.paymentId": update.paymentId
+                }
+            });
+            if (result.matchedCount === 0) {
+                throw new Error(`Player ${userId} not found in game ${gameId}`);
+            }
+        });
+    }
     getUpComingGames(params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
