@@ -9,7 +9,7 @@ import { BookingDTO } from "../../dtos/get_booking_dto";
 import { mapBookingDTO } from "../../mappers/getBookingapper";
 import { ISlotLockRepository } from "../../../domain/repositoryInterface/slotLock/slot_lock_repository_interface";
 
-export type CreateBookingInput = Omit<IBookingEntity, '_id' | 'userId'>;
+export type CreateBookingInput = Omit<IBookingEntity, 'userId'>;
 
 @injectable()
 export class BookSlotUseCase implements IBookSlotUseCase {

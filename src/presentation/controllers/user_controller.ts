@@ -22,6 +22,7 @@ import { IGetChatPageDataUseCase } from "../../domain/useCaseInterfaces/messages
 import { IBookSlotUseCase } from "../../domain/useCaseInterfaces/Bookings/book_slot_useCase_interface";
 import { IBookingEntity } from "../../domain/models/booking_entity";
 import { CreateBookingInput } from "../../application/usecase/Bookings/book_slot_usecase";
+import { IAddMoneyOwnerWalletUseCase } from "../../domain/useCaseInterfaces/wallet/add_money_owner_wallet_usecase";
 
 @injectable()
 export class UserController implements IUserController {
@@ -46,6 +47,8 @@ export class UserController implements IUserController {
     private _getChatPageDataUseCase: IGetChatPageDataUseCase,
     @inject("IBookSlotUseCase")
     private _bookSlotUseCase: IBookSlotUseCase,
+    @inject("IAddMoneyOwnerWalletUseCase")
+    private _addMoneyOwnerWalletUsecase: IAddMoneyOwnerWalletUseCase,
   ) {
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY environment variable is not set");
@@ -422,7 +425,7 @@ export class UserController implements IUserController {
       });
     }
   }
-async verifyBookingPayment(req: Request, res: Response): Promise<void> {
+  async verifyBookingPayment(req: Request, res: Response): Promise<void> {
     try {
       const sessionId = req.params.sessionId;
 
@@ -470,7 +473,11 @@ async verifyBookingPayment(req: Request, res: Response): Promise<void> {
           adminCommissionProcessed: false,
         };
 
-        await this._bookSlotUseCase.execute(bookingData, userId);
+        const booking=await this._bookSlotUseCase.execute(bookingData, userId);
+        console.log('bookings',booking._id)
+        console.log('bookingggg',bookingData.id)
+          await this._addMoneyOwnerWalletUsecase.execute(booking._id);
+        
       }
 
       res.status(200).json({ success: true });
@@ -479,10 +486,6 @@ async verifyBookingPayment(req: Request, res: Response): Promise<void> {
       handleErrorResponse(req, res, error);
     }
   }
-
-
-
-
 
   async createJoinHostedGameCheckoutSession(
     req: Request,
