@@ -60,7 +60,7 @@ export class AuthController implements IAuthController {
     @inject ("ICloudinarySignatureService")
     private _cloudinaryService:ICloudinarySignatureService
   ) {}
-
+ 
   // 🛠️ User Register
   async register(req: Request, res: Response): Promise<void> {
     try {
