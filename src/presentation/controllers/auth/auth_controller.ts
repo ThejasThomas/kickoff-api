@@ -70,7 +70,7 @@ export class AuthController implements IAuthController {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           message: ERROR_MESSAGES.INVALID_CREDENTIALS,
-        });
+        }); 
         return;
       }
       const validatedData = schema.parse(req.body);
