@@ -20,7 +20,7 @@ export class AdminController implements IAdminController{
 
             res.status(HTTP_STATUS.OK).json({
                 success:true,
-                data:dashboardData
+                data:dashboardData 
             })
         }
         catch(error){
