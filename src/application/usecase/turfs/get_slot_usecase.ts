@@ -4,7 +4,7 @@ import { ISlotEntity } from "../../../domain/models/slot_entity";
 import { CustomError } from "../../../domain/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IRuleRepository } from "../../../domain/repositoryInterface/Turf/rule_repository_interface";
-import {  ITimeRange } from "../../../domain/models/rule_entity";
+import { ITimeRange } from "../../../domain/models/rule_entity";
 import { IBookingRepository } from "../../../domain/repositoryInterface/booking/booking_repository_interface";
 import { IHostedGameRepository } from "../../../domain/repositoryInterface/booking/hosted_game_repository_interface";
 import { ISlotDTO } from "../../dtos/slot_dto";
@@ -13,14 +13,16 @@ import { ISlotDTO } from "../../dtos/slot_dto";
 export class GetSlotsUseCase implements IGetSlotsUseCase {
   constructor(
     @inject("IRuleRepository") private _ruleRepository: IRuleRepository,
-    @inject("IBookingRepository") private _bookingRepository: IBookingRepository,
-    @inject("IHostedGameRepository") private _hostedGamesRepository:IHostedGameRepository
+    @inject("IBookingRepository")
+    private _bookingRepository: IBookingRepository,
+    @inject("IHostedGameRepository")
+    private _hostedGamesRepository: IHostedGameRepository,
   ) {}
 
   async execute(
     turfId: string,
     date: string,
-    dayIndex: number
+    dayIndex: number,
   ): Promise<ISlotDTO[]> {
     try {
       const rules = await this._ruleRepository.findOne({ turfId });
@@ -29,16 +31,16 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
       const weeklyRulesMap = rules.weeklyRules[0] || {};
       const timeRanges: ITimeRange[] = weeklyRulesMap[dayIndex] || [];
 
-      const requestDate = date; 
+      const requestDate = date;
       const bookings = await this._bookingRepository.findByTurfIdAndDate(
         turfId,
-        requestDate
+        requestDate,
       );
 
-      const hostedGames=await this._hostedGamesRepository.findbyTurfIdAndDate(
+      const hostedGames = await this._hostedGamesRepository.findbyTurfIdAndDate(
         turfId,
-        requestDate
-      )
+        requestDate,
+      );
 
       const slots: ISlotEntity[] = [];
 
@@ -55,23 +57,21 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
 
           const slotStart = current;
 
-          
-
-          const isBookedByBooking  = bookings.some((bk) => {
+          const isBookedByBooking = bookings.some((bk) => {
             const bookingStart = this.parseTime(requestDate, bk.startTime);
             const bookingEnd = this.parseTime(requestDate, bk.endTime);
 
             return bookingStart < slotEnd && bookingEnd > slotStart;
           });
 
-          const isBookedByHostedGames =hostedGames.some((game)=>{
-            const gameStart=this.parseTime(requestDate,game.startTime);
-            const gameEnd=this.parseTime(requestDate,game.endTime)
+          const isBookedByHostedGames = hostedGames.some((game) => {
+            const gameStart = this.parseTime(requestDate, game.startTime);
+            const gameEnd = this.parseTime(requestDate, game.endTime);
 
-            return gameStart<slotEnd && gameEnd >slotStart
-          })
+            return gameStart < slotEnd && gameEnd > slotStart;
+          });
 
-          const isBooked =isBookedByBooking ||isBookedByHostedGames
+          const isBooked = isBookedByBooking || isBookedByHostedGames;
 
           slots.push({
             id: `${turfId}-${date}-${slotStart.toISOString()}`,
@@ -89,13 +89,15 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
         }
       }
 
-   
-      const today = new Date().toISOString().split("T")[0];
+const today = new Date()
+  .toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 
       if (requestDate === today) {
-        const now = new Date();
+        const now = new Date(
+          new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+        );
         now.setMinutes(0, 0, 0);
-        now.setHours(now.getHours() + 1); 
+        now.setHours(now.getHours() + 1);
 
         return slots.filter((slot) => {
           const slotStart = this.parseTime(requestDate, slot.startTime);
@@ -104,18 +106,18 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
       }
 
       return slots.filter((slot) => !slot.isBooked);
-
     } catch (err) {
       console.log("Slot generation error", err);
       throw new CustomError(
         ERROR_MESSAGES.SLOT_NOT_FOUND,
-        HTTP_STATUS.INTERNAL_SERVER_ERROR
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
   private parseTime(dateStr: string, timeStr: string): Date {
-    let hours = 0, minutes = 0;
+    let hours = 0,
+      minutes = 0;
 
     if (/am|pm/i.test(timeStr)) {
       const lower = timeStr.toLowerCase();
@@ -138,7 +140,8 @@ export class GetSlotsUseCase implements IGetSlotsUseCase {
 
   private formatTime(date: Date): string {
     return `${date.getHours().toString().padStart(2, "0")}:${date
-      .getMinutes().toString()
+      .getMinutes()
+      .toString()
       .padStart(2, "0")}`;
   }
 }
