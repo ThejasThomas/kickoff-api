@@ -33,6 +33,10 @@ export class EmailService implements IEmailService {
 		subject: string,
 		otp: string
 	): Promise<void> {
+		console.log("to",to,
+			"subject",subject,
+			"otp",otp
+		)
 		const mailOptions = {
 			from: `"KickOff" <${config.nodemailer.EMAIL_USER}>`,
 			to,

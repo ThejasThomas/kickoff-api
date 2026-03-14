@@ -36,12 +36,13 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
     }
     if (role === "client" || role === "turfOwner") {
       const phoneNumber = user.phoneNumber;
-
+console.log("phooonneeeee",phoneNumber)
       if (phoneNumber) {
         const isPhoneExisting =
           await this._phoneNumberExistenceService.phoneNumberExists(
             phoneNumber,
           );
+          console.log("phn number",isPhoneExisting)
 
         if (isPhoneExisting) {
           throw new CustomError(

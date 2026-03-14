@@ -22,6 +22,7 @@ export class sendOtpEmailUseCase implements ISendOtpEmailUseCase {
   ) {}
 
   async execute(email: string, phoneNumber?: string): Promise<void> {
+    console.log("email",email,"ph:",phoneNumber)
     const emailExists = await this._userExistenceService.emailExists(email);
     if (emailExists) {
       throw new CustomError(ERROR_MESSAGES.EMAIL_EXISTS, HTTP_STATUS.CONFLICT);
@@ -42,10 +43,12 @@ export class sendOtpEmailUseCase implements ISendOtpEmailUseCase {
 
     const hashedOtp = await this._otpBcrypt.hash(otp);
     await this.__otpService.storeOtp(email, hashedOtp);
+    console.log("otp stored")
     await this._emailService.sendOtpEmail(
       email,
       "KickOff - verify your Email",
       otp,
     );
+    console.log("send otp")
   }
 }
