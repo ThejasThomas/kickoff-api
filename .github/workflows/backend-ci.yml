@@ -18,7 +18,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy backend to EC2
         run: |
@@ -26,7 +25,7 @@ jobs:
             set -e
             cd /home/ubuntu/kickoff-api
             git pull origin main
-            npm install
+            npm ci
             npm run build
-            pm2 restart app
+            pm2 restart app || pm2 start dist/index.js --name app
           EOF
