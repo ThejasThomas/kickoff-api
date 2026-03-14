@@ -11,7 +11,7 @@ import { startBookingCompletionCron } from './presentation/cron/bookingCompletio
 async function startApp() {
   const expressServer = new ExpressServer();
   const mongoConnect = new MongoConnect();
-
+ 
   try {
     await mongoConnect.connectDB(); 
     startBookingCompletionCron()
